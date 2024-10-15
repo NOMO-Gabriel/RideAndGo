@@ -1,0 +1,62 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build outputs
+.next/
+out/
+.build/
+
+# Static files generated
+*.log
+*.lock
+.cache/
+dist/
+coverage/
+public/*.map
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.swd
+
+# Environment variables
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git and dependencies
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Docker files (if applicable)
+.docker/
+docker-compose.override.yml
+
+# Next.js Cache and Analytics
+.next/cache/
+.next/server/pages/
+.next/server/chunks/
+
+# Optional: Ignore public uploads (if dynamically generated)
+public/uploads/
+
+# Optional: Ignore images folder if heavy dynamic assets are saved there
+public/images/
+
+# Ignore build artifacts from TypeScript (if applicable)
+*.tsbuildinfo
