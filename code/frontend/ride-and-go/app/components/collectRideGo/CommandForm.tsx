@@ -98,19 +98,19 @@ const CommandForm: React.FC = () => {
 
       <div className="flex space-x-4">
         <button
-          className="px-4 py-2 bg-blue-800 hover:bg-orange-500 text-white rounded-md"
+          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("offer")}
         >
           {getContent("command")}
         </button>
         <button
-          className="px-4 py-2 bg-blue-800 hover:bg-orange-500 text-white rounded-md"
+          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("itinerary")}
         >
           {getContent("save")}
         </button>
         <button
-          className="px-4 py-2 bg-blue-800 hover:bg-orange-500 text-white rounded-md"
+          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("place")}
         >
           {getContent("place")}

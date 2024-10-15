@@ -40,14 +40,14 @@ export default function Page() {
       <Header />
       <div className="flex space-x-4 -translate-y-[120px] translate-x-[450px]">
         <button
-          className="px-4 py-2 bg-blue-800 text-white rounded hover:bg-orange-500"
+          className="px-4 py-2 bg-bleu-nuit text-white rounded hover:bg-orange-500"
           onClick={handleToggleMap}
         >
           {showMap ? getContent("hideMap") : getContent("showMap")}
         </button>
 
         <button
-          className="px-4 py-2 bg-blue-800 hover:bg-orange-500 text-white rounded"
+          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded"
           onClick={handleToggleInfoBoard}
         >
           {showInfoBoard ? getContent("hideInfos") : getContent("showInfos")}
