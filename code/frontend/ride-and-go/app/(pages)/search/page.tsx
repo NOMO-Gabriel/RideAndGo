@@ -1,7 +1,7 @@
 'use client';
 
 import Header from "@/app/components/collectRideGo/Header";
-import CommandForm from "@/app/components/collectRideGo/CommandForm";
+import InfosBoard from "@/app/components/collectRideGo/InfosBoard";
 import Map from "@/app/components/collectRideGo/Map";
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
@@ -56,14 +56,14 @@ export default function Page() {
 
       <div className="flex flex-row w-full space-x-16 ">
         {showMap && (
-          <div className={`flex-1 transition-all duration-300 border-4 border-gray-500 rounded-lg m-4 ${showInfoBoard ? 'w-9/12 ml-[100px]' : 'w-full'}`}>
+          <div className={`flex-1 transition-all duration-300  ${showInfoBoard ? 'w-9/12 ml-[100px]' : 'w-full'}`}>
             <Map />
           </div>
         )}
 
         {showInfoBoard && (
           <div className={`transition-all duration-300  flex justify-center  ${showMap ? 'flex-1 w-3/12 ml-[400px]' : 'w-full items-center'}`}>
-            <CommandForm />
+            <InfosBoard />
           </div>
         )}
       </div>
