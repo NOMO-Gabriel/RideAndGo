@@ -1,15 +1,176 @@
-'use client'
+'use client';
+import React, { useState } from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js'; // Assurez-vous que ce chemin est correct
 
-
-export default function Component() {
-    
-
-    return (
-      <div>
-          <div className="text-center h-screen flex flex-col space-y-4 ">
-            <h1 className="text-3xl font-bold mt-3">I am a new component</h1>
-            <h1 className={"text-3xl font-bold text-blue-500 "} >Please implement my logic code</h1> 
-        </div>
-      </div>
-    );
+// Type pour les notifications
+interface Notification {
+  id: number;
+  title: string;
+  miniDescription: string;
+  content: string; // Contenu complet de la notification
+  time: string;
+  type: 'alert' | 'new' | 'archived'; // Type de notification
+  imageUrl: string; // URL de l'image
 }
+
+// Données fictives pour les notifications
+const fakeNotifications: Notification[] = [
+  {
+    id: 1,
+    title: 'Server Down Alert',
+    miniDescription: 'The server is down for maintenance.',
+    content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
+    time: '10:00 AM',
+    type: 'alert',
+    imageUrl: 'https://via.placeholder.com/50',
+  },
+  // Ajoute d'autres notifications ici...
+];
+
+const notificationsContent = {
+  en: {
+    title: "Notifications",
+    filter: {
+      all: "All",
+      alert: "Alerts",
+      new: "New",
+      archived: "Archived"
+    },
+    table: {
+      image: "Image",
+      title: "Title",
+      description: "Description",
+      time: "Time",
+      actions: "Actions",
+      show: "Show",
+      delete: "Delete",
+    },
+    popup: {
+      close: "Close",
+    },
+  },
+  fr: {
+    title: "Notifications",
+    filter: {
+      all: "Tous",
+      alert: "Alertes",
+      new: "Nouveau",
+      archived: "Archivé"
+    },
+    table: {
+      image: "Image",
+      title: "Titre",
+      description: "Description",
+      time: "Temps",
+      actions: "Actions",
+      show: "Afficher",
+      delete: "Supprimer",
+    },
+    popup: {
+      close: "Fermer",
+    },
+  },
+};
+
+const Notifications = () => {
+  const [filter, setFilter] = useState<'all' | 'alert' | 'new' | 'archived'>('all');
+  const [notifications, setNotifications] = useState<Notification[]>(fakeNotifications);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const { locale } = useLocale(); // Hook d'internationalisation
+
+  // Filtrer les notifications selon le filtre sélectionné
+  const filteredNotifications = notifications.filter((notification) => {
+    if (filter === 'all') return true;
+    return notification.type === filter;
+  });
+
+  // Fonction pour supprimer une notification
+  const handleDelete = (id: number) => {
+    setNotifications(notifications.filter(notification => notification.id !== id));
+  };
+
+  // Fonction pour afficher le popup
+  const handleShowPopup = (notification: Notification) => {
+    setSelectedNotification(notification);
+    setShowPopup(true);
+  };
+
+  // Fonction pour fermer le popup
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setSelectedNotification(null);
+  };
+
+  // Obtenir le contenu localisé
+  const localizedContent = notificationsContent[locale as "fr" | "en"];
+
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">{localizedContent.title}</h2>
+      <div className="mb-4">
+        <select value={filter} onChange={(e) => setFilter(e.target.value as 'all' | 'alert' | 'new' | 'archived')}>
+          <option value="all">{localizedContent.filter.all}</option>
+          <option value="alert">{localizedContent.filter.alert}</option>
+          <option value="new">{localizedContent.filter.new}</option>
+          <option value="archived">{localizedContent.filter.archived}</option>
+        </select>
+      </div>
+      <table className="table-auto w-full border">
+        <thead>
+          <tr>
+            <th className="border px-4 py-2">{localizedContent.table.image}</th>
+            <th className="border px-4 py-2">{localizedContent.table.title}</th>
+            <th className="border px-4 py-2">{localizedContent.table.description}</th>
+            <th className="border px-4 py-2">{localizedContent.table.time}</th>
+            <th className="border px-4 py-2">{localizedContent.table.actions}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredNotifications.map(notification => (
+            <tr key={notification.id}>
+              <td className="border px-4 py-2">
+                <img src={notification.imageUrl} alt="Notification" className="w-12 h-12" />
+              </td>
+              <td className="border px-4 py-2">{notification.title}</td>
+              <td className="border px-4 py-2">{notification.miniDescription}</td>
+              <td className="border px-4 py-2">{notification.time}</td>
+              <td className="border px-4 py-2">
+                <button
+                  className="text-blue-600"
+                  onClick={() => handleShowPopup(notification)}
+                >
+                  {localizedContent.table.show}
+                </button>
+                <button
+                  className="text-red-600 ml-2"
+                  onClick={() => handleDelete(notification.id)}
+                >
+                  {localizedContent.table.delete}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Popup pour afficher le contenu complet de la notification */}
+      {showPopup && selectedNotification && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded shadow-lg w-96">
+            <h3 className="text-xl font-bold mb-2">{selectedNotification.title}</h3>
+            <p>{selectedNotification.content}</p>
+            <button
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+              onClick={handleClosePopup}
+            >
+              {localizedContent.popup.close}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Notifications;

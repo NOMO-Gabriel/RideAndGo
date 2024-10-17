@@ -8,7 +8,7 @@ export default function Component() {
     
     return (
       <div>
-          <Link href="#" className="w-full h-14 bg-bleu-nuit text-white font-extrabold rounded-lg hover:bg-green-400 p-2 cursor-pointer flex justify-center items-center">
+          <Link href="#" className="w-full h-14 bg-bleu-nuit text-white font-extrabold rounded-lg hover:bg-blue-900 p-2 cursor-pointer flex justify-center items-center">
               <div>
                 {locale ==="en"? "UPGRADE":"Mettre a niveau"}
               </div>
