@@ -52,7 +52,7 @@ export default function Page() {
         >
           {showInfoBoard ? getContent("hideInfos") : getContent("showInfos")}
         </button>
-      </div>
+      </div>app/go
 
       <div className="flex flex-row w-full space-x-16 ">
         {showMap && (
