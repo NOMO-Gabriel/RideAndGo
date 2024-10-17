@@ -8,15 +8,15 @@ export default function Component() {
     
 
     return (
-      <div className="flex flex-row bg-green-200 p-4 justify-between  w-full h-20">
-          <div className="flex flex-row bg-green-200 p-4 justify- ">
+      <div className="flex flex-row bg-green-200 p-4 justify-between items-center w-full h-20">
+          
             <div>
               <UserInfos/>
             </div>
             <div>
               <BecomeDriverBtn/>
             </div>
-          </div>
+         
       </div>
     );
 }

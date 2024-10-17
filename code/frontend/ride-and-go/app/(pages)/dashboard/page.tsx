@@ -7,14 +7,14 @@ import Sidebar from "@/app/components/Dashboard/Sidebar";
 export default function Page() {
     
     return (
-      <div className="flex flex-row px-20 bg-gray-100">
+      <div className="flex flex-row px-20 bg-gray-100 mt-2">
           {/* this is the sidebar */}
-            <div className="flex flex-col w-2/10 bg-blue-200">
+            <div className="flex flex-col w-[200px] bg-blue-200">
               <Sidebar/>
             </div>
 
           {/* this is the rigth side */}
-          <div className="w-full">
+          <div className="w-full flex flex-col">
               <div>
                 <BecomeDriverContainer/>
               </div>
