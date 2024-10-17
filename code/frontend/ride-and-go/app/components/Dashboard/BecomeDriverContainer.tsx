@@ -9,7 +9,7 @@ export default function Component() {
 
     return (
       <div className="flex flex-row bg-green-200 p-4 justify-between  w-full h-20">
-          <div className="flex flex-row bg-green-200 p-4 justify-between ">
+          <div className="flex flex-row bg-green-200 p-4 justify- ">
             <div>
               <UserInfos/>
             </div>
