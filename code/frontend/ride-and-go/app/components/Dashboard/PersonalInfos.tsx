@@ -77,7 +77,7 @@ export default function PersonalInfo() {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
+    <div className="p-4 bg-white rounded-lg shadow ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{localizedContent.personalInfo}</h2>
         <button onClick={() => setIsEditing(!isEditing)}>
