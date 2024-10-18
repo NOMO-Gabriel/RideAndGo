@@ -36,15 +36,6 @@ const notificationsContent = {
       new: "New",
       archived: "Archived"
     },
-    table: {
-      image: "Image",
-      title: "Title",
-      description: "Description",
-      time: "Time",
-      actions: "Actions",
-      show: "Show",
-      delete: "Delete",
-    },
     popup: {
       close: "Close",
     },
@@ -56,15 +47,6 @@ const notificationsContent = {
       alert: "Alertes",
       new: "Nouveau",
       archived: "Archivé"
-    },
-    table: {
-      image: "Image",
-      title: "Titre",
-      description: "Description",
-      time: "Temps",
-      actions: "Actions",
-      show: "Afficher",
-      delete: "Supprimer",
     },
     popup: {
       close: "Fermer",
@@ -116,43 +98,40 @@ const Notifications = () => {
           <option value="archived">{localizedContent.filter.archived}</option>
         </select>
       </div>
-      <table className="table-auto w-full border">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">{localizedContent.table.image}</th>
-            <th className="border px-4 py-2">{localizedContent.table.title}</th>
-            <th className="border px-4 py-2">{localizedContent.table.description}</th>
-            <th className="border px-4 py-2">{localizedContent.table.time}</th>
-            <th className="border px-4 py-2">{localizedContent.table.actions}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredNotifications.map(notification => (
-            <tr key={notification.id}>
-              <td className="border px-4 py-2">
-                <img src={notification.imageUrl} alt="Notification" className="w-12 h-12" />
-              </td>
-              <td className="border px-4 py-2">{notification.title}</td>
-              <td className="border px-4 py-2">{notification.miniDescription}</td>
-              <td className="border px-4 py-2">{notification.time}</td>
-              <td className="border px-4 py-2">
-                <button
-                  className="text-blue-600"
-                  onClick={() => handleShowPopup(notification)}
-                >
-                  {localizedContent.table.show}
-                </button>
-                <button
-                  className="text-red-600 ml-2"
-                  onClick={() => handleDelete(notification.id)}
-                >
-                  {localizedContent.table.delete}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="flex flex-col space-y-4">
+        {filteredNotifications.map(notification => (
+          <div key={notification.id} className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <img src={notification.imageUrl} alt="Notification" className="w-12 h-12" />
+              <div>
+                <h3 className="font-bold">{notification.title}</h3>
+                <p className="text-sm">{notification.miniDescription}</p>
+                <span className="text-xs text-gray-600">{notification.time}</span>
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                className="text-blue-600"
+                onClick={() => handleShowPopup(notification)}
+              >
+                Voir plus
+              </button>
+              <button
+                className="text-red-600"
+                onClick={() => handleDelete(notification.id)}
+              >
+                Supprimer
+              </button>
+              <button
+                className="text-green-600"
+                onClick={() => console.log(`Archiving notification with id: ${notification.id}`)}
+              >
+                Archiver
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Popup pour afficher le contenu complet de la notification */}
       {showPopup && selectedNotification && (
