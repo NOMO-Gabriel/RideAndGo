@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { FaGlobe, FaChevronDown } from 'react-icons/fa'; // Icônes pour la langue et le menu déroulant
 import Link from 'next/link';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
 
 const Navbar: React.FC = () => {
+  const {changeLocale} = useLocale();
   const [selectedLanguage, setSelectedLanguage] = useState('Fr'); // Langue par défaut
 
-  const handleLanguageChange = (lang: string) => {
-    setSelectedLanguage(lang); // Met à jour la langue sélectionnée
+  const handleLanguageChange = (languageCode: string) => {
+    changeLocale(languageCode); // Met à jour la langue sélectionnée
+    setSelectedLanguage(languageCode);
   };
 
   return (
@@ -54,16 +57,16 @@ const Navbar: React.FC = () => {
             {/* Menu déroulant des langues */}
             <div className="absolute hidden group-hover:block right-0 mt-2 w-32 bg-white text-bleu-nuit rounded-lg shadow-lg z-10">
               <ul className="py-2">
-                <li><button onClick={() => handleLanguageChange('Fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Français</button></li>
-                <li><button onClick={() => handleLanguageChange('En')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">English</button></li>
-                <li><button onClick={() => handleLanguageChange('Es')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Español</button></li>
+                <li><button onClick={() => handleLanguageChange('fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Français</button></li>
+                <li><button onClick={() => handleLanguageChange('en')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">English</button></li>
+                <li><button onClick={() => handleLanguageChange('fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Español</button></li>
               </ul>
             </div>
           </div>
 
           {/* Sign In & Sign Up Buttons */}
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">Sign In</button>
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">Sign Up</button>
+          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300"><Link href="/login">Log in</Link></button>
+          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300"><Link href="/register">Register</Link></button>
         </div>
       </div>
     </nav>
