@@ -55,8 +55,7 @@ docker-compose.override.yml
 # Optional: Ignore public uploads (if dynamically generated)
 public/uploads/
 
-# Optional: Ignore images folder if heavy dynamic assets are saved there
-public/images/
+
 
 # Ignore build artifacts from TypeScript (if applicable)
 *.tsbuildinfo
