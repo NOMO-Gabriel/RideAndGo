@@ -75,12 +75,12 @@ export default function Statistics() {
   return (
     <div className="space-y-8 p-6">
       {/* Première Section */}
-      <div className="flex space-x-8">
-        <div className="w-1/2 p-4 flex flex-col items-center justify-center text-bleu-nuit border-2 border-gray-200 rounded space-y-4">
+      <div className="flex space-x-8   border rounded ">
+        <div className="w-1/2  p-4 flex flex-col items-center justify-center text-bleu-nuit border-2 border-gray-200 rounded-md space-y-4">
           <h2 className="text-xl font-bold">{localizedContent.mostVisited}</h2>
           <div className="relative flex flex-row space-x-24">
             {/* Diagramme circulaire */}
-            <div className="w-40 h-40 rounded-full bg-blue-400 mx-auto"></div>
+            <div className="w-40 h-40 rounded-full bg-blue-300 mx-auto"></div>
             {/* Légende */}
             <div className="mt-4 space-y-2 ">
               <div className="border p-1 shadow-md">Lieu 1 - 40%</div>
@@ -91,7 +91,7 @@ export default function Statistics() {
           </div>
         </div>
 
-        <div className="w-1/2  p-4 lex flex-col items-center justify-center text-center text-bleu-nuit border-2 border-gray-200 rounded space-y-4">
+        <div className="w-1/2  p-4 lex flex-col items-center justify-center text-center text-bleu-nuit border-2 border-gray-200 rounded-md space-y-4">
             <h2 className="text-xl font-bold">{localizedContent.users}</h2>
           {localizedContent.stats.map((stat, index) => (
             <div key={index} className="flex items-center space-x-3">
