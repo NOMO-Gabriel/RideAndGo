@@ -142,7 +142,7 @@ export default function Register() {
                 </select>
               </div>
               <button type="submit" className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-500">
-                {getContent('register')}
+                <Link href="/">{getContent('register')}</Link>
               </button>
               <p className="mt-4 text-center">
                 {getContent('extra')} <a href="/login" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>

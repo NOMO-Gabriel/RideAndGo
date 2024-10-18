@@ -17,10 +17,12 @@ const Navbar: React.FC = () => {
     <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50"> {/* Header toujours visible en haut */}
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-4xl font-bold tracking-wider hover:text-orange-btn transition duration-300 cursor-pointer">
-          MonLogo
+        <div className="flex items-center space-x-2">
+          <a href="/">
+            <img src="/images/logo.png" alt='Ride&Go' className="h-12 w-auto"/>
+          </a>
+          <span className="text-white text-lg font-semibold hover:text-orange-btn transition duration-300 cursor-pointer"><a href="/">Ride&Go</a></span>
         </div>
-
         {/* Links */}
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">Home</Link>

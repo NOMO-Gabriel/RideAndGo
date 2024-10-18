@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
+import Link from "next/link";
 
 export default function Page() {
   const { locale } = useLocale();
@@ -115,7 +116,7 @@ export default function Page() {
                 </select>
               </div>
               <button type="submit" className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-500">
-                {getContent('login')}
+                <Link href="/">{getContent('login')}</Link>
               </button>
               <p className="mt-4 text-center">
                 {getContent('extra')} <a href="/register" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>
