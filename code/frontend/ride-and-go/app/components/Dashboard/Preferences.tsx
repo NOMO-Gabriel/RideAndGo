@@ -2,7 +2,7 @@
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import React, { useState } from 'react';
 
-// Types pour une option de préférence
+
 type Option = {
   value: string | number;
   label: { en: string; fr: string };

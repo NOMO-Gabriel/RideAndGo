@@ -43,16 +43,18 @@ export default function Statistics() {
       stats: ["Users", "Drivers", "Trips"],
       details: ["Vehicles Used", "Amount Spent", "Itineraries Taken", "Places Visited"],
       recentTrips: "Recent Trips",
+      users:"Users",
     },
     fr: {
       mostVisited: "Lieux les plus visités",
-      stats: ["Utilisateurs", "Chauffeurs", "Voyages"],
+      stats: ["Utilisateurs", "Chauffeurs", "Voyageurs"],
       details: ["Véhicules empruntés", "Montant dépensé", "Itinéraires empruntés", "Lieux visités"],
       recentTrips: "Voyages récents",
+      users:"Utilisateurs"
     }
   };
 
-  const localizedContent = content[locale] || content.en;
+  const localizedContent = content[locale as "en" | "fr"] || content.en;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,7 +67,7 @@ export default function Statistics() {
         itineraries: Math.min(prevStats.itineraries + 8, 800),
         places: Math.min(prevStats.places + 4, 400),
       }));
-    }, 10000);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -74,26 +76,27 @@ export default function Statistics() {
     <div className="space-y-8 p-6">
       {/* Première Section */}
       <div className="flex space-x-8">
-        <div className="w-1/2">
+        <div className="w-1/2 p-4 flex flex-col items-center justify-center text-bleu-nuit border-2 border-gray-200 rounded space-y-4">
           <h2 className="text-xl font-bold">{localizedContent.mostVisited}</h2>
-          <div className="relative">
+          <div className="relative flex flex-row space-x-24">
             {/* Diagramme circulaire */}
             <div className="w-40 h-40 rounded-full bg-blue-400 mx-auto"></div>
             {/* Légende */}
-            <div className="mt-4 space-y-2">
-              <div>Lieu 1 - 40%</div>
-              <div>Lieu 2 - 30%</div>
-              <div>Lieu 3 - 20%</div>
-              <div>Lieu 4 - 10%</div>
+            <div className="mt-4 space-y-2 ">
+              <div className="border p-1 shadow-md">Lieu 1 - 40%</div>
+              <div className="border p-1 shadow-md">Lieu 2 - 30%</div>
+              <div className="border p-1 shadow-md">Lieu 3 - 20%</div>
+              <div className="border p-1 shadow-md">Lieu 4 - 10%</div>
             </div>
           </div>
         </div>
 
-        <div className="w-1/2 space-y-4">
+        <div className="w-1/2  p-4 lex flex-col items-center justify-center text-center text-bleu-nuit border-2 border-gray-200 rounded space-y-4">
+            <h2 className="text-xl font-bold">{localizedContent.users}</h2>
           {localizedContent.stats.map((stat, index) => (
             <div key={index} className="flex items-center space-x-3">
               <FontAwesomeIcon icon={faUsers} />
-              <span className="text-lg">{stat}: {stats[stat.toLowerCase()]}</span>
+              <span className="text-lg"><strong className="font-bold text-orange-btn">10000 </strong> {stat}</span>
             </div>
           ))}
         </div>
@@ -102,9 +105,12 @@ export default function Statistics() {
       {/* Deuxième Section */}
       <div className="grid grid-cols-4 gap-6">
         {localizedContent.details.map((detail, index) => (
-          <div key={index} className="p-4 border rounded-lg text-center">
-            <h3 className="text-lg font-semibold">{detail}</h3>
-            <p className="text-2xl">{Object.values(stats)[index + 3]}</p>
+          <div key={index} className="p-4 border rounded-lg text-center flex items-center flex-col justify-center space-y-2">
+            <div className="rounded-full border-4 border-bleu-nuit w-32 h-32 flex items-center justify-center text-center">
+              <p className="text-3xl text-orange-btn">{Object.values(stats)[index + 3]}</p>
+            </div>
+            <h3 className="text-xs font-semibold">{detail}</h3>
+
           </div>
         ))}
       </div>
@@ -125,13 +131,13 @@ export default function Statistics() {
           </thead>
           <tbody>
             {tripData.map((trip) => (
-              <tr key={trip.id} className="hover:bg-gray-100">
-                <td className="border px-4 py-2">{trip.depart}</td>
-                <td className="border px-4 py-2">{trip.arrivee}</td>
-                <td className="border px-4 py-2">{trip.conducteur}</td>
-                <td className="border px-4 py-2">{trip.voyageur}</td>
-                <td className="border px-4 py-2">{trip.date}</td>
-                <td className="border px-4 py-2">{trip.avis}</td>
+              <tr key={trip.id} className="hover:bg-gray-100 ">
+                <td className="border px-4 py-2 text-orange-btn">{trip.depart}</td>
+                <td className="border px-4 py-2 text-bleu-nuit">{trip.arrivee}</td>
+                <td className="border px-4 py-2 text-bleu-nuit">{trip.conducteur}</td>
+                <td className="border px-4 py-2 text-bleu-nuit">{trip.voyageur}</td>
+                <td className="border px-4 py-2 text-black">{trip.date}</td>
+                <td className="border px-4 py-2 text-yellow-500">{trip.avis}</td>
               </tr>
             ))}
           </tbody>
