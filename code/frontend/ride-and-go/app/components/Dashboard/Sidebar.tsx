@@ -15,7 +15,7 @@ export default function Component() {
       { name: "Notifications", icon: faBell ,id:2},
       { name: "Preferences", icon: faCogs ,id:3},
       { name: "My Complaints", icon: faClipboard ,id:4},
-      { name: "My Itineraries", icon: faRoute ,id:5},
+      { name: "My Places and Itineraries", icon: faRoute ,id:5},
       { name: "Statistics", icon: faChartBar ,id:6},
       { name: "Subscriptions", icon: faCreditCard ,id:7},
     ],
@@ -24,7 +24,7 @@ export default function Component() {
       { name: "Notifications", icon: faBell ,id:2},
       { name: "Préférences", icon: faCogs ,id:3},
       { name: "Mes réclamations", icon: faClipboard ,id:4},
-      { name: "Mes itinéraires", icon: faRoute ,id:5},
+      { name: "Mes Lieux et itinéraires", icon: faRoute ,id:5},
       { name: "Statistiques", icon: faChartBar ,id:6},
       { name: "Abonnements", icon: faCreditCard ,id:7},
     ],
@@ -34,7 +34,7 @@ export default function Component() {
 
   return (
     <div>
-      <div className="w-[200px] flex flex-col p-2 space-y-4 border-x-2 border-gray-200">
+      <div className="w-[250px] flex flex-col p-2 space-y-4 border-x-2 border-gray-200">
         <UpgradeBtn />
         <div className="flex flex-col space-y-2">
           {localizedContent.map((item, index) => (

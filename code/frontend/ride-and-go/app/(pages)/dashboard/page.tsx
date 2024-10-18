@@ -8,9 +8,9 @@ export default function Page() {
   return (
     // Wrap the entire dashboard with DashboardProvider
     <DashboardProvider>
-      <div className="flex flex-row px-20 bg-gray-100 mt-2 h-screen">
+      <div className="flex flex-row px-20 bg-gray-100 mt-2 min-h-screen ">
         {/* Sidebar */}
-        <div className="flex flex-col w-[200px] bg-white">
+        <div className="flex flex-col w-[250px] bg-white">
           <Sidebar />
         </div>
 

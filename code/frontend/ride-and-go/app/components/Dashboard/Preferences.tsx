@@ -60,7 +60,7 @@ export default function Preferences() {
         {preferences.map(({ key, label, value, options, onChange }) => (
           <div key={key} className="flex flex-col space-y-2">
             <div className="text-bleu-nuit font-bold">
-              {label[locale]} :
+              {label[locale as 'en' | 'fr']} :
             </div>
             <div className="border-2 border-gray-200 p-2 text-center text-bleu-nuit w-[300px]">
               <select
@@ -70,7 +70,7 @@ export default function Preferences() {
               >
                 {options.map((option) => (
                   <option key={option.value} value={option.value}>
-                    {option.label[locale]}
+                    {option.label[locale as 'en' | 'fr']}
                   </option>
                 ))}
               </select>
@@ -82,8 +82,8 @@ export default function Preferences() {
       {/* Toggle Switch for Location */}
       <div className="flex justify-start items-center border-2 border-gray-200 p-2 text-center text-bleu-nuit w-[300px]">
         <div className="flex flex-row items-center justify-between space-x-16">
-          <span className="text-bleu-nuit font-bold">
-            {locale === 'en' ? 'Enable Location' : 'Activer la localisation'} :
+          <span className={`text-bleu-nuit font-bold ${locale==='fr'?"text-sm":""}`} >
+            {locale === 'en' ? 'Enable Location' : 'Activer Localisation'} 
           </span>
           <div
             className={`w-20 h-8 flex items-center rounded-full p-1 cursor-pointer ${
