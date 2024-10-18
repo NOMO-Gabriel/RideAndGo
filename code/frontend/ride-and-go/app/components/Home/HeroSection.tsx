@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { useState, useEffect } from 'react';
 import ButtonPrimary from '../misc/ButtonPrimary';
 
@@ -11,6 +12,11 @@ const images = [
 
 const HeroSection: React.FC = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const { locale, changeLocale } = useLocale();
+
+  const handleLanguageChange = () => {
+    changeLocale(locale === 'en' ? 'fr' : 'en');
+  };
 
   // Gestion du carrousel d'images en arrière-plan
   useEffect(() => {
@@ -27,13 +33,14 @@ const HeroSection: React.FC = () => {
     >
       <div className="absolute inset-0 bg-black bg-opacity-40"></div> {/* Couche semi-transparente */}
       <div className="relative z-10 container mx-auto">
-        <h1 className="text-5xl font-bold text-white drop-shadow-lg">Découvrez une nouvelle façon de vous déplacer</h1>
+        <h1 className="text-5xl font-bold text-white drop-shadow-lg">{locale==='en'?'Discover a new way to Ride and Go':'Découvrez une nouvelle façon de vous déplacer'}</h1>
         <p className="mt-4 text-lg text-gray-300 drop-shadow-lg">
-          Trouvez les meilleures solutions pour vos trajets quotidiens et explorez les nouvelles options de mobilité.
+        {locale==='en'?'Find the best solutions for your daily transport by exploring new options of mobility': 'Trouvez les meilleures solutions pour vos trajets quotidiens et explorez les nouvelles options de mobilité.'}
+         
         </p>
         <div className="mt-8">
           <button className="bg-orange-btn text-white px-6 py-3 rounded-full shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105">
-            Se déplacer
+            {locale==='en'?'Get a ride': 'Se déplacer'}
           </button>
         </div>
       </div>
