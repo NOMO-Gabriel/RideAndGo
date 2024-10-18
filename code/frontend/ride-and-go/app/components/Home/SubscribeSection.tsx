@@ -1,11 +1,17 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FaEnvelope } from 'react-icons/fa'; // Icône pour l'email
 import { motion } from 'framer-motion'; // Pour les animations interactives
 
 const SubscribeSection: React.FC = () => {
   const [email, setEmail] = useState('');
+  const { locale, changeLocale } = useLocale();
+
+  const handleLanguageChange = () => {
+    changeLocale(locale === 'en' ? 'fr' : 'en');
+  };
 
   // Gestion de l'envoi de formulaire (pour l'exemple, juste un alert)
   const handleSubmit = (e: React.FormEvent) => {

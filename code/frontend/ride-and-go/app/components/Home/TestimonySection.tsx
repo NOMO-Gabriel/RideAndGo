@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaUserCircle } from 'react-icons/fa'; // Icône pour l'initiale de la photo
+//import { useLocale } from '@/app/utils/hooks/useLocale.js';
+
 
 interface Testimonial {
   name: string;
@@ -32,6 +34,11 @@ const testimonials: Testimonial[] = [
 ];
 
 const TestimonialsSection: React.FC = () => {
+  {/*const { locale, changeLocale } = useLocale();
+
+  const handleLanguageChange = () => {
+    changeLocale(locale === 'en' ? 'fr' : 'en');
+  };*/}
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-6 lg:px-16">

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
+
 
 interface Stat {
   label: string;
@@ -16,6 +18,11 @@ const statistics: Stat[] = [
 const StatisticsSection: React.FC = () => {
   const [displayedStats, setDisplayedStats] = useState<number[]>([0, 0, 0]);
   const [explosionVisible, setExplosionVisible] = useState<boolean[]>([false, false, false]);
+  const { locale, changeLocale } = useLocale();
+
+  const handleLanguageChange = () => {
+    changeLocale(locale === 'en' ? 'fr' : 'en');
+  };
 
   useEffect(() => {
     let animationRunning = true; // Pour garder la boucle active
@@ -81,7 +88,7 @@ const StatisticsSection: React.FC = () => {
   return (
     <section className="py-16 bg-blanc-casse relative overflow-hidden">
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-bleu-nuit mb-10">Statistiques Clés</h2>
+        <h2 className="text-4xl font-bold text-bleu-nuit mb-10">{locale==='en'?'Key Statistics': 'Statistiques Clés'}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {statistics.map((stat, idx) => (
             <div

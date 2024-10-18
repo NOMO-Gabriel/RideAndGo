@@ -1,8 +1,15 @@
 'use client'
 
 import React from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
+
 
 const PlusValue: React.FC = () => {
+  const { locale, changeLocale } = useLocale();
+
+  const handleLanguageChange = () => {
+    changeLocale(locale === 'en' ? 'fr' : 'en');
+  };
   return (
     <section className="py-16 bg-gray-100">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
