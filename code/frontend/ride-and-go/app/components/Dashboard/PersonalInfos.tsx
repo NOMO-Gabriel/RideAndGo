@@ -77,62 +77,68 @@ export default function PersonalInfo() {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow ">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">{localizedContent.personalInfo}</h2>
-        <button onClick={() => setIsEditing(!isEditing)}>
-          <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
-        </button>
-      </div>
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        {[
-          { label: localizedContent.firstName, value: firstName, setter: setFirstName },
-          { label: localizedContent.lastName, value: lastName, setter: setLastName },
-          { label: localizedContent.username, value: username, setter: setUsername },
-          { label: localizedContent.dateOfBirth, value: dob, setter: setDob, type: 'date' },
-          { label: localizedContent.gender, value: gender, setter: setGender },
-          { label: localizedContent.email, value: email, setter: setEmail, type: 'email' },
-          { label: localizedContent.phone, value: phone, setter: setPhone, type: 'tel' },
-        ].map((field, index) => (
-          <div key={index}>
-            <label className="block mb-1">{field.label}</label>
-            <input
-              type={field.type || 'text'}
-              value={field.value}
-              onChange={(e) => field.setter(e.target.value)}
-              className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full transition`}
-              disabled={!isEditing}
-            />
+    <div className="p-4 bg-white rounded-lg shadow flex flex-col space-y-8 ">
+        {/* personal infos */}
+          <div className='border border-gray-200 shadow-xl rounded-lg z-0 p-6 flex items-center justify-center flex-col'>
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="font-bold text-lg mb-8 text-center">{localizedContent.personalInfo}</h2>
+               <button onClick={() => setIsEditing(!isEditing)}>
+                  <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
+                </button>
           </div>
-        ))}
-      </div>
+          <div className="grid grid-cols-3 gap-4 mb-6">
+              {[
+                { label: localizedContent.firstName, value: firstName, setter: setFirstName },
+                { label: localizedContent.lastName, value: lastName, setter: setLastName },
+                { label: localizedContent.username, value: username, setter: setUsername },
+                { label: localizedContent.dateOfBirth, value: dob, setter: setDob, type: 'date' },
+                { label: localizedContent.gender, value: gender, setter: setGender },
+                { label: localizedContent.email, value: email, setter: setEmail, type: 'email' },
+                { label: localizedContent.phone, value: phone, setter: setPhone, type: 'tel' },
+              ].map((field, index) => (
+                <div key={index}>
+                  <label className="block mb-1">{field.label}</label>
+                  <input
+                    type={field.type || 'text'}
+                    value={field.value}
+                    onChange={(e) => field.setter(e.target.value)}
+                    className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full transition`}
+                    disabled={!isEditing}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* password */}
 
-      <h3 className="text-lg font-semibold mb-2">{localizedContent.changePassword}</h3>
-      <form onSubmit={handlePasswordChange} className="space-y-4">
-        <div>
-          <label className="block mb-1">{localizedContent.newPassword}</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="border rounded px-2 py-1 w-full"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-1">{localizedContent.confirmPassword}</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border rounded px-2 py-1 w-full"
-            required
-          />
-        </div>
-        <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
-          {localizedContent.changePassword}
-        </button>
-      </form>
+          <div className='border border-gray-200 shadow-xl rounded-lg z-0 p-6 flex flex-col space-y-4 items-center justify-center'>
+              <h3 className="text-lg font-semibold mb-6 text-center">{localizedContent.changePassword}</h3>
+            < form onSubmit={handlePasswordChange} className="space-y-4">
+              <div>
+                <label className="block mb-1">{localizedContent.newPassword}</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="border rounded px-2 py-1 w-full"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block mb-1">{localizedContent.confirmPassword}</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="border rounded px-2 py-1 w-full"
+                  required
+                />
+              </div>
+              <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
+                {localizedContent.changePassword}
+              </button>
+            </form>
+          </div>
     </div>
   );
 }
