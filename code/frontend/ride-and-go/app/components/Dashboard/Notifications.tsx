@@ -90,7 +90,7 @@ const Notifications = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">{localizedContent.title}</h2>
-      <div className="mb-4">
+      <div className="mb-4 rounded-lg">
         <select value={filter} onChange={(e) => setFilter(e.target.value as 'all' | 'alert' | 'new' | 'archived')}>
           <option value="all">{localizedContent.filter.all}</option>
           <option value="alert">{localizedContent.filter.alert}</option>
@@ -100,7 +100,7 @@ const Notifications = () => {
       </div>
       <div className="flex flex-col space-y-4">
         {filteredNotifications.map(notification => (
-          <div key={notification.id} className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center justify-between">
+          <div key={notification.id} className="bg-gray-50 p-4 rounded-xl shadow-md flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img src={notification.imageUrl} alt="Notification" className="w-12 h-12" />
               <div>
