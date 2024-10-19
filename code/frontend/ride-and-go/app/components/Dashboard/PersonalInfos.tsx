@@ -81,7 +81,7 @@ export default function PersonalInfo() {
         {/* personal infos */}
           <div className='border border-gray-200 shadow-xl rounded-lg z-0 p-6 flex items-center justify-center flex-col'>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="font-bold text-lg mb-8 text-center">{localizedContent.personalInfo}</h2>
+              <h2 className="font-bold text-lg mb-8 text-center">{localizedContent.personalInfo}</h2>
                <button onClick={() => setIsEditing(!isEditing)}>
                   <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
                 </button>
