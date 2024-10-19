@@ -27,7 +27,7 @@ const fakeNotifications: Notification[] = [
   // Ajoute d'autres notifications ici...
 ];
 
-const notificationsContent = {
+const content = {
   en: {
     title: "Notifications",
     filter: {
@@ -85,7 +85,8 @@ const Notifications = () => {
   };
 
   // Obtenir le contenu localisé
-  const localizedContent = notificationsContent[locale as "fr" | "en"];
+
+  const localizedContent = locale === 'en' ? content.en : content.fr; 
 
   return (
     <div className="p-4">
