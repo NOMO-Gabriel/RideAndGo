@@ -67,12 +67,12 @@ const Navbar: React.FC = () => {
             </button>
 
             {/* Menu déroulant des langues */}
-            <div className="absolute hidden group-hover:block right-0 mt-2 w-32 bg-white text-bleu-nuit rounded-lg shadow-lg z-10">
+            {/* <div className="absolute hidden group-hover:block right-0 mt-2 w-32 bg-white text-bleu-nuit rounded-lg shadow-lg z-10">
               <ul className="py-2">
                 <li><button onClick={() => handleLanguageChange('Fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Français</button></li>
                 <li><button onClick={() => handleLanguageChange('En')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">English</button></li>
               </ul>
-            </div>
+            </div> */}
           </div>
 
           {/* Sign In & Sign Up Buttons */}

@@ -43,13 +43,7 @@ const otherSubscriptions: Subscription[] = [
     paymentDate: '2024-09-25',
     details: 'Accès limité aux fonctionnalités de base, sans support.',
   },
-  {
-    id: 4,
-    name: 'Special',
-    price: '3000 $/an',
-    paymentDate: '2024-09-25',
-    details: 'Accès limité aux fonctionnalités de base, sans support.',
-  }
+
 ];
 
 const subscriptionContent = {
@@ -127,7 +121,7 @@ const Subscription = () => {
       <h3 className="text-xl font-bold my-4">{localizedContent.otherSubscriptions}</h3>
       <div className="flex flex-row space-x-16 w-max h-max justify-center items-center">
         {otherSubscriptions.map(subscription => (
-          <div key={subscription.id} className="bg-gray-200 p-6 rounded-lg shadow-md text-2xl space-y-4 justify-start w-[300px] hover:translate-y-2 hover:shadow-lg shadow-bleu-nuit">
+          <div key={subscription.id} className="bg-gray-200 p-6 rounded-lg shadow-md text-2xl space-y-4 justify-start w-[240px] hover:translate-y-2 hover:shadow-lg shadow-bleu-nuit">
             <h4 className="font-bold text-3xl text-center">{subscription.name}</h4>
             <p className='text-orange-btn'>{subscription.price}</p>
             <p>{subscription.details}</p>

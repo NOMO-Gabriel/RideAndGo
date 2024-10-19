@@ -1,13 +1,14 @@
 import { useState } from "react";
 import AcceptedCard from "@/app/components/cards/AcceptedCard";
+import { useLocale } from "@/app/utils/hooks/useLocale.js";
 
 type Offer = {
   id: number;
   startPoint: string;
   endPoint: string;
   cost: number;
-  seats: number;      // Nombre de places
-  baggageAllowed: boolean; // Bagages : Oui ou Non
+  seats: number;     
+  baggageAllowed: boolean;
 };
 
 const destinations = [
@@ -21,8 +22,8 @@ const generateOffers = () => {
     startPoint: destinations[Math.floor(Math.random() * destinations.length)],
     endPoint: destinations[Math.floor(Math.random() * destinations.length)],
     cost: Math.floor(Math.random() * 5000) + 1000,
-    seats: Math.floor(Math.random() * 5) + 1, // 1 à 5 places
-    baggageAllowed: Math.random() > 0.5,      // Oui/Non aléatoire
+    seats: Math.floor(Math.random() * 5) + 1,
+    baggageAllowed: Math.random() > 0.5,
   }));
 };
 
@@ -30,6 +31,36 @@ const OffersBoard: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>(generateOffers());
   const [showAcceptedCard, setShowAcceptedCard] = useState(false);
   const [acceptedOffer, setAcceptedOffer] = useState<Offer | null>(null);
+  const { locale } = useLocale();
+
+  const content = {
+    fr: {
+      title: "Offres Disponibles",
+      start: "Départ",
+      end: "Arrivée",
+      cost: "Coût (FCFA)",
+      seats: "Places",
+      baggage: "Bagages",
+      confirm: "Confirmer",
+      reject: "Refuser",
+      yes: "Oui",
+      no: "Non",
+    },
+    en: {
+      title: "Available Offers",
+      start: "Start Point",
+      end: "End Point",
+      cost: "Cost (FCFA)",
+      seats: "Seats",
+      baggage: "Baggage",
+      confirm: "Confirm",
+      reject: "Reject",
+      yes: "Yes",
+      no: "No",
+    },
+  };
+
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
   const handleReject = (id: number) => {
     setOffers((prev) => prev.filter((offer) => offer.id !== id));
@@ -42,16 +73,18 @@ const OffersBoard: React.FC = () => {
 
   return (
     <div className="offers-board flex flex-col items-center border rounded-lg shadow-md p-6 bg-white w-[700px]">
-      <h1 className="text-2xl font-bold bg-bleu-nuit mb-4">Offres Disponibles</h1>
+      <h1 className="text-2xl font-bold bg-bleu-nuit mb-4">
+        {currentContent.title}
+      </h1>
 
       <table className="table-auto border-collapse border w-full">
         <thead>
           <tr>
-            <th className="border px-4 py-2">Départ</th>
-            <th className="border px-4 py-2">Arrivée</th>
-            <th className="border px-4 py-2">Coût (FCFA)</th>
-            <th className="border px-4 py-2">Places</th>
-            <th className="border px-4 py-2">Bagages</th>
+            <th className="border px-4 py-2">{currentContent.start}</th>
+            <th className="border px-4 py-2">{currentContent.end}</th>
+            <th className="border px-4 py-2">{currentContent.cost}</th>
+            <th className="border px-4 py-2">{currentContent.seats}</th>
+            <th className="border px-4 py-2">{currentContent.baggage}</th>
             <th className="border px-4 py-2">Actions</th>
           </tr>
         </thead>
@@ -63,20 +96,20 @@ const OffersBoard: React.FC = () => {
               <td className="border px-4 py-2">{offer.cost}</td>
               <td className="border px-4 py-2">{offer.seats}</td>
               <td className="border px-4 py-2">
-                {offer.baggageAllowed ? "Oui" : "Non"}
+                {offer.baggageAllowed ? currentContent.yes : currentContent.no}
               </td>
               <td className="border px-4 py-2 flex space-x-2">
                 <button
                   className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-800 transition"
                   onClick={() => handleAccept(offer)}
                 >
-                  Confirmer
+                  {currentContent.confirm}
                 </button>
                 <button
                   className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition"
                   onClick={() => handleReject(offer.id)}
                 >
-                  Refuser
+                  {currentContent.reject}
                 </button>
               </td>
             </tr>

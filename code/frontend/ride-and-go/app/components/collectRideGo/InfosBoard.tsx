@@ -49,34 +49,31 @@ const InfoBoard: React.FC = () => {
     },
   };
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
   return (
     <div className={`info-board flex flex-col items-center border rounded-lg shadow-md p-6 bg-white space-y-4 w-[300px] h-max `}>
-      <h1 className="text-2xl font-bold text-bleu-nuit">{getContent("title")}</h1>
+      <h1 className="text-2xl font-bold text-bleu-nuit">{currentContent.title}</h1>
 
       {searchData.isItinerary ? (
         <div className="flex flex-col space-y-2 rounded-md">
           <p className="text-md border p-2">
-            <span className="font-semibold text-bleu-nuit">{getContent("start")}: </span>
+            <span className="font-semibold text-bleu-nuit">{currentContent.start}: </span>
             {searchData.startPoint.name}
           </p>
           <p className="text-md  border  p-2 rounded-md">
-            <span className="font-semibold  text-bleu-nuit">{getContent("end")}: </span>
+            <span className="font-semibold  text-bleu-nuit">{currentContent.end}: </span>
             {searchData.endPoint.name}
           </p>
           <p className="text-md  border  p-2 rounded-md">
-            <span className="font-semibold  text-bleu-nuit">{getContent("cost")}: </span>
+            <span className="font-semibold  text-bleu-nuit">{currentContent.cost}: </span>
             {searchData.cost} FCFA
           </p>
         </div>
       ) : (
         <div className="text-md">
           <p>
-            <span className="font-semibold">{getContent("place")}: </span>
+            <span className="font-semibold">{gcurrentContent.place}: </span>
             {searchData.place.name}
           </p>
         </div>
@@ -87,34 +84,34 @@ const InfoBoard: React.FC = () => {
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md transition"
           onClick={() => handleAction("order")}
         >
-          {getContent("command")}
+          {currentContent.command}
         </button>
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md transition"
           onClick={() => handleAction("save")}
         >
-          {getContent("save")}
+          {currentContent.save}
         </button>
       </div>
 
       {showPopup && (
         <div className="popup flex items-center justify-center bg-black bg-opacity-50 fixed inset-0 ">
           <div className="bg-gray-100 rounded-lg p-6 shadow-lg max-w-sm space-y-4 text-center justify-center flex flex-col">
-            <p className="text-lg text-orange-500">{getContent("popUpMessage")}</p>
+            <p className="text-lg text-orange-500">{currentContent.popUpMessage}</p>
             
             <div className="flex flex-row space-x-2 p-2 mt-2 justify-between">
               <button
                 className="bg-red-300 text-white p-2 rounded-md hover:bg-red-600 transition "
                 onClick={closePopup}
               >
-                {getContent("close")}
+                {currentContent.close}
               </button>
               
               <Link
                 href="/login"
                 className="block text-white bg-bleu-nuit hover:bg-orange-500  p-2  rounded-md"
               >
-                {getContent("suscribe")}
+                {currentContent.suscribe}
               </Link>
    
             </div>

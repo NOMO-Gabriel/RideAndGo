@@ -17,10 +17,6 @@ const CommandForm: React.FC = () => {
     baggage: "yes",
   });
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
 
   const content = {
     fr: {
@@ -47,6 +43,7 @@ const CommandForm: React.FC = () => {
     },
   };
 
+  const currentContent = locale === 'en' ? content.en : content.fr;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -57,26 +54,26 @@ const CommandForm: React.FC = () => {
 
   return (
     <div className="command-form flex flex-col items-center border rounded-lg shadow-md p-6 bg-white space-y-4 w-[400px] h-max">
-      <h1 className="text-2xl font-bold text-bleu-nuit">{getContent("title")}</h1>
+      <h1 className="text-2xl font-bold text-bleu-nuit">{currentContent.title}</h1>
 
       <input
         type="text"
         name="startPoint"
-        placeholder={getContent("start")}
+        placeholder={currentContent.start}
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
       <input
         type="text"
         name="endPoint"
-        placeholder={getContent("end")}
+        placeholder={currentContent.end}
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
       <input
         type="number"
         name="places"
-        placeholder={getContent("places")}
+        placeholder={currentContent.places}
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
@@ -85,13 +82,13 @@ const CommandForm: React.FC = () => {
         className="border p-2 rounded w-full"
         onChange={handleChange}
       >
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+        <option value="yes">{locale ==='en '?"Yes" :"OUI"}</option>
+        <option value="no">{locale ==='en '?"NO" :"NON"}</option>
       </select>
       <input
         type="text"
         name="cost"
-        placeholder={getContent("cost")}
+        placeholder={currentContent.cost}
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
@@ -101,19 +98,19 @@ const CommandForm: React.FC = () => {
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("offer")}
         >
-          {getContent("command")}
+          {currentContent.command}
         </button>
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("itinerary")}
         >
-          {getContent("save")}
+          {currentContent.save}
         </button>
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("place")}
         >
-          {getContent("place")}
+          {currentContent.place}
         </button>
       </div>
 

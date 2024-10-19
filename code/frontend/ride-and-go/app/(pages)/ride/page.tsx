@@ -24,10 +24,7 @@ export default function Page() {
     },
   };
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
   const [showMap, setShowMap] = useState(true);
   const [showInfoBoard, setShowInfoBoard] = useState(true);
@@ -43,14 +40,14 @@ export default function Page() {
           className="px-4 py-2 bg-bleu-nuit text-white rounded hover:bg-orange-500"
           onClick={handleToggleMap}
         >
-          {showMap ? getContent("hideMap") : getContent("showMap")}
+          {showMap ? currentContent .hideMap : currentContent .showMap}
         </button>
 
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded"
           onClick={handleToggleInfoBoard}
         >
-          {showInfoBoard ? getContent("hideInfos") : getContent("showInfos")}
+          {showInfoBoard ? currentContent .hideInfos : currentContent .showInfos}
         </button>
       </div>
 

@@ -74,7 +74,7 @@ const content: Record<string, Content> = {
 
 export default function PersonalInfo() {
   const { locale } = useLocale(); // Utiliser le hook pour obtenir la langue active
-  const localizedContent = content[locale as "fr" | "en"]; 
+  const currentContent = locale === 'en' ? content.en : content.fr; 
 
   // État pour les informations personnelles
   const [firstName, setFirstName] = useState('John');
@@ -105,20 +105,21 @@ export default function PersonalInfo() {
         {/* personal infos */}
         <div className='border border-gray-200 shadow-xl rounded-lg z-0 p-6 flex  flex-col'>
             <div className="flex justify-between mb-4">
-                <h2 className="font-bold text-lg mb-8 text-center flex flex-col">{localizedContent.personalInfo}</h2>
+                <h2 className="font-bold text-lg mb-8 text-center flex flex-col">{currentContent.personalInfo}</h2>
                 <button onClick={() => setIsEditing(!isEditing)}>
                     <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
+
                 </button>
             </div>
           <div className="grid grid-cols-3 gap-4 mb-6">
               {[
-                { label: localizedContent.firstName, value: firstName, setter: setFirstName },
-                { label: localizedContent.lastName, value: lastName, setter: setLastName },
-                { label: localizedContent.username, value: username, setter: setUsername },
-                { label: localizedContent.dateOfBirth, value: dob, setter: setDob, type: 'date' },
-                { label: localizedContent.gender, value: gender, setter: setGender },
-                { label: localizedContent.email, value: email, setter: setEmail, type: 'email' },
-                { label: localizedContent.phone, value: phone, setter: setPhone, type: 'tel' },
+                { label: currentContent.firstName, value: firstName, setter: setFirstName },
+                { label: currentContent.lastName, value: lastName, setter: setLastName },
+                { label: currentContent.username, value: username, setter: setUsername },
+                { label: currentContent.dateOfBirth, value: dob, setter: setDob, type: 'date' },
+                { label: currentContent.gender, value: gender, setter: setGender },
+                { label: currentContent.email, value: email, setter: setEmail, type: 'email' },
+                { label: currentContent.phone, value: phone, setter: setPhone, type: 'tel' },
               ].map((field, index) => (
                 <div key={index}>
                   <label className="block mb-1 font-bold">{field.label}</label>
@@ -135,11 +136,11 @@ export default function PersonalInfo() {
           </div>
           {/* password */}
           <div className='border border-gray-200 shadow-xl rounded-lg z-0 p-6 flex flex-col space-y-4 '>
-              <h3 className="text-lg font-semibold mb-6 text-center">{localizedContent.changePassword}</h3>
+              <h3 className="text-lg font-semibold mb-6 text-center">{currentContent.changePassword}</h3>
               <form onSubmit={handlePasswordChange} className="space-y-4 flex flex-col">
                   <div>
                     <div>
-                        <label className="">{localizedContent.currentPassword}</label>
+                        <label className="">{currentContent.currentPassword}</label>
                         <input
                           type="password"
                           value={''}
@@ -151,7 +152,7 @@ export default function PersonalInfo() {
                   <div className='flex flex-col space-y-2'>
                     <div className='flex flex-row gap-4 w-full'>
                       <div className='w-1/2'>
-                        <label className="">{localizedContent.newPassword}</label>
+                        <label className="">{currentContent.newPassword}</label>
                         <input
                           type="password"
                           value={newPassword}
@@ -161,7 +162,7 @@ export default function PersonalInfo() {
                         />
                       </div>
                       <div className='w-1/2'>
-                        <label className="">{localizedContent.confirmPassword}</label>
+                        <label className="">{currentContent.confirmPassword}</label>
                         <input
                           type="password"
                           value={confirmPassword}
@@ -172,17 +173,17 @@ export default function PersonalInfo() {
                       </div>
                     </div>
                     <div className='flex flex-col justify-start space-y-2'>
-                      <p className='space-y-2'>{localizedContent.passwordRequirementsIntro}</p> {/* Texte introductif */}
+                      <p className='space-y-2'>{currentContent.passwordRequirementsIntro}</p> {/* Texte introductif */}
                       <ul className='text-red-600'>
-                        <li>{localizedContent.passwordRequirements.minLength}</li>
-                        <li>{localizedContent.passwordRequirements.lowercase}</li>
-                        <li>{localizedContent.passwordRequirements.uppercase}</li>
-                        <li>{localizedContent.passwordRequirements.symbolOrNumber}</li>
+                        <li>{currentContent.passwordRequirements.minLength}</li>
+                        <li>{currentContent.passwordRequirements.lowercase}</li>
+                        <li>{currentContent.passwordRequirements.uppercase}</li>
+                        <li>{currentContent.passwordRequirements.symbolOrNumber}</li>
                       </ul>
                     </div>
                   </div>
                   <button type="submit" className="bg-bleu-nuit hover:bg-blue-800 text-white rounded px-4 py-2 w-max">
-                    {localizedContent.changePassword}
+                    {currentContent.changePassword}
                   </button>
               </form>
           </div>
