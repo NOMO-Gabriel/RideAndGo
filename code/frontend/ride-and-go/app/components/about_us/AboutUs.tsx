@@ -13,7 +13,7 @@ const AboutUs: React.FC = () => {
   const content = {
     en: {
       heroTitle: "About Ride&Go",
-      heroText: "At Ride&Go, we don't just move people, we **move lives forward**. Join us in making every ride count!",
+      heroText: "At Ride&Go, we don't just move people, we move lives forward. Join us in making every ride count!",
       missionTitle: "Our Mission",
       missionText: "Our mission is to revolutionize the transportation industry by connecting travelers with professional drivers who prioritize safety, responsibility, and service excellence. Every trip with Ride&Go contributes to a better future where every journey is meaningful.",
       visionTitle: "Our Vision",
@@ -51,7 +51,7 @@ const AboutUs: React.FC = () => {
     },
     fr: {
       heroTitle: "À propos de Ride&Go",
-      heroText: "Chez Ride&Go, nous ne faisons pas que transporter des gens, nous **faisons avancer des vies**. Rejoignez-nous pour rendre chaque trajet important !",
+      heroText: "Chez Ride&Go, nous ne faisons pas que transporter des gens, nous faisons avancer des vies. Rejoignez-nous pour rendre chaque trajet important !",
       missionTitle: "Notre Mission",
       missionText: "Notre mission est de révolutionner l'industrie du transport en connectant les voyageurs avec des chauffeurs professionnels qui priorisent la sécurité, la responsabilité et l'excellence du service. Chaque trajet avec Ride&Go contribue à un avenir meilleur où chaque voyage est significatif.",
       visionTitle: "Notre Vision",
@@ -100,7 +100,7 @@ const AboutUs: React.FC = () => {
             <FaRoad className="text-6xl text-orange-btn" />
             <h1 className="text-5xl font-bold ml-4">{currentContent.heroTitle}</h1>
           </div>
-          <p className="text-lg mt-2">{currentContent.heroText}</p>
+          <p className="text-lg font-bold italic mt-2">{currentContent.heroText}</p>
         </div>
       </section>
 
