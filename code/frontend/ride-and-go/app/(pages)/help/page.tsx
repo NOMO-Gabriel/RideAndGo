@@ -151,13 +151,13 @@ const HelpPage: React.FC = () => {
                 className="flex justify-between items-center p-4 cursor-pointer hover:bg-blue-100 rounded-lg"
                 onClick={() => toggleQuestion(index)}
               >
-                <h3 className="text-lg font-semibold text-blue-700">
+                <h3 className="text-lg font-bold text-blue-700">
                   {item.question}
                 </h3>
                 {openIndex === index ? <FaMinus className="text-blue-700" /> : <FaPlus className="text-blue-700" />}
               </div>
               {openIndex === index && (
-                <p className="p-4 text-gray-700">{item.answer}</p>
+                <p className="p-4 font-bold  text-gray-700">{item.answer}</p>
               )}
             </div>
           ))
