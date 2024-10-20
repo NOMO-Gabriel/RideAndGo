@@ -7,13 +7,21 @@ import SubscribeSection from "./components/Home/SubscribeSection";
 
 
 
-
+const images = [
+    '/images/heroimg.jpeg', 
+    '/images/heroimg3.jpeg', 
+  ];
+  
+  const messages = {
+    en: 'Discover a new way to Ride and Go',
+    fr: 'Découvrez une nouvelle façon de vous déplacer'
+  };
 
 export default function page(){
 
     return(
         <div>
-           <HeroSection/>
+           <HeroSection images={images} messages={messages} />
            <FeaturesSection/>
            <PlueValue/>
            <StatisticsSection/>

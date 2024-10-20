@@ -52,11 +52,11 @@ const InfoBoard: React.FC = () => {
   const currentContent = locale === 'en' ? content.en : content.fr;
 
   return (
-    <div className={`info-board flex flex-col items-center border rounded-lg shadow-md p-6 bg-white space-y-4 w-[300px] h-max `}>
-      <h1 className="text-2xl font-bold text-bleu-nuit">{currentContent.title}</h1>
+    <div className={`info-board flex flex-col  border rounded-lg shadow-md p-6 bg-white space-y-6 w-[400px] h-[310px]`}>
+      <h1 className="text-2xl font-bold text-bleu-nuit text-center">{currentContent.title}</h1>
 
       {searchData.isItinerary ? (
-        <div className="flex flex-col space-y-2 rounded-md">
+        <div className="flex flex-col space-y- rounded-md">
           <p className="text-md border p-2">
             <span className="font-semibold text-bleu-nuit">{currentContent.start}: </span>
             {searchData.startPoint.name}
@@ -73,15 +73,15 @@ const InfoBoard: React.FC = () => {
       ) : (
         <div className="text-md">
           <p>
-            <span className="font-semibold">{gcurrentContent.place}: </span>
+            <span className="font-semibold">{currentContent.place}: </span>
             {searchData.place.name}
           </p>
         </div>
       )}
 
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 justify-between mt-96">
         <button
-          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md transition"
+          className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md transition "
           onClick={() => handleAction("order")}
         >
           {currentContent.command}
