@@ -18,6 +18,10 @@ export default function Component() {
       { name: "My Places and Itineraries", icon: faRoute ,id:5},
       { name: "Statistics", icon: faChartBar ,id:6},
       { name: "Subscriptions", icon: faCreditCard ,id:7},
+      { name: "Finances", icon: faCreditCard ,id:8},
+      { name: "Chat", icon: faCreditCard ,id:9},
+      { name: "Manage users", icon: faCreditCard ,id:10},
+
     ],
     fr: [
       { name: "Informations personnelles", icon: faUser ,id:1},
@@ -27,6 +31,9 @@ export default function Component() {
       { name: "Mes Lieux et itinéraires", icon: faRoute ,id:5},
       { name: "Statistiques", icon: faChartBar ,id:6},
       { name: "Abonnements", icon: faCreditCard ,id:7},
+      { name: "Finances", icon: faCreditCard ,id:8},
+      { name: "Chat", icon: faCreditCard ,id:9},
+      { name: "Utilisateurs", icon: faCreditCard ,id:10},
     ],
   };
 
