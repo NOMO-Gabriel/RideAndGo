@@ -1,6 +1,6 @@
 'use client';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Données des fonctionnalités
 const features = [
@@ -82,6 +82,13 @@ const FeaturesSection: React.FC = () => {
       prevIndex - featuresPerView >= 0 ? prevIndex - featuresPerView : Math.max(features.length - featuresPerView, 0)
     );
   };
+  //useEffect(() => {
+  //  const interval = setInterval(() => {
+  //    nextFeatures();
+    //}, 5000); 
+    //return () => clearInterval(interval);
+  //}, [currentIndex]);
+  
 
   return (
     <div className="py-16 bg-blanc-casse mb-16 mt-16">
@@ -99,18 +106,15 @@ const FeaturesSection: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
             {features.slice(currentIndex, currentIndex + featuresPerView).map((feature, index) => (
               <div
-                key={index}
-                className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6 relative overflow-hidden"
-                style={{
-                  backgroundImage: `url(${feature.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  color: 'black',
-                  minHeight: '350px', // Hauteur augmentée
-                  borderRadius: '10px',
-                  padding: '20px',
-                }}
-              >
+              key={index}
+              className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6 relative overflow-hidden hover:scale-105 hover:shadow-2xl transition-transform duration-300"
+              style={{
+                backgroundImage: `url(${feature.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+            
                 <div className="text-6xl mb-4">{feature.icon}</div>
                 <h3 className="text-2xl font-semibold mb-2">{feature.titleEn} </h3>
                 <button className="bg-orange-btn text-white px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">

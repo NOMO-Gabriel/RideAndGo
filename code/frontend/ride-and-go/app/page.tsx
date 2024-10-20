@@ -6,7 +6,6 @@ import TestimonySection from "./components/Home/TestimonySection";
 import SubscribeSection from "./components/Home/SubscribeSection";
 
 
-
 const images = [
     '/images/heroimg.jpeg', 
     '/images/heroimg3.jpeg', 
@@ -22,6 +21,7 @@ export default function page(){
     return(
         <div>
            <HeroSection images={images} messages={messages} />
+          
            <FeaturesSection/>
            <PlueValue/>
            <StatisticsSection/>

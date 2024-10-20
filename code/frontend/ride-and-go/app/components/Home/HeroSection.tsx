@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
+import CompactFareCalculator from '@/app/components/Home/FareCalculator';
 
 interface HeroSectionProps {
   images: string[]; // Prop pour les images
@@ -26,9 +27,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ images, messages }) => {
 
   return (
     <section
-      className="relative bg-cover bg-center text-center py-20 mt-2"
-      style={{ backgroundImage: `url(${images[currentImage]})` }} // Utilise les images des props
-    >
+  className="relative bg-cover bg-center text-center py-20 mt-2 parallax"
+  style={{ backgroundImage: `url(${images[currentImage]})`, backgroundAttachment: 'fixed' }}
+>
+
       <div className="absolute inset-0 bg-black bg-opacity-40"></div> {/* Couche semi-transparente */}
       <div className="relative z-10 container mx-auto">
         <h1 className="text-5xl font-bold text-white drop-shadow-lg">
@@ -46,7 +48,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ images, messages }) => {
           >
             {locale === 'en' ? 'Get a ride' : 'Se déplacer'}
           </button>
+         
         </div>
+        <div className='mt-5'><CompactFareCalculator/></div>
+        
       </div>
     </section>
   );

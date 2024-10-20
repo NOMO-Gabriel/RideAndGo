@@ -126,19 +126,20 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="font-semibold text-xl mb-4">{locale==='en'?'Follow us':'Suivez nous'} </h4>
           <div className="flex space-x-4 mb-6">
-            <a href="#" className="hover:text-orange-400 transition-colors duration-300">
-              <FaTwitter className="w-6 h-6" />
-            </a>
-            <a href="#" className="hover:text-orange-400 transition-colors duration-300">
-              <FaFacebookF className="w-6 h-6" />
-            </a>
-            <a href="#" className="hover:text-orange-400 transition-colors duration-300">
-              <FaInstagram className="w-6 h-6" />
-            </a>
-            <a href="#" className="hover:text-orange-400 transition-colors duration-300">
-              <FaLinkedin className="w-6 h-6" />
-            </a>
+          <a href="#" className="hover:text-orange-400 hover:scale-110 transition-transform duration-300">
+  <FaTwitter className="w-6 h-6" />
+</a>
+<a href="#" className="hover:text-orange-400 hover:scale-110 transition-transform duration-300">
+  <FaFacebookF className="w-6 h-6" />
+</a>
+<a href="#" className="hover:text-orange-400 hover:scale-110 transition-transform duration-300">
+  <FaInstagram className="w-6 h-6" />
+</a>
+<a href="#" className="hover:text-orange-400 hover:scale-110 transition-transform duration-300">
+  <FaLinkedin className="w-6 h-6" />
+</a>
           </div>
+          
 
           {/* Language Selector */}
           <div className="relative inline-block">
