@@ -17,12 +17,14 @@ export default function Page() {
       showMap: "Afficher la carte",
       hideInfos: "Masquer les infos",
       showInfos: "Afficher les infos",
+      search: "Rechercher",
     },
     en: {
       hideMap: "Hide Map",
       showMap: "Show Map",
       hideInfos: "Hide Infos",
       showInfos: "Show Infos",
+      search: "Search",
     },
   };
 
@@ -40,6 +42,22 @@ export default function Page() {
 
   const [showMap, setShowMap] = useState(true); // La carte est visible par défaut et ne peut pas être masquée au départ
   const [showInfoBoard, setShowInfoBoard] = useState(false); // Infoboard masqué par défaut
+
+  // État pour les données de recherche fictives
+  const [searchData, setSearchData] = useState({
+    startPoint: {
+      latitude: 3.8480,
+      longitude: 11.5021,
+      name: "Point de Départ",
+    },
+    endPoint: {
+      latitude: 3.8500,
+      longitude: 11.5050,
+      name: "Point d'Arrivée",
+    },
+    place: null,
+    isItinerary: true, // Simule un itinéraire actif
+  });
 
   const handleToggleMap = () => {
     // La carte ne peut pas être masquée
@@ -74,6 +92,10 @@ export default function Page() {
       <div className="flex flex-col items-center space-y-2">
         <Header />
         <div className="flex space-x-4 -translate-y-[120px] translate-x-[750px] ">
+          <Link href="#" onClick={handleSearchClick} className="px-4 py-2 text-bleu-nuit text-lg hover:underline hover:text-orange-btn">
+            {currentContent.search}
+          </Link>
+
           {showInfoBoard && (
             <Link 
               href="#" 
@@ -93,7 +115,7 @@ export default function Page() {
               }`}
               style={{ zIndex: 0 }} // Ajout du z-index pour la map
             >
-              <Map />
+              <Map searchData={searchData} /> {/* Passer les données de recherche au composant Map */}
             </div>
           )}
 

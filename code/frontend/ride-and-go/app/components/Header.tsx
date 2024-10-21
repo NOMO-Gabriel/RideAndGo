@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
+
 const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -49,6 +50,7 @@ const Navbar: React.FC = () => {
       assistance: 'Assistance',
       signIn: 'Sign in',
       signUp: 'Sign up',
+      dashboard:"dashboard",
     },
     fr: {
       home: 'Accueil',
@@ -62,10 +64,11 @@ const Navbar: React.FC = () => {
       assistance: 'Assistance',
       signIn: 'Se Connecter',
       signUp: "S'inscrire",
+      dashboard:  "tableau de bord",
     },
   };
 
-  const currentContent = content[locale]; 
+  const   currentContent = locale === 'en' ? content.en : content.fr; 
 
   return (
     <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50">
@@ -75,14 +78,15 @@ const Navbar: React.FC = () => {
           <FaRoad className="mr-2" />
           Ride&Go
         </div>
-
         {/* Links */}
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
           <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
           <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
           <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
-          
+          <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link>
+
+
           {/* Help Menu Dropdown */}
           <div className="relative group dropdown">
             <button 
@@ -120,8 +124,8 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Sign In & Sign Up Buttons */}
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</button>
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</button>
+          <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
+          <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
         </div>
       </div>
     </nav>

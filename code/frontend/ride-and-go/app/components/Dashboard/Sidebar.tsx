@@ -1,39 +1,41 @@
-'use client'
+'use client';
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import { useDashboardContext } from "@/app/utils/contexts/DashboardContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faBell, faCogs, faClipboard, faRoute, faChartBar, faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser, faBell, faCogs, faClipboard, faRoute, faChartBar,
+  faWallet, faComments, faUserShield, faHandshake
+} from "@fortawesome/free-solid-svg-icons";
 import UpgradeBtn from "./UpgradeBtn";
 
 export default function Component() {
   const { locale } = useLocale();
-  const { updateDashboardFilter } = useDashboardContext()
+  const { updateDashboardFilter } = useDashboardContext();
 
   const content = {
     en: [
-      { name: "Personal Info", icon: faUser ,id:1},
-      { name: "Notifications", icon: faBell ,id:2},
-      { name: "Preferences", icon: faCogs ,id:3},
-      { name: "My Complaints", icon: faClipboard ,id:4},
-      { name: "My Places and Itineraries", icon: faRoute ,id:5},
-      { name: "Statistics", icon: faChartBar ,id:6},
-      { name: "Subscriptions", icon: faCreditCard ,id:7},
-      { name: "Finances", icon: faCreditCard ,id:8},
-      { name: "Chat", icon: faCreditCard ,id:9},
-      { name: "Manage users", icon: faCreditCard ,id:10},
-
+      { name: "Personal Info", icon: faUser, id: 1 },
+      { name: "Notifications", icon: faBell, id: 2 },
+      { name: "Preferences", icon: faCogs, id: 3 },
+      { name: "My Complaints", icon: faClipboard, id: 4 },
+      { name: "My Places and Itineraries", icon: faRoute, id: 5 },
+      { name: "Statistics", icon: faChartBar, id: 6 },
+      { name: "Subscriptions", icon: faHandshake, id: 7 },
+      { name: "Finances", icon: faWallet, id: 8 },
+      { name: "Chat", icon: faComments, id: 9 },
+      { name: "Manage Users", icon: faUserShield, id: 10 },
     ],
     fr: [
-      { name: "Informations personnelles", icon: faUser ,id:1},
-      { name: "Notifications", icon: faBell ,id:2},
-      { name: "Préférences", icon: faCogs ,id:3},
-      { name: "Mes réclamations", icon: faClipboard ,id:4},
-      { name: "Mes Lieux et itinéraires", icon: faRoute ,id:5},
-      { name: "Statistiques", icon: faChartBar ,id:6},
-      { name: "Abonnements", icon: faCreditCard ,id:7},
-      { name: "Finances", icon: faCreditCard ,id:8},
-      { name: "Chat", icon: faCreditCard ,id:9},
-      { name: "Utilisateurs", icon: faCreditCard ,id:10},
+      { name: "Informations personnelles", icon: faUser, id: 1 },
+      { name: "Notifications", icon: faBell, id: 2 },
+      { name: "Préférences", icon: faCogs, id: 3 },
+      { name: "Mes réclamations", icon: faClipboard, id: 4 },
+      { name: "Mes Lieux et itinéraires", icon: faRoute, id: 5 },
+      { name: "Statistiques", icon: faChartBar, id: 6 },
+      { name: "Abonnements", icon: faHandshake, id: 7 },
+      { name: "Finances", icon: faWallet, id: 8 },
+      { name: "Chat", icon: faComments, id: 9 },
+      { name: "Utilisateurs", icon: faUserShield, id: 10 },
     ],
   };
 
@@ -52,7 +54,6 @@ export default function Component() {
             >
               <FontAwesomeIcon icon={item.icon} className="text-lg" />
               <span className="text-sm">{item.name}</span>
-              
             </button>
           ))}
         </div>
