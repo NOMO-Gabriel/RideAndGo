@@ -6,7 +6,7 @@ import { FaGlobe, FaRoad } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { useLocale } from '@/app/utils/hooks/useLocale.js';
+
 
 const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
