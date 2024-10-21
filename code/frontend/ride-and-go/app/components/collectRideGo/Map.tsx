@@ -19,7 +19,7 @@ const Map: React.FC = () => {
   const { startPoint, endPoint, place, isItinerary } = searchData;
 
   return (
-    <div className="relative flex justify-center items-center my-8 mx-auto w-full max-w-6xl h-[600px] rounded-2xl shadow-2xl overflow-hidden border border-gray-300">
+    <div className="relative flex justify-center items-center my-auto mx-auto w-full max-w-6xl h-[600px] rounded-2xl shadow-2xl overflow-hidden border border-gray-300">
       <MapContainer 
         center={[3.8480, 11.5021]} // Center of the map
         zoom={13} // Initial zoom level

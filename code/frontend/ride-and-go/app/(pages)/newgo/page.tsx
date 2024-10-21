@@ -66,28 +66,19 @@ export default function Page() {
          <HeroSection images={images} messages={messages} />
         <div className="flex flex-col items-center  space-y-2">
         <Header />
-        
         <div className="flex space-x-4 -translate-y-[120px] translate-x-[450px]">
             <Link
-                href="#"
-                className="px-4 py-2 bg-bleu-nuit text-white rounded hover:bg-orange-500"
-                onClick={handleToggleMap}
-            >
-                {showMap ? currentContent.hideMap : currentContent.showMap}
-            </Link>
-
-            <button
-            className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded"
+            href={"#"}
+            className="px-4 py-24 text-bleu-nuit hover:text-orange-500 rounded"
             onClick={handleToggleInfoBoard}
             >
-            {showInfoBoard ? currentContent.hideInfos : currentContent.showInfos}
-            </button>
+                {showInfoBoard ? currentContent.hideInfos : currentContent.showInfos}
+            </Link>
         </div>
-
-        <div className="flex flex-row w-full space-x-16 ">
+        <div className="flex flex-row w-full px-4    space-x-16 ">
             {showMap && (
                 <div
-                    className={`transition-all duration-300 ${
+                    className={`w-full h-full transition-all duration-300 ${
                         showInfoBoard ? 'flex-1 w-[70%]' : 'w-full mb-40 '
                     }`}
                     style={{ zIndex: 0 }} // Ajout du z-index pour la map

@@ -77,6 +77,7 @@ const CommandForm: React.FC = () => {
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
+      <span className="">{locale === 'en'?"Do you have luggages?":"Avez-vous des bagages?"}</span>
       <select
         name="baggage"
         className="border p-2 rounded w-full"
