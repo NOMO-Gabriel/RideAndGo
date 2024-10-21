@@ -81,10 +81,10 @@ export default function Itineraries() {
       </h1>
 
       <div className="space-x-4 mb-6">
-        <button onClick={() => setFilter('places')} className="px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded">
+        <button onClick={() => setFilter('places')} className="px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
           {localizedText.places}
         </button>
-        <button onClick={() => setFilter('itineraries')} className="px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded">
+        <button onClick={() => setFilter('itineraries')} className="px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
           {localizedText.itineraries}
         </button>
       </div>
@@ -94,10 +94,10 @@ export default function Itineraries() {
           {places.map((place) => (
             <div key={place.id} className="p-4 border rounded-lg shadow-md relative">
               <div className="flex items-center space-x-3">
-                <FontAwesomeIcon icon={categoryIcons[place.category]} className="text-orange-btn text-2xl" />
-                <h2 className="text-xl font-semibold">{place.name}</h2>
+                <FontAwesomeIcon icon={categoryIcons[place.category]} className="text-orange-btn text-xl" />
+                <h2 className="text-lg font-semibold">{place.name}</h2>
               </div>
-              <p className="text-xl mt-2 text-bleu-nuit"><strong>Description:</strong> {place.description}</p>
+              <p className=" mt-2 text-bleu-nuit"><strong>Description:</strong> {place.description}</p>
               <button className="mt-2 text-sm text-bleu-nuit flex items-center" onClick={() => setInfoPlace(place)}>
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
                 {localizedText.info}
@@ -129,7 +129,7 @@ export default function Itineraries() {
         <div className="space-y-6">
           {itineraries.map((itinerary) => (
             <div key={itinerary.id} className="p-4 border rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-lg font-semibold">
                 <span onMouseEnter={() => setHoveredPlace(itinerary.startPoint)} onMouseLeave={() => setHoveredPlace(null)}>
                   {itinerary.startPoint.name}
                 </span> 

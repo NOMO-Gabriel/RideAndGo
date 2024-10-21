@@ -128,13 +128,22 @@ const Complaints = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">{localizedContent.title}</h2>
-      <div className="mb-4">
+  
+      <div className="flex justify-between mb-4">
+                <h2 className="font-bold text-lg mb-8 text-center flex flex-col">{localizedContent.title}</h2>
+                <button className='flex flex-row p-2 border bg-blue-400 w-max rounded-lg space-x-4 justify-center items-center text-center h-max hover:bg-orange-btn'>
+                    <FontAwesomeIcon icon={faPlus} className="w-6 h-6 text-white" />
+                    <p className='text-white'>{locale === "en"? "new complaint" : "nouvelle plainte"}</p>
+                </button>
+       </div>
+      
+      <div className="mb-4 flex flex-row space-between w-full">
         <select className={"p-2 w-max text-center rounded font-medium"} value={filter} onChange={(e) => setFilter(e.target.value as 'all' | 'pending' | 'resolved')}>
           <option value="all">{localizedContent.filter.all}</option>
           <option value="pending">{localizedContent.filter.pending}</option>
           <option value="resolved">{localizedContent.filter.resolved}</option>
         </select>
+
       </div>
       <div className="flex flex-col space-y-4">
         {filteredComplaints.map(complaint => (
