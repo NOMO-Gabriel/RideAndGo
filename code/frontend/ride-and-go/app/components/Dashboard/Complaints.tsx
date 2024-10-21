@@ -177,7 +177,7 @@ const Complaints = () => {
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <button
-                  className="text-green-600"
+                  className="text-black"
                   onClick={() => console.log(`Archiving complaint with id: ${complaint.id}`)}
                 >
                   <FontAwesomeIcon icon={faArchive} />
