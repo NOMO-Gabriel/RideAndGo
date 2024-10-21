@@ -5,6 +5,7 @@ import CommandForm from "@/app/components/collectRideGo/CommandForm";
 import Map from "@/app/components/collectRideGo/Map";
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
+import HeroSection from "@/app/components/Home/HeroSection";
 
 export default function Page() {
   const { locale } = useLocale();
@@ -36,6 +37,7 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center  space-y-2">
       <Header />
+     
       <div className="flex space-x-4 -translate-y-[120px] translate-x-[450px]">
         <button
           className="px-4 py-2 bg-bleu-nuit text-white rounded hover:bg-orange-500"
