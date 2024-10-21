@@ -14,9 +14,8 @@ const CommandForm: React.FC = () => {
     endPoint: "",
     cost: "",
     places: "",
-    baggage: "yes",
+    baggage: "yes", // Default value for baggage
   });
-
 
   const content = {
     fr: {
@@ -24,27 +23,32 @@ const CommandForm: React.FC = () => {
       start: "Point de Départ",
       end: "Point d'Arrivée",
       places: "Nombre de Places",
-      baggage: "Bagages (Oui/Non)",
+      baggage: "Avez vous des baggages ?",
       cost: "Coût",
       command: "Commander",
       save: "Enregistrer",
       place: "Gérer le Lieu",
+      yes: "Oui",
+      no: "Non",
     },
     en: {
       title: "Order Form",
       start: "Start Point",
       end: "End Point",
       places: "Number of Seats",
-      baggage: "Baggage (Yes/No)",
+      baggage: " Do you have baggages ? ",
       cost: "Cost",
       command: "Order",
       save: "Save",
       place: "Manage Place",
+      yes: "Yes",
+      no: "No",
     },
   };
 
-  const currentContent = locale === 'en' ? content.en : content.fr;
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const currentContent = locale === "en" ? content.en : content.fr;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -77,14 +81,36 @@ const CommandForm: React.FC = () => {
         className="border p-2 rounded w-full"
         onChange={handleChange}
       />
-      <select
-        name="baggage"
-        className="border p-2 rounded w-full"
-        onChange={handleChange}
-      >
-        <option value="yes">{locale ==='en '?"Yes" :"OUI"}</option>
-        <option value="no">{locale ==='en '?"NO" :"NON"}</option>
-      </select>
+
+      {/* Radio Buttons for Baggage */}
+      <div className="w-full">
+        <label className="block text-base mb-2 text-bleu-nuit">{currentContent.baggage}</label>
+        <div className="flex space-x-4 justify-between">
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="baggage"
+              value="yes"
+              checked={formData.baggage === "yes"}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            {currentContent.yes}
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              name="baggage"
+              value="no"
+              checked={formData.baggage === "no"}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            {currentContent.no}
+          </label>
+        </div>
+      </div>
+
       <input
         type="text"
         name="cost"
@@ -93,7 +119,7 @@ const CommandForm: React.FC = () => {
         onChange={handleChange}
       />
 
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 justify-between">
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("offer")}
@@ -106,12 +132,12 @@ const CommandForm: React.FC = () => {
         >
           {currentContent.save}
         </button>
-        <button
+        {/* <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded-md"
           onClick={() => handleAction("place")}
         >
           {currentContent.place}
-        </button>
+        </button> */}
       </div>
 
       {showPopup === "offer" && <OfferCard data={formData} closePopup={closePopup} />}
