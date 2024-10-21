@@ -57,8 +57,8 @@ export default function Page() {
     '/images/go.jpeg'
   ]
   const messages = {
-    en: '',
-    fr: 'Explo'
+    en: 'Manage your travelling journey more easily',
+    fr: 'Gérez vos déplacements plus facilement'
   }
 
   return (
