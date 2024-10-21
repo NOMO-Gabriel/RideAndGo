@@ -6,6 +6,7 @@ import { FaGlobe, FaRoad } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
 
 const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
@@ -75,7 +76,6 @@ const Navbar: React.FC = () => {
           <FaRoad className="mr-2" />
           Ride&Go
         </div>
-
         {/* Links */}
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
