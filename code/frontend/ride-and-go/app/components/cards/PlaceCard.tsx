@@ -23,7 +23,7 @@ const translations = {
 };
 
 const PlaceCard: React.FC<PlaceCardProps> = ({ data, closePopup }) => {
-  const locale = useLocale(); 
+  const {locale }= useLocale(); 
   const t = locale === 'en' ? translations.en : translations.fr;
 
   return (

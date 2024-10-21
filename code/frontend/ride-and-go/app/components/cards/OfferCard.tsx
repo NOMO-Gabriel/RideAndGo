@@ -37,7 +37,7 @@ const translations = {
 };
 
 const OfferCard: React.FC<OfferCardProps> = ({ data, closePopup }) => {
-  const locale = useLocale(); 
+  const{ locale }= useLocale(); 
   const t = locale === 'en' ? translations.en : translations.fr;
 
   return (
