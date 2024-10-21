@@ -116,7 +116,7 @@ export default function Page() {
                 <Link href="/">{currentContent.login}</Link>
               </button>
               <p className="mt-4 text-center">
-                {currentContent.extra} <a href="/register" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>
+                {currentContent.extra} <a href="/register" className="text-blue-nuit underline hhover:text-orange-btn">{currentContent.link}</a>
               </p>
             </form>
           </div>
