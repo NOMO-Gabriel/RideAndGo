@@ -1,0 +1,63 @@
+'use client';
+import { useLocale } from "@/app/utils/hooks/useLocale.js";
+import { useDashboardContext } from "@/app/utils/contexts/DashboardContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser, faBell, faCogs, faClipboard, faRoute, faChartBar,
+  faWallet, faComments, faUserShield, faHandshake
+} from "@fortawesome/free-solid-svg-icons";
+import UpgradeBtn from "./UpgradeBtn";
+
+export default function Component() {
+  const { locale } = useLocale();
+  const { updateDashboardFilter } = useDashboardContext();
+
+  const content = {
+    en: [
+      { name: "Personal Info", icon: faUser, id: 1 },
+      { name: "Notifications", icon: faBell, id: 2 },
+      { name: "Preferences", icon: faCogs, id: 3 },
+      { name: "My Complaints", icon: faClipboard, id: 4 },
+      { name: "My Places and Itineraries", icon: faRoute, id: 5 },
+      { name: "Statistics", icon: faChartBar, id: 6 },
+      { name: "Subscriptions", icon: faHandshake, id: 7 },
+      { name: "Finances", icon: faWallet, id: 8 },
+      { name: "Chat", icon: faComments, id: 9 },
+      { name: "Manage Users", icon: faUserShield, id: 10 },
+    ],
+    fr: [
+      { name: "Informations personnelles", icon: faUser, id: 1 },
+      { name: "Notifications", icon: faBell, id: 2 },
+      { name: "Préférences", icon: faCogs, id: 3 },
+      { name: "Mes réclamations", icon: faClipboard, id: 4 },
+      { name: "Mes Lieux et itinéraires", icon: faRoute, id: 5 },
+      { name: "Statistiques", icon: faChartBar, id: 6 },
+      { name: "Abonnements", icon: faHandshake, id: 7 },
+      { name: "Finances", icon: faWallet, id: 8 },
+      { name: "Chat", icon: faComments, id: 9 },
+      { name: "Utilisateurs", icon: faUserShield, id: 10 },
+    ],
+  };
+
+  const localizedContent = content[locale as "fr" | "en"] || content.en;
+
+  return (
+    <div>
+      <div className="w-[250px] flex flex-col p-2 space-y-4 border-x-2 border-gray-200">
+        <UpgradeBtn />
+        <div className="flex flex-col space-y-2">
+          {localizedContent.map((item, index) => (
+            <button
+              key={index}
+              className="text-black hover:text-white hover:bg-bleu-nuit cursor-pointer h-10 rounded-lg flex flex-row items-center space-x-3 px-4"
+              onClick={() => updateDashboardFilter(item.id)}
+            >
+              <FontAwesomeIcon icon={item.icon} className="text-lg" />
+              <span className="text-sm">{item.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

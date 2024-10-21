@@ -5,6 +5,7 @@ import CommandForm from "@/app/components/collectRideGo/CommandForm";
 import Map from "@/app/components/collectRideGo/Map";
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
+import HeroSection from "@/app/components/Home/HeroSection";
 
 export default function Page() {
   const { locale } = useLocale();
@@ -23,11 +24,9 @@ export default function Page() {
       showInfos: "Show Infos",
     },
   };
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  
 
   const [showMap, setShowMap] = useState(true);
   const [showInfoBoard, setShowInfoBoard] = useState(true);
@@ -38,21 +37,22 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center  space-y-2">
       <Header />
+     
       <div className="flex space-x-4 -translate-y-[120px] translate-x-[450px]">
         <button
           className="px-4 py-2 bg-bleu-nuit text-white rounded hover:bg-orange-500"
           onClick={handleToggleMap}
         >
-          {showMap ? getContent("hideMap") : getContent("showMap")}
+          {showMap ? currentContent.hideMap : currentContent.showMap}
         </button>
 
         <button
           className="px-4 py-2 bg-bleu-nuit hover:bg-orange-500 text-white rounded"
           onClick={handleToggleInfoBoard}
         >
-          {showInfoBoard ? getContent("hideInfos") : getContent("showInfos")}
+          {showInfoBoard ? currentContent.hideInfos : currentContent.showInfos}
         </button>
-      </div>
+      </div>app/go
 
       <div className="flex flex-row w-full space-x-16 ">
         {showMap && (

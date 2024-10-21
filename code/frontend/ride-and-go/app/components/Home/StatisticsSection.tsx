@@ -1,21 +1,23 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
 
 interface Stat {
-  label: string;
+  label: { en: string; fr: string }; // Ajouter des traductions pour chaque étiquette
   value: number;
 }
 
 const statistics: Stat[] = [
-  { label: 'Taxis', value: 100 },
-  { label: 'Utilisateurs', value: 5000 },
-  { label: 'Nombre de déplacements par jour', value: 120 },
+  { label: { en: 'Taxis', fr: 'Taxis' }, value: 100 },
+  { label: { en: 'Users', fr: 'Utilisateurs' }, value: 5000 },
+  { label: { en: 'Daily Rides', fr: 'Nombre de déplacements par jour' }, value: 120 },
 ];
 
 const StatisticsSection: React.FC = () => {
   const [displayedStats, setDisplayedStats] = useState<number[]>([0, 0, 0]);
   const [explosionVisible, setExplosionVisible] = useState<boolean[]>([false, false, false]);
+  const { locale } = useLocale(); // Retirer changeLocale car pas utilisé ici
 
   useEffect(() => {
     let animationRunning = true; // Pour garder la boucle active
@@ -81,7 +83,9 @@ const StatisticsSection: React.FC = () => {
   return (
     <section className="py-16 bg-blanc-casse relative overflow-hidden">
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-bleu-nuit mb-10">Statistiques Clés</h2>
+        <h2 className="text-4xl font-bold text-bleu-nuit mb-10">
+          {locale === 'en' ? 'Key Statistics' : 'Statistiques Clés'}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {statistics.map((stat, idx) => (
             <div
@@ -100,7 +104,7 @@ const StatisticsSection: React.FC = () => {
                   {displayedStats[idx]}+
                 </div>
                 <p className="mt-2 text-gray-600 text-lg font-medium">
-                  {stat.label}
+                  {locale === 'en' ? stat.label.en : stat.label.fr}
                 </p>
               </div>
             </div>

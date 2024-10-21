@@ -44,11 +44,7 @@ const Header: React.FC = () => {
       search: "Search"
     },
   };
-
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  const currentContent = locale === 'en' ? content.en : content.fr;
  
 
   const handleToggle = () => {
@@ -81,14 +77,14 @@ const Header: React.FC = () => {
             onClick={handleToggle}
             style={{ transform: isItinerary ? 'translateX(0%)' : 'translateX(100%)' }}
           >
-            {getContent('itinerary')}
+            {currentContent.itinerary}
           </button>
           <button
             className={`absolute w-24 h-12 rounded-full transition-colors duration-300 ${!isItinerary ? 'bg-bleu-nuit text-white' : 'bg-gray-300'}`}
             style={{ transform: isItinerary ? 'translateX(100%)' : 'translateX(0%)' }} 
             onClick={handleToggle}
           >
-            {getContent('place')}
+            {currentContent.place}
           </button>
         </div>
       </div>
@@ -98,16 +94,16 @@ const Header: React.FC = () => {
           <input
             id="starting-point"
             type="text"
-            placeholder={getContent('startingPoint')} 
+            placeholder={currentContent.startingPoint} 
             className="border border-gray-300 rounded p-2"
           />
           <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2  rounded-full w-max ">
-              {getContent('search')}
+              {currentContent.search}
           </button>
           <input
             id="destination-point"
             type="text"
-            placeholder={getContent('destinationPoint')} 
+            placeholder={currentContent.destinationPoint} 
             className="border border-gray-300 rounded p-2"
           />
         </div>
@@ -116,11 +112,11 @@ const Header: React.FC = () => {
           <input
             id="search-place"
             type="text"
-            placeholder={getContent('searchPlace')} 
+            placeholder={currentContent.searchPlace} 
             className="border border-gray-300 rounded p-2"
           />
           <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2  rounded-full w-max ">
-              {getContent('search')}
+              {currentContent.search}
           </button>
       </div>
      
