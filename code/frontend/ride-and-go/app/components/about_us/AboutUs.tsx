@@ -100,7 +100,7 @@ const AboutUs: React.FC = () => {
             <FaRoad className="text-6xl text-orange-btn" />
             <h1 className="text-5xl font-bold ml-4">{currentContent.heroTitle}</h1>
           </div>
-          <p className="text-lg font-bold italic mt-2">{currentContent.heroText}</p>
+          <p className="text-lg font-bold  mt-2">{currentContent.heroText}</p>
         </div>
       </section>
 
