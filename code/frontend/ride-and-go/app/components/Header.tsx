@@ -6,15 +6,16 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  // Icônes pour la langue et le menu déroulant
 import Link from 'next/link';
-import { faFontAwesome } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar: React.FC = ({ setIsRegistegit vr }) => {
+const Navbar: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('Fr'); // Langue par défaut
   const { locale, changeLocale } = useLocale();
+
 
   const handleLanguageChange = () => {
         changeLocale(locale === 'en' ? 'fr' : 'en');
     };
+
 
   return (
     <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50"> {/* Header toujours visible en haut */}
@@ -23,7 +24,6 @@ const Navbar: React.FC = ({ setIsRegistegit vr }) => {
         <div className="text-4xl font-bold tracking-wider hover:text-orange-btn transition duration-300 cursor-pointer">
           Ride&Go
         </div>
-        
         {/* Links */}
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300"> {locale==='en'?'Home':'Accueil'}</Link>
@@ -69,8 +69,9 @@ const Navbar: React.FC = ({ setIsRegistegit vr }) => {
             {/* Menu déroulant des langues */}
             {/* <div className="absolute hidden group-hover:block right-0 mt-2 w-32 bg-white text-bleu-nuit rounded-lg shadow-lg z-10">
               <ul className="py-2">
-                <li><button onClick={() => handleLanguageChange('Fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Français</button></li>
-                <li><button onClick={() => handleLanguageChange('En')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">English</button></li>
+                <li><button onClick={() => handleLanguageChange('fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Français</button></li>
+                <li><button onClick={() => handleLanguageChange('en')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">English</button></li>
+                <li><button onClick={() => handleLanguageChange('fr')} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Español</button></li>
               </ul>
             </div> */}
           </div>

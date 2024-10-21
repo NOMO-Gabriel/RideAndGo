@@ -52,10 +52,5 @@ docker-compose.override.yml
 .next/server/pages/
 .next/server/chunks/
 
-# Optional: Ignore public uploads (if dynamically generated)
-public/uploads/
-
-
-
 # Ignore build artifacts from TypeScript (if applicable)
 *.tsbuildinfo
