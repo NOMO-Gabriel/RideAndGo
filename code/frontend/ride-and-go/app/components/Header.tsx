@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { faFontAwesome } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC = ({ setIsRegistegit vr }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('Fr'); // Langue par défaut
   const { locale, changeLocale } = useLocale();
 
@@ -76,8 +76,8 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Sign In & Sign Up Buttons */}
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{locale==='en'?'Sign in':'Se Connecter'}</button>
-          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{locale==='en'?'Sign up':"S'inscrire"}</button>
+          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300" onClick={()=>{setIsRegister(false)}}><Link href="/login">{locale==='en'?'Log in':'Se Connecter'}</Link></button>
+          <button className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300" onClick={()=>{setIsRegister(true)}}><Link href="/login">{locale==='en'?'Register':"S'inscrire"}</Link></button>
         </div>
       </div>
     </nav>
