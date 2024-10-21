@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
 import { useSearchFilter } from "@/app/utils/hooks/useSearchFilter"; 
