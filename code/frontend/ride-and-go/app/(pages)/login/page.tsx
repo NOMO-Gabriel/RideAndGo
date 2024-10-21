@@ -35,10 +35,7 @@ export default function Page() {
     },
   };
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["fr", "en"].includes(locale) ? locale : "en";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -62,7 +59,7 @@ export default function Page() {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
         <div className="flex justify-center items-center min-h-screen">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-bold mb-6 text-center">{getContent('login')}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">{currentContent.login}</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <input
@@ -70,7 +67,7 @@ export default function Page() {
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  placeholder={getContent('username')}
+                  placeholder={currentContent.username}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
@@ -80,7 +77,7 @@ export default function Page() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder={getContent('password')}
+                  placeholder={currentContent.password}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 {/* Icône d'œil pour basculer la visibilité */}
@@ -111,15 +108,15 @@ export default function Page() {
                   onChange={handleChange}
                   className="w-full p-2 border border-gray-300 rounded"
                 >
-                  <option value="customer">{getContent('customer')}</option>
-                  <option value="driver">{getContent('driver')}</option>
+                  <option value="customer">{currentContent.customer}</option>
+                  <option value="driver">{currentContent.driver}</option>
                 </select>
               </div>
               <button type="submit" className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-500">
-                <Link href="/">{getContent('login')}</Link>
+                <Link href="/">{currentContent.login}</Link>
               </button>
               <p className="mt-4 text-center">
-                {getContent('extra')} <a href="/register" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>
+                {currentContent.extra} <a href="/register" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>
               </p>
             </form>
           </div>

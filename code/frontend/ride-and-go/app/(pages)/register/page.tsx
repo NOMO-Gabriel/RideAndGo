@@ -41,10 +41,7 @@ export default function Register() {
     },
   };
 
-  const getContent = (key: keyof typeof content["en"]) => {
-    const validLocale = ["Fr", "En"].includes(locale) ? locale : "fr";
-    return content[validLocale as "fr" | "en"][key];
-  };
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -70,7 +67,7 @@ export default function Register() {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
         <div className="flex justify-center items-center min-h-screen">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-bold mb-6 text-center">{getContent('register')}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">{currentContent.register}</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <input
@@ -78,7 +75,7 @@ export default function Register() {
                   name="firstname"
                   value={formData.firstname}
                   onChange={handleChange}
-                  placeholder={getContent('firstname')}
+                  placeholder={currentContent.firstname}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
@@ -88,7 +85,7 @@ export default function Register() {
                   name="lastname"
                   value={formData.lastname}
                   onChange={handleChange}
-                  placeholder={getContent('lastname')}
+                  placeholder={currentContent.lastname}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
@@ -98,7 +95,7 @@ export default function Register() {
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  placeholder={getContent('username')}
+                  placeholder={currentContent.username}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
@@ -108,7 +105,7 @@ export default function Register() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder={getContent('password')}
+                  placeholder={currentContent.password}
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 {/* Icône d'œil pour basculer la visibilité */}
@@ -139,15 +136,15 @@ export default function Register() {
                   onChange={handleChange}
                   className="w-full p-2 border border-gray-300 rounded"
                 >
-                  <option value="customer">{getContent('customer')}</option>
-                  <option value="driver">{getContent('driver')}</option>
+                  <option value="customer">{currentContent.customer}</option>
+                  <option value="driver">{currentContent.driver}</option>
                 </select>
               </div>
               <button type="submit" className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-500">
-                <Link href="/">{getContent('register')}</Link>
+                <Link href="/">{currentContent.register}</Link>
               </button>
               <p className="mt-4 text-center">
-                {getContent('extra')} <a href="/login" className="text-blue-nuit underline hhover:text-orange-btn">{getContent('link')}</a>
+                {currentContent.extra} <Link href="/login" className="text-blue-nuit underline hhover:text-orange-btn">{currentContent.link}</Link>
               </p>
             </form>
           </div>
