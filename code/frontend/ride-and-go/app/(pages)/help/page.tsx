@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; // Hook pour gérer la langue
-import { FaPlus, FaMinus, FaSearch } from 'react-icons/fa'; // Icônes pour l'expansion et la recherche
+import { FaPlus, FaMinus, FaSearch, FaQuestionCircle, FaReply } from 'react-icons/fa'; // Ajout des icônes de question et réponse
 
 const HelpPage: React.FC = () => {
   const { locale } = useLocale(); // Utilisation du hook pour obtenir la langue actuelle
@@ -119,11 +119,11 @@ const HelpPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-bleu-nuit min-h-screen p-6 flex flex-col items-center">
+    <div className="bg-gradient-to-r from-blanc-casse to-bleu-100 min-h-screen p-6 flex flex-col items-center">
       <h1 className="text-4xl font-bold text-center text-blue-700 mb-4 animate__animated animate__fadeIn">
         {content[locale].title}
       </h1>
-      <p className="text-lg text-center mb-8 text-blue-600 animate__animated animate__fadeIn">
+      <p className="text-lg text-center mb-8 text-orange-btn font-bold animate__animated animate__fadeIn">
         {content[locale].subtitle}
       </p>
 
@@ -141,24 +141,29 @@ const HelpPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-2xl animate__animated animate__fadeIn">
+      <div className="w-full max-w-2xxl animate__animated animate__fadeIn">
         {filteredQuestions.length === 0 ? (
           <p className="text-gray-600 text-center">No results found. Please try a different search term.</p>
         ) : (
           filteredQuestions.map((item, index) => (
-            <div key={index} className={`mb-2 rounded-lg transition-all duration-300 ${openIndex === index ? 'bg-blanc-casse' : 'bg-white'}`}>
+            <div key={index} className={`mb-4 rounded-lg transition-all duration-300 ${openIndex === index ? 'bg-blue-50 shadow-lg' : 'bg-bleu-50'}`}>
               <div 
                 className="flex justify-between items-center p-4 cursor-pointer hover:bg-blue-100 rounded-lg"
                 onClick={() => toggleQuestion(index)}
               >
-                <h3 className="text-lg font-bold text-blue-700">
-                  {item.question}
+                <h3 className="text-lg text-xl font-bold text-blue-700 flex items-center">
+                  <FaQuestionCircle className="mr-2 text-blue-500" /> {item.question}
                 </h3>
                 {openIndex === index ? <FaMinus className="text-blue-700" /> : <FaPlus className="text-blue-700" />}
               </div>
               {openIndex === index && (
-                <p className="p-4 font-bold  text-gray-700">{item.answer}</p>
-              )}
+                <div className="p-4 text-gray-700 bg-blue-200 rounded-lg animate__animated animate__fadeIn">
+                  <p className="flex items-center">
+                    <FaReply className="mr-2 text-green-500" /> 
+                    <span className="font-bold text-xl">{item.answer}</span>
+                  </p>
+                </div>
+              )} 
             </div>
           ))
         )}

@@ -82,7 +82,7 @@ const Navbar: React.FC = () => {
           <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
           <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
           <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
-
+          
           {/* Help Menu Dropdown */}
           <div className="relative group dropdown">
             <button 
