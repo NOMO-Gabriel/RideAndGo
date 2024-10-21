@@ -24,7 +24,7 @@ const content = {
 };
 
 const ItineraryCard: React.FC<ItineraryCardProps> = ({ data, closePopup }) => {
-  const locale = useLocale(); 
+  const {locale} = useLocale(); 
 
   const currentTranslation = locale === 'en' ? content.en : content.fr;
   
