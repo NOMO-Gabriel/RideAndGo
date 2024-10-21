@@ -86,6 +86,7 @@ const Navbar: React.FC = () => {
           <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
           <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link>
 
+
           {/* Help Menu Dropdown */}
           <div className="relative group dropdown">
             <button 

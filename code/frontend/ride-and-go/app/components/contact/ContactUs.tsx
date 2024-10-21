@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useLocale } from "@/app/utils/hooks/useLocale.js"; // Hook pour gérer la langue
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa'; // Icônes pour les sections
-import Image from 'next/image'; // Pour intégrer des images
+import { useLocale } from "@/app/utils/hooks/useLocale.js";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import Image from 'next/image';
 
 const ContactUs: React.FC = () => {
-  const { locale } = useLocale(); // Utilisation du hook pour obtenir la langue actuelle
+  const { locale } = useLocale();
 
-  // Contenu multilingue
   const content = {
     en: {
       title: "Get in Touch with Us",
@@ -53,49 +52,52 @@ const ContactUs: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simuler un envoi de formulaire
     setSuccessMessage(content[locale].form.successMessage);
-    setFormData({ name: '', email: '', message: '' }); // Réinitialiser le formulaire
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
-    <div className="bg-gradient-to-r from-green-50 to-blue-50 min-h-screen p-6 flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold text-center text-blue-700 mb-4 animate__animated animate__fadeIn">
+    <div className="bg-gradient-to-r from-blanc-casse to-blue-100 min-h-screen p-10 flex flex-col justify-center items-center">
+      {/* Titre de la page */}
+      <h1 className="text-5xl font-bold text-center text-blue-700 mb-6 animate__animated animate__fadeIn">
         {content[locale].title}
       </h1>
-      <p className="text-lg text-center mb-8 text-blue-600 animate__animated animate__fadeIn">
+      <p className="text-lg text-center mb-12 text-blue-600 animate__animated animate__fadeIn">
         {content[locale].subtitle}
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 animate__animated animate__fadeIn">
-        <div className="bg-blanc-casse shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
-            <FaMapMarkerAlt className="inline mr-2" />
+      {/* Informations de contact */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 animate__animated animate__fadeIn w-full max-w-4xl">
+        <div className="bg-white shadow-md rounded-lg p-6 transition-all duration-300 hover:shadow-lg">
+          <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex items-center">
+            <FaMapMarkerAlt className="inline-block mr-3 text-blue-500" />
             {content[locale].contactInfo.address}
           </h2>
-          <p className="text-lg text-gray-600">123 Ride&Go Lane, City, Country</p>
+          <p className="text-lg text-orange-btn">123 Ride&Go Lane, City, Country</p>
         </div>
-        <div className="bg-blanc-casse shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
-            <FaPhone className="inline mr-2" />
+        <div className="bg-white shadow-md rounded-lg p-6 transition-all duration-300 hover:shadow-lg">
+          <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex items-center">
+            <FaPhone className="inline-block mr-3 text-blue-500" />
             {content[locale].contactInfo.phone}
           </h2>
-          <p className="text-lg text-gray-600">+123 456 7890</p>
+          <p className="text-lg text-orange-btn">+123 456 7890</p>
         </div>
-        <div className="bg-blanc-casse shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
-            <FaEnvelope className="inline mr-2" />
+        <div className="bg-white shadow-md rounded-lg p-6 transition-all duration-300 hover:shadow-lg">
+          <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex items-center">
+            <FaEnvelope className="inline-block mr-3 text-blue-500" />
             {content[locale].contactInfo.email}
           </h2>
-          <p className="text-lg text-gray-600">support@rideandgo.com</p>
+          <p className="text-lg text-orange-btn">support@rideandgo.com</p>
         </div>
       </div>
 
-      <form className="bg-blanc-casse shadow-lg rounded-lg p-8 w-full max-w-md animate__animated animate__fadeIn" onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-semibold text-blue-700 mb-6">Contact Form</h2>
+      {/* Formulaire de contact */}
+      <form className="bg-white shadow-lg rounded-lg p-10 w-full max-w-md animate__animated animate__fadeIn" onSubmit={handleSubmit}>
+        <h2 className="text-3xl font-semibold text-blue-700 mb-6 text-center">Contact Form</h2>
         
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="name">{content[locale].form.name}</label>
+        {/* Champ Nom */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-lg mb-2" htmlFor="name">{content[locale].form.name}</label>
           <input 
             type="text" 
             name="name" 
@@ -103,12 +105,13 @@ const ContactUs: React.FC = () => {
             value={formData.name} 
             onChange={handleChange} 
             required 
-            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:border-blue-500"
+            className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:border-blue-500 text-lg"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="email">{content[locale].form.email}</label>
+        {/* Champ Email */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-lg mb-2" htmlFor="email">{content[locale].form.email}</label>
           <input 
             type="email" 
             name="email" 
@@ -116,33 +119,40 @@ const ContactUs: React.FC = () => {
             value={formData.email} 
             onChange={handleChange} 
             required 
-            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:border-blue-500"
+            className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:border-blue-500 text-lg"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="message">{content[locale].form.message}</label>
+        {/* Champ Message */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-lg mb-2" htmlFor="message">{content[locale].form.message}</label>
           <textarea 
             name="message" 
             id="message" 
             value={formData.message} 
             onChange={handleChange} 
             required 
-            className="border border-gray-300 p-2 rounded w-full focus:outline-none focus:border-blue-500" 
-            rows={4}
+            className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:border-blue-500 text-lg" 
+            rows={5}
           ></textarea>
         </div>
 
+        {/* Bouton d'envoi */}
         <button 
           type="submit" 
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-300 flex items-center"
+          className="bg-blue-600 text-white text-lg px-6 py-3 rounded w-full hover:bg-blue-700 transition-all duration-300 flex items-center justify-center"
         >
           <FaPaperPlane className="mr-2" />
           {content[locale].form.submit}
         </button>
       </form>
 
-      {successMessage && <p className="text-green-600 mt-4 font-semibold animate__animated animate__fadeIn">{successMessage}</p>}
+      {/* Message de succès */}
+      {successMessage && (
+        <p className="text-green-600 mt-6 text-lg font-semibold animate__animated animate__fadeIn">
+          {successMessage}
+        </p>
+      )}
     </div>
   );
 };
