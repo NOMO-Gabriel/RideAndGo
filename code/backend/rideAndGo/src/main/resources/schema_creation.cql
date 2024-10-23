@@ -3,7 +3,7 @@ CREATE KEYSPACE IF NOT EXISTS rideandgo
 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
 
 -- Sélection du keyspace
-USE ride_and_go;
+USE rideandgo;
 
 -- Table User
 CREATE TABLE IF NOT EXISTS user (
