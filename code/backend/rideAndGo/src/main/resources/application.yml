@@ -12,6 +12,6 @@ spring:
 myapp:
   constants:
     appName: "RideAndGo"
-    cassandraUrl: "0.0.0.0"  # Définition de cassandraUrl
+    cassandraUrl: "172.18.0.2"  # Définition de cassandraUrl
 
     
