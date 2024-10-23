@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import CompactFareCalculator from '@/app/components/Home/FareCalculator';
+//import CompactFareCalculator from '@/app/components/Home/FareCalculator';
 
 interface HeroSectionProps {
   images: string[]; // Prop pour les images
@@ -48,9 +48,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ images, messages }) => {
           >
             {locale === 'en' ? 'Get a ride' : 'Se déplacer'}
           </button>
-         
+
         </div>
-        <div className='mt-5'><CompactFareCalculator/></div>
         
       </div>
     </section>
