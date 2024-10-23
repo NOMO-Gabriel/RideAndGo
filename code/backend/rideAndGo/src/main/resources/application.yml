@@ -1,10 +1,17 @@
 spring:
   data:
     cassandra:
-      contact-points: 172.18.0.2
+      contact-points: ${myapp.constants.cassandraUrl}  # Référence à cassandraUrl
       port: 9042
       local-datacenter: datacenter1
       keyspace-name: rideandgo
       schema-action: create-if-not-exists
   profiles:
     active: dev
+
+myapp:
+  constants:
+    appName: "RideAndGo"
+    cassandraUrl: "0.0.0.0"  # Définition de cassandraUrl
+
+    
