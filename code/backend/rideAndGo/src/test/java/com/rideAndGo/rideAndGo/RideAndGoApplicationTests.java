@@ -41,7 +41,7 @@ class RideAndGoApplicationTests {
 
     private boolean testCassandraConnection() {
     try (CqlSession session = CqlSession.builder()
-            .addContactPoint(new InetSocketAddress("172.18.0.2", 9042)) // Adresse IP et port
+            .addContactPoint(new InetSocketAddress("0.0.0.0", 9042)) // Adresse IP et port
             .withLocalDatacenter("datacenter1") // Assurez-vous que cela correspond à votre configuration
             .build()) {
         return session.getMetadata().getKeyspaces().size() > 0; // Vérifie si au moins un keyspace existe
