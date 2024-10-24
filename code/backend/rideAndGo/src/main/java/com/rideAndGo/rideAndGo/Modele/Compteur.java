@@ -1,23 +1,19 @@
 package com.rideAndGo.rideAndGo.Modele;
 
-
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-@Table("Compteur")
+@Table("compteur")  // Assurez-vous que le nom correspond à la table dans votre base de données Cassandra
 @Data
 @AllArgsConstructor
-public class Compteur{
+@NoArgsConstructor  // Ce constructeur sans arguments résout l'erreur
+public class Compteur {
 
     @PrimaryKey
-    @Id
-    public int id;
-    public  int compteurUser;
-
-    public int compteur_Conducteur;
-    public int compteur_voyage;
-
-    public int compteur_message;
+    private int id;
+    private int compteurUser;
+    private int compteurConducteur;  // Renommé pour suivre la convention camelCase
+    private int compteurVoyage;  // Renommé pour suivre la convention camelCase
+    private int compteurMessage;  // Renommé pour suivre la convention camelCase
 }

@@ -11,43 +11,66 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/User")
 @RestController
 @AllArgsConstructor
-
 public class UserController {
     private final UserService service;
     private final CompteurRepository repository;
 
     private final UserAuthentificationRepository repository2;
-/*
-    @PostConstruct
-    public void saveUser(){
-        List<User> users=new ArrayList<>();
-        users.add(new User(1,"ronel","nkouathio","aok","nkouathioronel@gmail","12","melen","697933510"));
-        users.add(new User(2,"onel","ronel","lao","ronelnkouathio@gmail","13","melen","697933410"));
-        users.add(new User(3,"ronel","manel","ado","manelnkouathio@gmail","14","melen","697933511"));
-        service.saveall(users);
-    }*/
+
     @GetMapping("/read")
-    public List<User> getUser(){
+    public List<User> getUser() {
         return service.lireallUser();
     }
+
     @PostMapping("/create")
-    public User addUser(@RequestBody User User){
-        Compteur compteur=repository.findById(1).get();
-        compteur.compteurUser=compteur.compteurUser+1;
+    public User addUser(@RequestBody User User) {
+        // Chercher le compteur avec l'ID 1
+        Optional<Compteur> optionalCompteur = repository.findById(1);
+
+        Compteur compteur;
+        if (optionalCompteur.isPresent()) {
+            // Si le compteur existe, l'utiliser
+            compteur = optionalCompteur.get();
+        } else {
+            // Sinon, créer un nouveau compteur avec l'ID 1
+            compteur = new Compteur();
+            compteur.setId(1);  // Initialiser le compteur avec ID 1
+            compteur.setCompteurUser(0);  // Initialiser le compteur d'utilisateur à 0
+        }
+
+        // Incrémenter le compteur d'utilisateur
+        compteur.setCompteurUser(compteur.getCompteurUser() + 1);
+
+        // Sauvegarder le compteur mis à jour dans la base de données
         repository.save(compteur);
-        User.setId(compteur.compteurUser);
+
+        // Utiliser le compteur incrémenté comme ID pour l'utilisateur
+        User.setId(compteur.getCompteurUser());
+
+        // Sauvegarder l'utilisateur
         service.créer(User);
-        repository2.save(new UserAuthentification(new KeyUser( User.getNom(), User.getMotDePasse()),User.getId(), User.getPrenom(), User.getPseudo(), User.getEmail(),User.getAdresse(),User.getTelephone()));
+
+        // Sauvegarder l'utilisateur pour l'authentification
+        repository2.save(new UserAuthentification(
+                new KeyUser(User.getNom(), User.getMotDePasse()),
+                User.getId(),
+                User.getPrenom(),
+                User.getPseudo(),
+                User.getEmail(),
+                User.getAdresse(),
+                User.getTelephone()
+        ));
+
         return User;
     }
+
     @GetMapping(value = "/read/{id}")
-    public User recuperer(@PathVariable int id)
-    {
+    public User recuperer(@PathVariable int id) {
         return service.recuperer(id);
     }
-
 }
