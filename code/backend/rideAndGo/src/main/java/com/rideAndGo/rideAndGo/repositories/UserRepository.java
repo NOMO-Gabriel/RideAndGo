@@ -10,6 +10,10 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends CassandraRepository<User, UUID> { 
     
-    Optional<User> findByPseudo(String pseudo); 
+    Optional<User> findByPseudo(String pseudo);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByPhoneNumber(Double phoneNumber);
     boolean existsByPseudo(String pseudo);
+    boolean existsByEmail(String email);
+    boolean existsByPhoneNumber(double phoneNumber);
 }

@@ -1,23 +1,14 @@
 package com.rideAndGo.rideAndGo.dto;
 
+import lombok.Data;
+
+@Data
 public class AuthRequest {
+
     private String pseudo;
     private String password;
+    private String Email;
+    private Double phoneNumber;
 
-    // Getters et Setters
-    public String getPseudo() {
-        return pseudo;
-    }
-
-    public void setUsername(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+   
 }

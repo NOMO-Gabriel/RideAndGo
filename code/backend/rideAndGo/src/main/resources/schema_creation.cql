@@ -146,3 +146,7 @@ CREATE TABLE IF NOT EXISTS rating (
     score FLOAT,
     comment TEXT
 );
+
+CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
+CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
+CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);

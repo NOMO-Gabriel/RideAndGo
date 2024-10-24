@@ -25,6 +25,15 @@ public class UserService {
         return userRepository.findByPseudo(pseudo);
     }
 
+    public Optional<User> findByEmail(String email) { // Correction ici : 'String' au lieu de 'string'
+    return userRepository.findByEmail(email);
+}
+
+public Optional<User> findByPhoneNumber(Double phoneNumber) { // Correction ici : 'String' au lieu de 'string'
+return userRepository.findByPhoneNumber(phoneNumber);
+}
+
+
     // Récupérer tous les utilisateurs
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
@@ -39,14 +48,21 @@ public class UserService {
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
+     // Enregistrer un nouvel utilisateur
+     public void save(User user) {
+        userRepository.save(user);
+    }
 
     // Vérifier l'existence d'un pseudo
     public boolean existsByPseudo(String pseudo) {
         return userRepository.existsByPseudo(pseudo);
     }
 
-    // Enregistrer un nouvel utilisateur
-    public void save(User user) {
-        userRepository.save(user);
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+              
+    }
+    public boolean existsByPhoneNumber(double phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }
