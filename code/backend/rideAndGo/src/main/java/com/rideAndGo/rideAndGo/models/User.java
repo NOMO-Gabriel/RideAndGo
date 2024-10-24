@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Table("users") 
+@Table("user") 
 public class User {
     @Id
     private UUID id;

@@ -16,7 +16,7 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
             .requestMatchers("/api/register", "/api/login").permitAll()
-            .anyRequest().authenticated()
+
             .and()
             .formLogin().disable() // Désactiver le formulaire de connexion par défaut
             .logout().disable(); // Désactiver le logout par défaut
@@ -28,3 +28,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+//  .anyRequest().authenticated()

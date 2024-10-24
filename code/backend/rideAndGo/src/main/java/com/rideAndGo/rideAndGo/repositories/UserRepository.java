@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends CassandraRepository<User, UUID> { 
+    
     Optional<User> findByPseudo(String pseudo); 
     boolean existsByPseudo(String pseudo);
 }
