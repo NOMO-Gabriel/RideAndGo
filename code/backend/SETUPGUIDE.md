@@ -1,87 +1,133 @@
+# **Project Setup Guide for RideAndGo**
 
-# RideAndGo Project Setup Guide
+## **Prerequisites**  
+- **JDK 21**  
+- **Maven**  
+- **Docker**  
+- **Cassandra**: Installed in a Docker container.  
+  ➔ For more information, refer to the [official documentation](https://cassandra.apache.org/_/quickstart.html).
 
-## Prerequisites
-- JDK 21
-- Maven
-- Cassandra 5
+---
 
-## Configuring the Database
+## **Database Configuration**
 
-### 1. Run Cassandra Server with Docker
-To run Cassandra, use the following command:
-
+### **1. Start Cassandra with Docker**  
+Run the following command to start Cassandra in a Docker container:  
 ```bash
 docker run --name cassandra-container -d -p 9042:9042 cassandra:latest
 ```
 
-### 2. Verify Your Configuration
-Ensure the Cassandra container is running by executing:
+---
 
+### **2. Verify the Docker Container**  
+Ensure the container is running by executing:  
 ```bash
 sudo docker ps
 ```
 
-### 3. Run `cqlsh` to Use Cassandra
-To access the Cassandra command line interface, execute:
+---
 
+### **3. Create the Database from a Script**
+
+#### **Step 1: Navigate to the Script Directory**
+```bash
+cd RideAndGo/code/backend/rideAndGo/src/main/resources
+```
+
+#### **Step 2: Copy the Script to the Docker Container**
+```bash
+sudo docker cp schema_creation.cql cassandra-container:/data.cql
+```
+**Note:**  
+If **cassandra-container** is not found, run:  
+```bash
+docker ps
+```
+Copy the **container ID** and replace **cassandra-container** with this ID in the above command.
+
+#### **Step 3: Run the Script inside the Container**
+```bash
+docker exec -it cassandra-container cqlsh -f /data.cql
+```
+
+---
+
+### **4. Access the Cassandra CQL Interface**  
+To open `cqlsh`, execute:  
 ```bash
 docker exec -it cassandra-container cqlsh
 ```
 
-### 4. Create the Keyspace for the Database in Cassandra
-Once in `cqlsh`, create a keyspace with the following commands:
+---
 
-```sql
-CREATE KEYSPACE rideandgo WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-USE rideandgo;
-```
+### **5. Verify the Keyspace and Tables**
 
-### 5. Verify the Keyspace
-To ensure the keyspace was created, execute:
-
+#### **Step 1: List Available Keyspaces**
 ```sql
 DESCRIBE KEYSPACES;
 ```
 
-## Running the Project
-To run the project, navigate to the project directory and execute:
+#### **Step 2: Select the `rideandgo` Keyspace**
+```sql
+USE rideandgo;
+```
 
-### Install Dependencies
+#### **Step 3: Describe Existing Tables**
+```sql
+DESCRIBE tables;
+```
+
+---
+
+### **6. Configure Cassandra URL**  
+
+#### **Step 1: Get the Container's IP Address**
+```bash
+sudo docker ps
+```
+**Note the container’s IP address** (e.g., `172.18.0.2` or `0.0.0.0`).
+
+#### **Step 2: Update the `application.yml` Configuration File**  
+Open the **`src/main/resources/application.yml`** file and update the **cassandraUrl** property in the **myApp** object with the container’s IP address.
+
+---
+
+## **Running the Project**
+
+### **1. Install Dependencies**  
+Navigate to the **backend/rideAndGo** directory and run:  
 ```bash
 mvn clean install
 ```
 
-### Run the Project
+---
+
+### **2. Run the Spring Boot Application**  
+From the **backend/rideAndGo** directory, execute:  
 ```bash
 mvn spring-boot:run
 ```
 
-### Test the Connectivity with the Database
-To run the connectivity tests, use:
+---
 
+### **3. Test Database Connectivity**  
+Run the following command to execute tests:  
 ```bash
 mvn test
 ```
 
-## Database Configuration
-Don't forget to check and adjust the database configuration file located at `src/main/resources/application.yml`. Here’s the content you should have:
+---
 
-```yaml
-spring:
-  data:
-    cassandra:
-      contact-points: 172.18.0.2
-      port: 9042
-      local-datacenter: datacenter1
-      keyspace-name: rideandgo
-      schema-action: create-if-not-exists
-  profiles:
-    active: dev
-```
+## **Important Notes**  
+- **Verify the Cassandra Container's IP Address**:  
+  Ensure that the IP address **172.18.0.2** matches the container’s IP. Use the following command to inspect the container:  
+  ```bash
+  docker inspect cassandra-container
+  ```
 
-### Important
-- Ensure the IP address `172.18.0.2` corresponds to your Cassandra container. If you're using Docker, you can verify it by running `docker inspect cassandra-container`.
-- If the configuration file is not correctly adjusted, it may lead to errors when connecting to the database.
+- **Incorrect Configuration**:  
+  If the application fails to connect to the database, ensure that the Cassandra URL in **`application.yml`** is correctly set.
 
-With these steps, you should be able to set up the project and check the connectivity to the Cassandra database. If you encounter any issues, feel free to ask for help.
+---
+
+By following these steps, you should be able to configure, run, and test the **RideAndGo** project successfully. If you encounter any issues, feel free to ask for assistance.
