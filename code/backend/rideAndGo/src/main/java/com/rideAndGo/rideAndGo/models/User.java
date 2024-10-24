@@ -29,7 +29,7 @@ public class User {
     @Column("password")
     private String password;
 
-    @Column("is_online")
+    @Column("isOnline")
     private Boolean isOnline;
 
     @Column("roles")
