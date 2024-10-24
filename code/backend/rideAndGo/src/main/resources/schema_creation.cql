@@ -8,12 +8,13 @@ USE rideandgo;
 -- Table User
 CREATE TABLE IF NOT EXISTS user (
     id UUID PRIMARY KEY,
-    name TEXT,
-    surname TEXT,
+    nom TEXT,
+    prenom TEXT,
     pseudo TEXT,
+    adresse TEXT,
     birthDate DATE,
-    password TEXT,
-    phoneNumber DOUBLE,
+    motDePasse TEXT,
+    telephone DOUBLE,
     email TEXT,
     isOnline BOOLEAN,
     updatedAt TIMESTAMP,
@@ -42,6 +43,19 @@ CREATE TABLE IF NOT EXISTS notification (
     receiver MAP<TEXT, INT>
 );
 
+CREATE TABLE IF NOT EXISTS compteur(
+    id UUID PRIMARY KEY,
+    state TEXT,
+    isDeleted BOOLEAN,
+    title TEXT,
+    message TEXT,
+    date TIMESTAMP,
+    receiver MAP<TEXT, INT>,
+    compteurUser INT,
+    compteur_Conducteur INT,
+    compteur_message INT,
+    compteur_voyage INT,
+);
 -- Table Alert
 CREATE TABLE IF NOT EXISTS alert (
     id UUID PRIMARY KEY,
