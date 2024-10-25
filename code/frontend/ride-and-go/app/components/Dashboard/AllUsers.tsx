@@ -1,35 +1,18 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faUser, faTrash, faPen, faEye, faUserShield, faBan, 
-  faPauseCircle, faTasks, faBell
+  faUser, faTrash, faPen, faEye, faUserShield, faBan,
+  faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
-
-// Type pour l'utilisateur
-interface User {
-  id: number;
-  username: string;
-  role: 'customer' | 'driver' | 'admin';
-  createdAt: string;
-  lastConnection: string;
-  status: 'active' | 'inactive';
-}
-
-// Données fictives des utilisateurs
-const fakeUsers: User[] = [
-  { id: 1, username: 'Alice', role: 'customer', createdAt: '2024-01-15', lastConnection: '2024-10-21', status: 'active' },
-  { id: 2, username: 'Bob', role: 'driver', createdAt: '2024-02-20', lastConnection: '2024-10-20', status: 'inactive' },
-  { id: 3, username: 'Charlie', role: 'customer', createdAt: '2024-03-10', lastConnection: '2024-10-19', status: 'active' },
-  { id: 4, username: 'Admin', role: 'admin', createdAt: '2024-04-01', lastConnection: '2024-10-18', status: 'active' },
-];
+import { useUserContext } from '@/app/context/UserContext';
 
 const userContent = {
   en: {
     title: "Users",
     filter: "Filter by Role",
-    actions: { 
+    actions: {
       view: "View", edit: "Edit", delete: "Delete", promote: "Promote",
       block: "Block", suspend: "Suspend", alert: "Send Alert", activity: "Activity"
     },
@@ -38,7 +21,7 @@ const userContent = {
   fr: {
     title: "Utilisateurs",
     filter: "Filtrer par rôle",
-    actions: { 
+    actions: {
       view: "Voir", edit: "Modifier", delete: "Supprimer", promote: "Promouvoir",
       block: "Bloquer", suspend: "Suspendre", alert: "Envoyer une alerte", activity: "Activité"
     },
@@ -46,18 +29,53 @@ const userContent = {
   },
 };
 
+const roleHierarchy = ['superAdmin', 'admin', 'user'];
+
+const getHighestRole = (roles: string[]) => {
+  for (const role of roleHierarchy) {
+    if (roles.includes(role)) {
+      return role;
+    }
+  }
+  return 'user'; // Default role if no match is found
+};
+
 const Users = () => {
   const { locale } = useLocale(); // Gestion de l'internationalisation
   const localizedContent = userContent[locale as 'fr' | 'en'];
+  const { users, fetchUsers, fetchUser, user } = useUserContext();
 
-  const [users, setUsers] = useState<User[]>(fakeUsers);
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  
+
   const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'driver' | 'admin'>('all');
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // Gestion de la suppression d'un utilisateur
-  const handleDelete = (id: number) => setUsers(users.filter(user => user.id !== id));
+  const handleDelete = (id: string) => {
+    // Implement the delete logic here, e.g., call an API to delete the user
+  };
 
   // Gestion du filtrage par rôle
-  const filteredUsers = roleFilter === 'all' ? users : users.filter(user => user.role === roleFilter);
+  const filteredUsers = roleFilter === 'all' ? users : users.filter(user => user.roles.includes(roleFilter));
+
+  const handleView = (id: string) => {
+    try{
+          console.log('VIEWING user with ID:', id); // Log for debugging
+          fetchUser(id);
+          setSelectedUser(id);
+    }catch(error){
+      console.error('Error fetching uer:', error);
+    }
+    
+  };
+
+  const handleClosePopup = () => {
+    setSelectedUser(null);
+  };
 
   return (
     <div className="p-4">
@@ -87,44 +105,59 @@ const Users = () => {
             <div className="flex items-center space-x-4">
               <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
               <div>
-                <h3 className="font-bold">{user.username}</h3>
-                <p className="text-sm">{user.role}</p>
-                <span className="text-xs">Created: {user.createdAt}</span>
+                <h3 className="font-bold"></h3>
+                <h3 className="font-bold">{user.name} {user.surname} {user.averagerating}</h3>
+                <p className="text-sm">{getHighestRole(user.roles)}</p>
+                <span className="text-xs">Created: {new Date(user.createdat).toLocaleDateString()}</span>
                 <br />
-                <span className="text-xs">Last connection: {user.lastConnection}</span>
+                <span className="text-xs">Last connection: {new Date(user.updatedat).toLocaleDateString()}</span>
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex space-x-4 text-xl">
-              <button className="text-green-600" title={localizedContent.actions.view}>
+              <button className="text-green-600" title={localizedContent.actions.view} onClick={() => handleView(user.id)}>
                 <FontAwesomeIcon icon={faEye} />
               </button>
-              <button className="text-blue-600" title={localizedContent.actions.edit}>
-                <FontAwesomeIcon icon={faPen} />
-              </button>
-              <button className="text-yellow-600" title={localizedContent.actions.promote}>
-                <FontAwesomeIcon icon={faUserShield} />
-              </button>
+
               <button className="text-gray-600" title={localizedContent.actions.activity}>
                 <FontAwesomeIcon icon={faTasks} />
               </button>
               <button className="text-orange-600" title={localizedContent.actions.suspend}>
                 <FontAwesomeIcon icon={faPauseCircle} />
               </button>
-              <button className="text-red-600" title={localizedContent.actions.block}>
-                <FontAwesomeIcon icon={faBan} />
-              </button>
+
               <button className="text-purple-600" title={localizedContent.actions.alert}>
                 <FontAwesomeIcon icon={faBell} />
               </button>
-              <button className="text-red-600" onClick={() => handleDelete(user.id)} title={localizedContent.actions.delete}>
+              <button className="text-red-600" onClick={() => handleDelete(user.d)} title={localizedContent.actions.delete}>
                 <FontAwesomeIcon icon={faTrash} />
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Popup */}
+      {selectedUser && user && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
+          <div className="bg-blue-500 w-[500px] h-[50000px]p-8 rounded-lg shadow-lg relative">
+            <button className="absolute top-2 right-2 text-red-600" onClick={handleClosePopup}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <div className="flex items-center space-x-4">
+              <img src={user.avatar[0]} alt={localizedContent.alt} className="w-12 h-12" />
+              <div>
+                <h3 className="font-bold">{user.name} {user.surname}</h3>
+                <p className="text-sm">{getHighestRole(user.roles)}</p>
+                <span className="text-xs">Created: {new Date(user.createdat).toLocaleDateString()}</span>
+                <br />
+                <span className="text-xs">Last connection: {new Date(user.updatedat).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
