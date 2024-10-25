@@ -78,4 +78,16 @@ public class User {
 
     @Column("averagerating")
     private Float averageRating;
+
+    @Column("lastconnection")
+    private Instant lastConnection;
+
+    @Column("issuspend")
+    private Boolean isSuspend;
+
+    @Column("isdeleted")
+    private Boolean isDeleted;
+
+    @Column("gender")
+    private String gender;
 }

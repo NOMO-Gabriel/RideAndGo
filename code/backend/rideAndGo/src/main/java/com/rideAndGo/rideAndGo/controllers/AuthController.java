@@ -102,8 +102,11 @@ public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationReques
     newUser.setSurname(registrationRequest.getSurname());
     newUser.setName(registrationRequest.getName());
     newUser.setPhoneNumber(registrationRequest.getPhoneNumber());  // Valeur statique pour le numéro de téléphone
+    newUser.setGender(registrationRequest.getGender());
     newUser.setIsOnline(false);  // Par défaut, l'utilisateur n'est pas en ligne
-
+    newUser.setIsSuspend(false);
+    newUser.setIsDeleted(false);
+    newUser.setLastConnection(now);
     // Valeurs statiques pour les autres champs
     List<UUID> defaultUUIDList = new ArrayList<>();
     defaultUUIDList.add(UUID.randomUUID());
@@ -120,9 +123,9 @@ public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationReques
 
     newUser.setCreatedAt(now);          // Utilise Instant pour TIMESTAMP
     newUser.setUpdatedAt(now);          // Utilise Instant pour TIMESTAMP
-       
-    newUser.setAverageRating(0.f);     // Note moyenne par défaut
 
+    newUser.setAverageRating(0.f);     // Note moyenne par défaut
+    
     userService.save(newUser);
 
     return ResponseEntity.ok(new AuthResponse("Registration successful"));

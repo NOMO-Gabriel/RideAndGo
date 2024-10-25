@@ -28,7 +28,12 @@ CREATE TABLE IF NOT EXISTS user (
     vehicle UUID,
     piece LIST<UUID>,
     picture LIST<UUID>,
-    avatar LIST<UUID>
+    avatar LIST<UUID>,
+    lastConnection TIMESTAMP,
+    isSuspend BOOLEAN,
+    isDeleted BOOLEAN,
+    gender TEXT
+
 );
 
 -- Table Notification
