@@ -33,44 +33,72 @@ public class AuthController {
     @PostMapping("/loginByPseudo")
     public ResponseEntity<AuthResponse> loginByPseudo(@RequestBody AuthRequest authRequest) {
         User user = userService.findByPseudo(authRequest.getPseudo()).orElse(null);
-        if(user == null) {
+        
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found"));
         }
-
+        
+        if (user.getIsDeleted()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account has been deleted"));
+        }
+    
+        if (user.getIsSuspend()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account is suspended"));
+        }
+    
         if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
-        
+    
         return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
-
+    
     @PostMapping("/loginByPhoneNumber")
     public ResponseEntity<AuthResponse> loginByPhoneNumber(@RequestBody AuthRequest authRequest) {
         User user = userService.findByPhoneNumber(authRequest.getPhoneNumber()).orElse(null);
-        if(user == null) {
+        
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found"));
         }
-
+    
+        if (user.getIsDeleted()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account has been deleted"));
+        }
+    
+        if (user.getIsSuspend()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account is suspended"));
+        }
+    
         if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
-        
+    
         return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
-
+    
     @PostMapping("/loginByEmail")
     public ResponseEntity<AuthResponse> loginByEmail(@RequestBody AuthRequest authRequest) {
         User user = userService.findByEmail(authRequest.getEmail()).orElse(null);
-        if(user == null) {
+        
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found"));
         }
-
+    
+        if (user.getIsDeleted()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account has been deleted"));
+        }
+    
+        if (user.getIsSuspend()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Account is suspended"));
+        }
+    
         if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
-        
+    
         return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
+    
 
     @PostMapping("/register")
 public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationRequest registrationRequest) {
