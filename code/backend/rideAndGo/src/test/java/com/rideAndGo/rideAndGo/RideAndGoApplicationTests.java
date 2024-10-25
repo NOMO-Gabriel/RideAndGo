@@ -1,11 +1,10 @@
 package com.rideAndGo.rideAndGo;
-
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.rideAndGo.rideAndGo.config.MyAppConstants;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.rideAndGo.rideAndGo.config.MyAppConstants;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,6 +12,7 @@ import java.net.InetSocketAddress;
 
 @SpringBootTest
 class RideAndGoApplicationTests {
+
 
     @Autowired
     private MyAppConstants myAppConstants; // Injection de MyAppConstants
@@ -57,4 +57,5 @@ class RideAndGoApplicationTests {
             return false;
         }
     }
+
 }
