@@ -7,6 +7,7 @@ import {
   faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationMessage from '../cards/ConfirmationMessage';
+import { getAllActiveUsers } from '@/api/user';
 import { useUserContext } from '@/app/context/UserContext';
 
 const userContent = {
@@ -44,12 +45,38 @@ const getHighestRole = (roles: string[]) => {
 const Users = () => {
   const { locale } = useLocale(); // Gestion de l'internationalisation
   const localizedContent = userContent[locale as 'fr' | 'en'];
-  const { users, fetchUsers, fetchUser, user } = useUserContext();
+  {/*const { users, fetchUsers, fetchUser, user } = useUserContext();
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+  */}
+  const [users, setUsers] = useState([
+    {"name":"eleo",
+      "roles":["user"]
+    },
+    {"name":"eleo2",
+      "roles":["admin"]
 
+    }
+
+  ]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const fetchUsers = async () => {
+          try {
+              const data = await getAllActiveUsers();
+              setUsers(data);
+              setLoading(false);
+          } catch (error) {
+              setError(error.message);
+              setLoading(false);
+          }
+      };
+
+      fetchUsers();
+  }, []);
   
 
   const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'driver' | 'admin'>('all');

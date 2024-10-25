@@ -1,0 +1,22 @@
+[0;1;32m●[0m docker.service - Docker Application Container Engine
+     Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Fri 2024-10-25 21:51:27 WAT; 36min ago
+TriggeredBy: [0;1;32m●[0m docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 2338 (dockerd)
+      Tasks: 12
+     Memory: 106.1M
+        CPU: 1.002s
+     CGroup: /system.slice/docker.service
+             └─2338 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.093005009+01:00" level=info msg="[graphdriver] using prior storage driver: overlay2"
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.100835038+01:00" level=info msg="Loading containers: start."
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.607447129+01:00" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to set a preferred IP address"
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.713248441+01:00" level=info msg="Loading containers: done."
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.742273596+01:00" level=warning msg="WARNING: bridge-nf-call-iptables is disabled"
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.742323137+01:00" level=warning msg="WARNING: bridge-nf-call-ip6tables is disabled"
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.742369616+01:00" level=info msg="Docker daemon" commit=41ca978 containerd-snapshotter=false storage-driver=overlay2 version=27.3.1
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.743019775+01:00" level=info msg="Daemon has completed initialization"
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC systemd[1]: Started Docker Application Container Engine.
+oct. 25 21:51:27 eleonor-HP-250-G8-Notebook-PC dockerd[2338]: time="2024-10-25T21:51:27.792120015+01:00" level=info msg="API listen on /run/docker.sock"
