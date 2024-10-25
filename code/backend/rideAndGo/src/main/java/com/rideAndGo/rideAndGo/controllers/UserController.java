@@ -1,7 +1,10 @@
 package com.rideAndGo.rideAndGo.controllers;
 
+import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.services.UserService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Récupérer un utilisateur par son ID
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     // Récupérer tous les utilisateurs
     @GetMapping("/")
     public ResponseEntity<Iterable<User>> getAllUsers() {
@@ -31,13 +27,26 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    // Récupérer un utilisateur par son ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable UUID id) {
+        Optional<User> user = userService.getUserById(id);
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
+        }
+        return ResponseEntity.ok(user.get());
+    }
+
     // Mettre à jour un utilisateur
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User updatedUser) {
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody User updatedUser) {
         // Vérifiez que l'utilisateur existe d'abord
-        if (!userService.getUserById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+        Optional<User> existingUser = userService.getUserById(id);
+        if (!existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
         }
+        
+        // Mettez à jour les informations de l'utilisateur
         updatedUser.setId(id); // Assurez-vous que l'ID est défini
         User user = userService.updateUser(updatedUser);
         return ResponseEntity.ok(user);
@@ -45,10 +54,13 @@ public class UserController {
 
     // Supprimer un utilisateur
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        if (!userService.getUserById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
+        // Vérifiez si l'utilisateur existe
+        Optional<User> user = userService.getUserById(id);
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
         }
+        
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

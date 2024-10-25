@@ -1,23 +1,22 @@
 package com.rideAndGo.rideAndGo.dto;
 
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
 public class UserRegistrationRequest {
     private String pseudo;
     private String password;
+    private String email;
+    private Double phoneNumber;
+  
+    private String name;
+    private String surname;
+   
+    private LocalDate birthDate;
+    private String gender;
+   
 
-    // Getters et Setters
-    public String getPseudo() {
-        return pseudo;
-    }
-
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    // Lombok génère automatiquement les getters, setters, toString, equals, et hashCode.
 }

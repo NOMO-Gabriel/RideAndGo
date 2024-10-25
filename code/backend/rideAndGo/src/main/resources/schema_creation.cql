@@ -28,7 +28,12 @@ CREATE TABLE IF NOT EXISTS user (
     vehicle UUID,
     piece LIST<UUID>,
     picture LIST<UUID>,
-    avatar LIST<UUID>
+    avatar LIST<UUID>,
+    lastConnection TIMESTAMP,
+    isSuspend BOOLEAN,
+    isDeleted BOOLEAN,
+    gender TEXT
+
 );
 
 -- Table Notification
@@ -146,3 +151,7 @@ CREATE TABLE IF NOT EXISTS rating (
     score FLOAT,
     comment TEXT
 );
+
+CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
+CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
+CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
