@@ -1,35 +1,19 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faUser, faTrash, faPen, faEye, faUserShield, faBan, 
-  faPauseCircle, faTasks, faBell
+  faUser, faTrash, faPen, faEye, faUserShield, faBan,faCheckCircle,
+  faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
-
-// Type pour l'utilisateur
-interface User {
-  id: number;
-  username: string;
-  role: 'customer' | 'driver' | 'admin';
-  createdAt: string;
-  lastConnection: string;
-  status: 'active' | 'inactive';
-}
-
-// Données fictives des utilisateurs
-const fakeUsers: User[] = [
-  { id: 1, username: 'Alice', role: 'customer', createdAt: '2024-01-15', lastConnection: '2024-10-21', status: 'active' },
-  { id: 2, username: 'Bob', role: 'driver', createdAt: '2024-02-20', lastConnection: '2024-10-20', status: 'inactive' },
-  { id: 3, username: 'Charlie', role: 'customer', createdAt: '2024-03-10', lastConnection: '2024-10-19', status: 'active' },
-  { id: 4, username: 'Admin', role: 'admin', createdAt: '2024-04-01', lastConnection: '2024-10-18', status: 'active' },
-];
+import ConfirmationMessage from '../cards/ConfirmationMessage';
+import { useUserContext } from '@/app/context/UserContext';
 
 const userContent = {
   en: {
     title: "Users",
     filter: "Filter by Role",
-    actions: { 
+    actions: {
       view: "View", edit: "Edit", delete: "Delete", promote: "Promote",
       block: "Block", suspend: "Suspend", alert: "Send Alert", activity: "Activity"
     },
@@ -38,7 +22,7 @@ const userContent = {
   fr: {
     title: "Utilisateurs",
     filter: "Filtrer par rôle",
-    actions: { 
+    actions: {
       view: "Voir", edit: "Modifier", delete: "Supprimer", promote: "Promouvoir",
       block: "Bloquer", suspend: "Suspendre", alert: "Envoyer une alerte", activity: "Activité"
     },
@@ -46,18 +30,85 @@ const userContent = {
   },
 };
 
+const roleHierarchy = ['superAdmin', 'admin', 'user'];
+
+const getHighestRole = (roles: string[]) => {
+  for (const role of roleHierarchy) {
+    if (roles.includes(role)) {
+      return role;
+    }
+  }
+  return 'user'; // Default role if no match is found
+};
+
 const Users = () => {
   const { locale } = useLocale(); // Gestion de l'internationalisation
   const localizedContent = userContent[locale as 'fr' | 'en'];
+  const { users, fetchUsers, fetchUser, user } = useUserContext();
 
-  const [users, setUsers] = useState<User[]>(fakeUsers);
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  
+
   const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'driver' | 'admin'>('all');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
 
   // Gestion de la suppression d'un utilisateur
-  const handleDelete = (id: number) => setUsers(users.filter(user => user.id !== id));
+  const handleDelete = (id: string) => {
+    // Implement the delete logic here, e.g., call an API to delete the user
+    try{
+      setIsDeletePopupOpen(true);
+      console.log('deleting user with ID:', id); // Log for debugging
+      fetchUser(id);
+      setUserToDelete(id);
+    }catch(error){
+      console.error('Error fetching uer:', error);
+    } 
+  };
+  
+  const handleFinalDelete = (id: string) => {
+    // Implement the delete logic here, e.g., call an API to delete the user
+    try{
+      console.log('Final deleting user with ID:', id); // Log for debugging
+      ConfirmationMessage({
+        icon: <FontAwesomeIcon icon={faUser} />,
+        message: 'Action successful!',
+      });
+      setIsDeletePopupOpen(false);
+
+    }catch(error){
+      ConfirmationMessage({
+        icon: <FontAwesomeIcon icon={faUser} />,
+        message: 'Action successful!',
+      });
+      console.error('Error fetching user:', error);
+    } 
+  };
 
   // Gestion du filtrage par rôle
-  const filteredUsers = roleFilter === 'all' ? users : users.filter(user => user.role === roleFilter);
+  const filteredUsers = roleFilter === 'all' ? users : users.filter(user => user.roles.includes(roleFilter));
+
+  const handleView = (id: string) => {
+    try{
+          console.log('VIEWING user with ID:', id); // Log for debugging
+          fetchUser(id);
+          setSelectedUser(id);
+    }catch(error){
+      console.error('Error fetching uer:', error);
+    }
+    
+  };
+
+  const handleClosePopup = () => {
+    setSelectedUser(null);
+  };
+  const handleCloseDeletePopup = () => {
+    setUserToDelete(null);
+  };
 
   return (
     <div className="p-4">
@@ -87,34 +138,28 @@ const Users = () => {
             <div className="flex items-center space-x-4">
               <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
               <div>
-                <h3 className="font-bold">{user.username}</h3>
-                <p className="text-sm">{user.role}</p>
-                <span className="text-xs">Created: {user.createdAt}</span>
+                <h3 className="font-bold"></h3>
+                <h3 className="font-bold">{user.name} {user.surname} {user.averagerating}</h3>
+                <p className="text-sm">{getHighestRole(user.roles)}</p>
+                <span className="text-xs">Created: {new Date(user.createdat).toLocaleDateString()}</span>
                 <br />
-                <span className="text-xs">Last connection: {user.lastConnection}</span>
+                <span className="text-xs">Last connection: {new Date(user.updatedat).toLocaleDateString()}</span>
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex space-x-4 text-xl">
-              <button className="text-green-600" title={localizedContent.actions.view}>
+              <button className="text-green-600" title={localizedContent.actions.view} onClick={() => handleView(user.id)}>
                 <FontAwesomeIcon icon={faEye} />
               </button>
-              <button className="text-blue-600" title={localizedContent.actions.edit}>
-                <FontAwesomeIcon icon={faPen} />
-              </button>
-              <button className="text-yellow-600" title={localizedContent.actions.promote}>
-                <FontAwesomeIcon icon={faUserShield} />
-              </button>
+
               <button className="text-gray-600" title={localizedContent.actions.activity}>
                 <FontAwesomeIcon icon={faTasks} />
               </button>
               <button className="text-orange-600" title={localizedContent.actions.suspend}>
                 <FontAwesomeIcon icon={faPauseCircle} />
               </button>
-              <button className="text-red-600" title={localizedContent.actions.block}>
-                <FontAwesomeIcon icon={faBan} />
-              </button>
+
               <button className="text-purple-600" title={localizedContent.actions.alert}>
                 <FontAwesomeIcon icon={faBell} />
               </button>
@@ -125,6 +170,72 @@ const Users = () => {
           </div>
         ))}
       </div>
+
+      {/* Popup affiche infos de l'utilisateur*/}
+      {selectedUser && user && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white w-[500px] h-[500px] p-10 rounded-lg shadow-lg relative">
+      <button className="absolute top-2 right-2 text-red-600 focus:outline-none" onClick={handleClosePopup}>
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
+      <div className="flex items-center space-x-6">
+        {/*<img src={user.avatar[0]} alt={localizedContent.alt} className="w-16 h-16 rounded-full object-cover" />*/}
+        <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
+        
+        <div>
+          <h3 className="text-2xl font-bold">{user.name} {user.surname}</h3>
+          <p className="text-lg">{getHighestRole(user.roles)}</p>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-500 text-sm">Created:</span>
+            <span className="text-sm">{new Date(user.createdat).toLocaleDateString()}</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-500 text-sm">Last connection:</span>
+            <span className="text-sm">{new Date(user.updatedat).toLocaleDateString()}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+{/* Popup suppression de l'utilisateur*/}
+{userToDelete && user && isDeletePopupOpen &&( // Show user info and delete button only if user is selected
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white w-[500px] h-[500px] p-10 rounded-lg shadow-lg relative">
+      <button className="absolute top-2 right-2 text-red-600 focus:outline-none" onClick={handleCloseDeletePopup}>
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
+      <h3 className="text-xl font-bold mb-4">Are you sure you want to delete this user?</h3>
+      <div className="flex items-center space-x-6">
+        {/*<img src={user.avatar[0]} alt={localizedContent.alt} className="w-16 h-16 rounded-full object-cover" />*/}
+        <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
+        
+        <div>
+          <h3 className="text-2xl font-bold">{user.name} {user.surname}</h3>
+          <p className="text-lg">{getHighestRole(user.roles)}</p>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-500 text-sm">Created:</span>
+            <span className="text-sm">{new Date(user.createdat).toLocaleDateString()}</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-500 text-sm">Last connection:</span>
+            <span className="text-sm">{new Date(user.updatedat).toLocaleDateString()}</span>
+          </div>
+        </div>
+      </div>
+      <button className="text-red-600 ml-4" onClick={() => handleFinalDelete(user.id)}> {/* Delete button */}
+        <FontAwesomeIcon icon={faTrash} /> {localizedContent.actions.delete}
+      </button>
+      <button className="text-red-600 ml-4" onClick={() => setIsDeletePopupOpen(false)}> {/* Delete button */}
+        <FontAwesomeIcon icon={faTrash} /> Abandon
+      </button>
+      
+      
+    </div>
+  </div>
+
+
+)}
     </div>
   );
 };

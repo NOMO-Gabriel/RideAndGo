@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import { SearchFilterProvider } from "./utils/contexts/SearchFilterContext";
 
 import ScrollToTopButton from "./components/ScrollToTopButton";
+import { UserProvider } from "./context/UserContext";
 
 
 
@@ -21,7 +22,8 @@ export default function RootLayout({
   return (
       <html lang="en">
       <body  className={`antialiased `}>
-      <LocaleProvider>
+        <UserProvider>
+          <LocaleProvider>
         <ThemeProvider>
         <SearchFilterProvider>
           <Header/>
@@ -31,6 +33,8 @@ export default function RootLayout({
       </ThemeProvider>
       </LocaleProvider>
       <ScrollToTopButton/>
+        </UserProvider>
+      
       </body>
       </html>
   );
