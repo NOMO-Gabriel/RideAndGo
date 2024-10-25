@@ -41,7 +41,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
         
-        return ResponseEntity.ok(new AuthResponse("Login successful"));
+        return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
 
     @PostMapping("/loginByPhoneNumber")
@@ -55,7 +55,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
         
-        return ResponseEntity.ok(new AuthResponse("Login successful"));
+        return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
 
     @PostMapping("/loginByEmail")
@@ -69,7 +69,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect password"));
         }
         
-        return ResponseEntity.ok(new AuthResponse("Login successful"));
+        return ResponseEntity.ok(new AuthResponse("Login successful", user));
     }
 
     @PostMapping("/register")
