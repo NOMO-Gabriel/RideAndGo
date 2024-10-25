@@ -39,7 +39,7 @@ public class UserController {
 
     // Mettre à jour un utilisateur
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody UserToUpdate updatedUser) {
+    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody User updatedUser) {
         // Vérifiez que l'utilisateur existe d'abord
         Optional<User> existingUser = userService.getUserById(id);
         if (!existingUser.isPresent()) {
