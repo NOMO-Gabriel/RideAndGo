@@ -90,4 +90,14 @@ public class User {
 
     @Column("gender")
     private String gender;
+
+    @Column("language")
+    private String language;
+    @Column("theme")
+    private String theme;
+    @Column("islocalisable")
+    private Boolean isLocalisable;
+    
+    @Column("timezone")
+    private Double timeZone;
 }
