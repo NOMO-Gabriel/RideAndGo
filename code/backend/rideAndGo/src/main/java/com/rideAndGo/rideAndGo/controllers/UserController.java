@@ -28,6 +28,7 @@ public class UserController {
     }
 
     // Récupérer tous les utilisateurs
+    @CrossOrigin(origins = "http://localhost:3000")
    @GetMapping("/")
 public ResponseEntity<Iterable<User>> getAllActiveUsers() {
     Iterable<User> users = StreamSupport.stream(userService.getAllUsers().spliterator(), false)
