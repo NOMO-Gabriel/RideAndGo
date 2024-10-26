@@ -1,5 +1,6 @@
 package com.rideAndGo.rideAndGo.services;
 
+import com.rideAndGo.rideAndGo.dto.UpdatePersonalInfosRequestDTO;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -65,4 +66,6 @@ return userRepository.findByPhoneNumber(phoneNumber);
     public boolean existsByPhoneNumber(double phoneNumber) {
         return userRepository.existsByPhoneNumber(phoneNumber);
     }
+
+
 }
