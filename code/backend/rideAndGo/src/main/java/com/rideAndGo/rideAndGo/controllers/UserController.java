@@ -4,6 +4,7 @@ import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.PasswordChangeRequest;
 import com.rideAndGo.rideAndGo.dto.UpdatePersonalInfosRequestDTO;
+import com.rideAndGo.rideAndGo.dto.UpdatePreferencesRequestDTO;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.services.UserService;
 
@@ -178,6 +179,45 @@ public ResponseEntity<?> reactivateUser(@PathVariable UUID id) {
         userService.updateUser(userToUpdate);
     
         return ResponseEntity.ok(new HTTPResponse("Personal information updated successfully."));
+    }
+
+    @PutMapping("/updatePreferences")
+    public ResponseEntity<HTTPResponse> updatePreferences(@RequestBody UpdatePreferencesRequestDTO preferencesToUpdate) {
+        Optional<User> optionalUser = userService.getUserById(preferencesToUpdate.getId());
+    
+        // Vérification si l'utilisateur existe
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HTTPResponse("User not found."));
+        }
+    
+        // Extraction de l'utilisateur
+        User userToUpdate = optionalUser.get();
+        UpdatePreferencesRequestDTO.preferencesDTO newPreferences = preferencesToUpdate.getPreferencesDTO();
+        System.out.println("ID: " + preferencesToUpdate.getId());
+        System.out.println("Preferences: " + preferencesToUpdate.getPreferencesDTO());
+
+        if(newPreferences==null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new HTTPResponse("You can not update empty preferences."));
+        }
+        // Mise à jour conditionnelle des champs non nuls
+        if (newPreferences.getLanguage() != null) {
+            userToUpdate.setLanguage(newPreferences.getLanguage());
+        }
+        if(newPreferences.getTheme() != null) {
+            userToUpdate.setTheme(newPreferences.getTheme());
+        }
+        if (newPreferences.getIsLocalisable() != null) {
+            userToUpdate.setIsLocalisable(newPreferences.getIsLocalisable());
+            
+        }
+        if(newPreferences.getTimeZone() != null) {
+            userToUpdate.setTimeZone(newPreferences.getTimeZone());
+        }
+    
+        // Enregistrement des modifications
+        userService.updateUser(userToUpdate);
+    
+        return ResponseEntity.ok(new HTTPResponse("Preferences updated successfully."));
     }
     
 

@@ -155,8 +155,12 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
     newUser.setUpdatedAt(now);          // Utilise Instant pour TIMESTAMP
 
     newUser.setAverageRating(0.f);     // Note moyenne par défaut
-    
+    newUser.setLanguage("en");
+    newUser.setTheme("light");
+    newUser.setIsLocalisable(false);
+
     userService.save(newUser);
+
 
     return ResponseEntity.ok(new HTTPResponse("Registration successful"));
 }
