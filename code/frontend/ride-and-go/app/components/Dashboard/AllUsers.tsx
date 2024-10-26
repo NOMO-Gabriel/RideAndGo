@@ -45,13 +45,13 @@ const getHighestRole = (roles: string[]) => {
 const Users = () => {
   const { locale } = useLocale(); // Gestion de l'internationalisation
   const localizedContent = userContent[locale as 'fr' | 'en'];
-  {/*const { users, fetchUsers, fetchUser, user } = useUserContext();
+  const { users, fetchUsers, fetchUser, user } = useUserContext();
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
-  */}
-  const [users, setUsers] = useState([
+  
+  const [uusers, setUsers] = useState([
     {"name":"eleo",
       "roles":["user"]
     },
@@ -68,10 +68,13 @@ const Users = () => {
           try {
               const data = await getAllActiveUsers();
               setUsers(data);
-              setLoading(false);
+              console.log("Yo");
+              console.log(users);
+
           } catch (error) {
               setError(error.message);
-              setLoading(false);
+              console.log("Erorrr");
+              
           }
       };
 
