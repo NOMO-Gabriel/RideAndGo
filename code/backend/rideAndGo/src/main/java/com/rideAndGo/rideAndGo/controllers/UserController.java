@@ -1,7 +1,10 @@
 package com.rideAndGo.rideAndGo.controllers;
 
 import com.rideAndGo.rideAndGo.dto.AuthResponse;
+import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.PasswordChangeRequest;
+import com.rideAndGo.rideAndGo.dto.UpdatePersonalInfosRequestDTO;
+import com.rideAndGo.rideAndGo.dto.UpdatePreferencesRequestDTO;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.services.UserService;
 
@@ -26,6 +29,7 @@ public class UserController {
     }
 
     // Récupérer tous les utilisateurs
+    @CrossOrigin(origins = "http://localhost:3000")
    @GetMapping("/")
 public ResponseEntity<Iterable<User>> getAllActiveUsers() {
     Iterable<User> users = StreamSupport.stream(userService.getAllUsers().spliterator(), false)
@@ -134,5 +138,87 @@ public ResponseEntity<?> reactivateUser(@PathVariable UUID id) {
     return ResponseEntity.ok(new AuthResponse("User has been reactivated."));
 }
 
+    //to update personnal infos of a user
+    @PutMapping("/updatePersonnalInfos")
+    public ResponseEntity<HTTPResponse> updatePersonnalInfos(@RequestBody UpdatePersonalInfosRequestDTO infosToUpdate) {
+        Optional<User> optionalUser = userService.getUserById(infosToUpdate.getId());
+    
+        // Vérification si l'utilisateur existe
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HTTPResponse("User not found."));
+        }
+    
+        // Extraction de l'utilisateur
+        User userToUpdate = optionalUser.get();
+        UpdatePersonalInfosRequestDTO.PersonalInfosDTO newInfos = infosToUpdate.getPersonnalInfos();
+    
+        // Mise à jour conditionnelle des champs non nuls
+        if (newInfos.getName() != null) {
+            userToUpdate.setName(newInfos.getName());
+        }
+        if (newInfos.getSurname() != null) {
+            userToUpdate.setSurname(newInfos.getSurname());
+        }
+        if (newInfos.getPseudo() != null) {
+            userToUpdate.setPseudo(newInfos.getPseudo());
+        }
+        if (newInfos.getBirthDate() != null) {
+            userToUpdate.setBirthDate(newInfos.getBirthDate());
+        }
+        if (newInfos.getGender() != null) {
+            userToUpdate.setGender(newInfos.getGender());
+        }
+        if (newInfos.getEmail() != null) {
+            userToUpdate.setEmail(newInfos.getEmail());
+        }
+        if (newInfos.getPhoneNumber() != null) {
+            userToUpdate.setPhoneNumber(newInfos.getPhoneNumber());
+        }
+    
+        // Enregistrement des modifications
+        userService.updateUser(userToUpdate);
+    
+        return ResponseEntity.ok(new HTTPResponse("Personal information updated successfully."));
+    }
+
+    @PutMapping("/updatePreferences")
+    public ResponseEntity<HTTPResponse> updatePreferences(@RequestBody UpdatePreferencesRequestDTO preferencesToUpdate) {
+        Optional<User> optionalUser = userService.getUserById(preferencesToUpdate.getId());
+    
+        // Vérification si l'utilisateur existe
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new HTTPResponse("User not found."));
+        }
+    
+        // Extraction de l'utilisateur
+        User userToUpdate = optionalUser.get();
+        UpdatePreferencesRequestDTO.preferencesDTO newPreferences = preferencesToUpdate.getPreferencesDTO();
+        System.out.println("ID: " + preferencesToUpdate.getId());
+        System.out.println("Preferences: " + preferencesToUpdate.getPreferencesDTO());
+
+        if(newPreferences==null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new HTTPResponse("You can not update empty preferences."));
+        }
+        // Mise à jour conditionnelle des champs non nuls
+        if (newPreferences.getLanguage() != null) {
+            userToUpdate.setLanguage(newPreferences.getLanguage());
+        }
+        if(newPreferences.getTheme() != null) {
+            userToUpdate.setTheme(newPreferences.getTheme());
+        }
+        if (newPreferences.getIsLocalisable() != null) {
+            userToUpdate.setIsLocalisable(newPreferences.getIsLocalisable());
+            
+        }
+        if(newPreferences.getTimeZone() != null) {
+            userToUpdate.setTimeZone(newPreferences.getTimeZone());
+        }
+    
+        // Enregistrement des modifications
+        userService.updateUser(userToUpdate);
+    
+        return ResponseEntity.ok(new HTTPResponse("Preferences updated successfully."));
+    }
+    
 
 }

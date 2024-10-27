@@ -7,7 +7,8 @@ import {
   faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationMessage from '../cards/ConfirmationMessage';
-import { useUserContext } from '@/app/context/UserContext';
+import { getAllActiveUsers } from '@/app/utils/api/user';
+import { useUserContext } from '@/app/utils/contexts/UserContext';
 
 const userContent = {
   en: {
@@ -49,7 +50,36 @@ const Users = () => {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+  
+  const [uusers, setUsers] = useState([
+    {"name":"eleo",
+      "roles":["user"]
+    },
+    {"name":"eleo2",
+      "roles":["admin"]
 
+    }
+
+  ]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const fetchUsers = async () => {
+          try {
+              const data = await getAllActiveUsers();
+              setUsers(data);
+              console.log("Yo");
+              console.log(users);
+
+          } catch (error) {
+              setError(error.message);
+              console.log("Erorrr");
+              
+          }
+      };
+
+      fetchUsers();
+  }, []);
   
 
   const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'driver' | 'admin'>('all');

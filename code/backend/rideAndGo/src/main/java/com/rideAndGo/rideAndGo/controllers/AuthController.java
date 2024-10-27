@@ -2,6 +2,7 @@ package com.rideAndGo.rideAndGo.controllers;
 
 import com.rideAndGo.rideAndGo.dto.AuthRequest;
 import com.rideAndGo.rideAndGo.dto.AuthResponse;
+import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.UserRegistrationRequest;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.services.UserService;
@@ -101,23 +102,23 @@ public class AuthController {
     
 
     @PostMapping("/register")
-public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationRequest registrationRequest) {
+public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationRequest registrationRequest) {
     
 
         if (userService.existsByPseudo(registrationRequest.getPseudo())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse("This pseudo is already used"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new HTTPResponse("This pseudo is already used"));
         }
 
         if (userService.existsByEmail(registrationRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse("This Email is already used"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new HTTPResponse("This Email is already used"));
         }
 
         if (userService.existsByPhoneNumber(registrationRequest.getPhoneNumber())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse("This phoneNumber is already used"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new HTTPResponse("This phoneNumber is already used"));
         }
     
     List<String> roles = new ArrayList<>();
-    roles.add("ROLE_USER");
+    roles.add("ROLE_TRAVELLER");
     Instant now = Instant.now();  // Pour les champs TIMESTAMP
     LocalDate birthDate = registrationRequest.getBirthDate();  // Pour le champ DATE
 
@@ -134,7 +135,8 @@ public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationReques
     newUser.setIsOnline(false);  // Par défaut, l'utilisateur n'est pas en ligne
     newUser.setIsSuspend(false);
     newUser.setIsDeleted(false);
-    newUser.setLastConnection(now);
+    newUser.setLastConnection(now); 
+    newUser.setBirthDate(birthDate);
     // Valeurs statiques pour les autres champs
     List<UUID> defaultUUIDList = new ArrayList<>();
     defaultUUIDList.add(UUID.randomUUID());
@@ -153,9 +155,13 @@ public ResponseEntity<AuthResponse> register(@RequestBody UserRegistrationReques
     newUser.setUpdatedAt(now);          // Utilise Instant pour TIMESTAMP
 
     newUser.setAverageRating(0.f);     // Note moyenne par défaut
-    
+    newUser.setLanguage("en");
+    newUser.setTheme("light");
+    newUser.setIsLocalisable(false);
+
     userService.save(newUser);
 
-    return ResponseEntity.ok(new AuthResponse("Registration successful"));
+
+    return ResponseEntity.ok(new HTTPResponse("Registration successful"));
 }
 }

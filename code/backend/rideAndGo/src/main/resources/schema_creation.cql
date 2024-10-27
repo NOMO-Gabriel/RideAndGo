@@ -32,8 +32,13 @@ CREATE TABLE IF NOT EXISTS user (
     lastConnection TIMESTAMP,
     isSuspend BOOLEAN,
     isDeleted BOOLEAN,
-    gender TEXT
-
+    gender TEXT,
+    
+    -- Nouvelles colonnes pour les préférences
+    language TEXT,
+    theme TEXT,  -- e.g., "light", "dark"
+    timezone  DOUBLE,  -- e.g., "1"
+    isLocalisable BOOLEAN  -- e.g., true"
 );
 
 -- Table Notification
@@ -100,13 +105,15 @@ CREATE TABLE IF NOT EXISTS itinerary (
 -- Table Travel
 CREATE TABLE IF NOT EXISTS travel (
     id UUID PRIMARY KEY,
-    startPoint TEXT,
-    endPoint TEXT,
+    startPointId UUID,
+    endPointId UUID,
     driver UUID,  -- driver id
-    traveller LIST<UUID>,  -- list of traveller ids
+    traveller UUID,  -- list of traveller ids
     date TIMESTAMP,
-    travellerRating UUID,
-    driverRating UUID
+    travellerRating DOUBLE,
+    driverRating DOUBLE,
+    numberOfSeats DOUBLE,
+    price DOUBLE
 );
 
 -- Table Subscription
