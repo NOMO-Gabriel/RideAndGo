@@ -7,7 +7,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  roles: string[]; // Liste de rôles attribués
+  roles: string[]; 
   [key: string]: any;
 }
 
@@ -17,7 +17,7 @@ interface UserContextType {
   token: string | null;
   fetchUsers: () => Promise<void>;
   fetchUser: (id: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  login: (identifierType: 'email' | 'phoneNumber' | 'pseudo', identifierValue: string, password: string) => Promise<void>;
   logout: () => void;
   hasRole: (role: string) => boolean; // Vérification du rôle
 }
@@ -89,16 +89,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (
+    identifierType: 'email' | 'phoneNumber' | 'pseudo',
+    identifierValue: string,
+    password: string
+  ) => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const endpoint = `${API_URL}/loginBy${capitalize(identifierType)}`;
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ [identifierType]: identifierValue, password }),
       });
 
       if (!response.ok) throw new Error('Login failed');
       const data = await response.json();
+      
       setToken(data.token);
       localStorage.setItem('token', data.token);
       await fetchUserProfile(); // Charger les informations utilisateur après connexion
@@ -116,6 +122,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const hasRole = (role: string): boolean => {
     return user?.roles.includes(role) || false;
   };
+
+  // Fonction pour capitaliser le premier caractère (utilisée pour les endpoints)
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
     <UserContext.Provider value={{ users, user, token, fetchUsers, fetchUser, login, logout, hasRole }}>

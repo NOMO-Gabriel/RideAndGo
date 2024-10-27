@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import { FaGlobe, FaRoad } from 'react-icons/fa';
+import { FaGlobe, FaRoad, FaUser } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-
+import { useUser } from '@/app/utils/hooks/useUser'; // Assurez-vous d'importer votre hook useUser
 
 const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { user } = useUser(); // Récupérer l'utilisateur
+  const roles = user?.roles || []; // Assurer que roles est un tableau
 
   const handleLanguageChange = (lang: string) => {
     changeLocale(lang);
@@ -20,7 +22,6 @@ const Navbar: React.FC = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  // Fermer le dropdown si on clique à l'extérieur
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.closest('.dropdown') === null) {
@@ -28,7 +29,6 @@ const Navbar: React.FC = () => {
     }
   };
 
-  // Ajouter l'écouteur d'événements pour le clic à l'extérieur
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
       assistance: 'Assistance',
       signIn: 'Sign in',
       signUp: 'Sign up',
-      dashboard:"dashboard",
+      dashboard: 'Dashboard',
     },
     fr: {
       home: 'Accueil',
@@ -64,28 +64,36 @@ const Navbar: React.FC = () => {
       assistance: 'Assistance',
       signIn: 'Se Connecter',
       signUp: "S'inscrire",
-      dashboard:  "tableau de bord",
+      dashboard: "Tableau de bord",
     },
   };
 
-  const   currentContent = locale === 'en' ? content.en : content.fr; 
+  const currentContent = locale === 'en' ? content.en : content.fr;
+
+  const isGuest = roles.includes('ROLE_GUEST');
+  const isTraveller = roles.includes('ROLE_TRAVELLER');
+  const isDriver = roles.includes('ROLE_DRIVER');
 
   return (
     <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo avec l'icône de route */}
         <div className="text-4xl font-bold tracking-wider flex items-center hover:text-orange-btn transition duration-300 cursor-pointer">
           <FaRoad className="mr-2" />
           Ride&Go
         </div>
-        {/* Links */}
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
           <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
-          <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
-          <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
-          <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link>
-
+          
+          {/* Affichage conditionné des liens "Go" et "Ride" */}
+          {isTraveller && (
+            <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
+          )}
+          {isDriver && (
+            <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
+          )}
+          
+          {/* <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link> */}
 
           {/* Help Menu Dropdown */}
           <div className="relative group dropdown">
@@ -112,7 +120,8 @@ const Navbar: React.FC = () => {
           <div className="relative group">
             <button className="flex items-center space-x-2 group-hover:text-orange-btn transition duration-300">
               <FaGlobe />
-              <select   
+              <select  
+                title={locale === 'en' ? "Language" : "Langue"} 
                 value={locale}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className='p-2 text-white bg-bleu-nuit rounded-lg shadow-lg z-10'
@@ -123,9 +132,31 @@ const Navbar: React.FC = () => {
             </button>
           </div>
 
-          {/* Sign In & Sign Up Buttons */}
-          <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
-          <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
+          {/* Affichage conditionné des boutons de connexion et d'inscription */}
+          {!user ? (
+            <>
+              <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
+              <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
+            </>
+          ) : (
+            <div className="relative group dropdown">
+              <button 
+                onClick={toggleDropdown} 
+                className="flex items-center space-x-2"
+              >
+                <FaUser />
+                <FontAwesomeIcon icon={faChevronDown} />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
+                  <ul className="py-2">
+                    <li><Link href="/dashboard" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.dashboard}</Link></li>
+                    <li><Link href="/logout" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Logout</Link></li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>

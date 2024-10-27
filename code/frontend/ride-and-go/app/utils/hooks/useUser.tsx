@@ -12,7 +12,7 @@ export const useUser = () => {
   const { user, token, ...rest } = context;
 
   const isAuthenticated = !!token;
-  const userRole = user?.roles[0] || 'ROLE_GUEST';
+  const userRole = user?.roles[0] || ['ROLE_GUEST'];
 
   const hasRole = (role: string) => user?.roles.includes(role);
 

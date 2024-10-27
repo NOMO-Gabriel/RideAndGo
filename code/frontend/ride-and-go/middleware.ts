@@ -21,5 +21,5 @@ export function middleware(request: NextRequest) {
 
 // Matcher pour appliquer le middleware sur certaines routes
 export const config = {
-  matcher: ['/admin/:path*', '/dashboard/:path*'],
+  matcher: ['/admina/:path*', '/dashboarda/:path*'],
 };

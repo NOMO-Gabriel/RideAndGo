@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { login } from '@/app/utils/api/auth'; 
+import { useUser } from '@/app/utils/hooks/useUser'; // Importer le hook
+
 
 interface LoginData {
-  identifier: string;
+  identifier: string ;
   password: string;
 }
 
 const LoginForm = () => {
+  const { login } = useUser(); // Récupérer la fonction de connexion du contexte
   const [loginData, setLoginData] = useState<LoginData>({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false); // Ajout de l'état de succès
+  const [success, setSuccess] = useState(false);
 
   // Fonction pour détecter le type de l'identifiant
   const getIdentifierType = (identifier: string): 'email' | 'phoneNumber' | 'pseudo' => {
@@ -36,11 +38,11 @@ const LoginForm = () => {
     const identifierType = getIdentifierType(loginData.identifier);
 
     try {
-      await login(identifierType, loginData.identifier, loginData.password);
-      setSuccess(true); // Connexion réussie
+      await login(loginData.identifier, loginData.password, identifierType); // Appel au hook de connexion
+      setSuccess(true);
       setTimeout(() => {
         window.location.href = '/dashboard'; // Redirection après succès
-      }, 2000); // Délai avant redirection
+      }, 2000);
     } catch (err) {
       setError('Erreur de connexion. Veuillez vérifier vos identifiants.');
     } finally {
@@ -49,7 +51,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/images/bg_login.jpeg)" }}>
+    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/images/bg_register.jpeg)" }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
         <div className="flex justify-center items-center min-h-screen">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
