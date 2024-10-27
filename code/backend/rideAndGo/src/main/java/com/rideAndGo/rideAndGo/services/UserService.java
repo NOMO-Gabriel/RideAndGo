@@ -22,15 +22,15 @@ public class UserService {
     }
 
     // Recherche d'un utilisateur par son pseudo
-    public Optional<User> findByPseudo(String pseudo) { // Correction ici : 'String' au lieu de 'string'
+    public Optional<User> findByPseudo(String pseudo) { 
         return userRepository.findByPseudo(pseudo);
     }
 
-    public Optional<User> findByEmail(String email) { // Correction ici : 'String' au lieu de 'string'
+    public Optional<User> findByEmail(String email) { 
     return userRepository.findByEmail(email);
 }
 
-public Optional<User> findByPhoneNumber(Double phoneNumber) { // Correction ici : 'String' au lieu de 'string'
+public Optional<User> findByPhoneNumber(Double phoneNumber) { 
 return userRepository.findByPhoneNumber(phoneNumber);
 }
 
@@ -67,5 +67,7 @@ return userRepository.findByPhoneNumber(phoneNumber);
         return userRepository.existsByPhoneNumber(phoneNumber);
     }
 
-
+    public boolean existsById(UUID ID) {
+        return userRepository.existsById(ID);
+    }
 }
