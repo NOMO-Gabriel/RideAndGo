@@ -1,4 +1,4 @@
-'use client';
+' use client';
 
 import { useEffect, useState } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
@@ -6,13 +6,16 @@ import { FaGlobe, FaRoad, FaUser } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { useUser } from '@/app/utils/hooks/useUser'; // Assurez-vous d'importer votre hook useUser
+import { useUser} from '@/app/utils/hooks/useUser'; 
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
 
 const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { user } = useUser(); // Récupérer l'utilisateur
-  const roles = user?.roles || []; // Assurer que roles est un tableau
+  const [isDropdownAccountOpen, setIsDropdownAccountOpen] = useState(false);
+  const { user,logout } = useUser(); // Récupérer l'utilisateur
+  const roles = user?.roles || ['ROLE_GUEST']; // Assurer que roles est un tableau
+  
 
   const handleLanguageChange = (lang: string) => {
     changeLocale(lang);
@@ -20,6 +23,9 @@ const Navbar: React.FC = () => {
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
+  };
+  const toggleDropdownAccount = () => {
+    setIsDropdownAccountOpen((prev) => !prev);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -70,9 +76,13 @@ const Navbar: React.FC = () => {
 
   const currentContent = locale === 'en' ? content.en : content.fr;
 
-  const isGuest = roles.includes('ROLE_GUEST');
+  // Affichage conditionné des liens "Go" et "Ride"
   const isTraveller = roles.includes('ROLE_TRAVELLER');
   const isDriver = roles.includes('ROLE_DRIVER');
+  const handleLogout = () =>{
+    logout();
+    window.location.href = '/login';
+  }
 
   return (
     <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50">
@@ -104,6 +114,7 @@ const Navbar: React.FC = () => {
               <span>{currentContent.help}</span>
               <FontAwesomeIcon icon={faChevronDown} className="transition-transform duration-300 group-hover:rotate-180" />
             </button>
+         
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
                 <ul className="py-2">
@@ -141,17 +152,23 @@ const Navbar: React.FC = () => {
           ) : (
             <div className="relative group dropdown">
               <button 
-                onClick={toggleDropdown} 
+                onClick={toggleDropdownAccount} 
                 className="flex items-center space-x-2"
               >
                 <FaUser />
-                <FontAwesomeIcon icon={faChevronDown} />
+                {
+                  !isDropdownAccountOpen ? (
+                    <FontAwesomeIcon icon={faChevronDown} />
+                  ) : (
+                    <FontAwesomeIcon icon={faChevronUp} />
+                  )
+                }
               </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
+              {isDropdownAccountOpen && (
+                <div className="absolute right-0 mt-2 w-30 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
                   <ul className="py-2">
-                    <li><Link href="/dashboard" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.dashboard}</Link></li>
-                    <li><Link href="/logout" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">Logout</Link></li>
+                    <li><Link href="/dashboard" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300  w-full  rounded-md text-center">{currentContent.dashboard}</Link></li>
+                    <li><button onClick={handleLogout} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full  rounded-md">Logout</button></li>
                   </ul>
                 </div>
               )}

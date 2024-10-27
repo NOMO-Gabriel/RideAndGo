@@ -5,6 +5,7 @@ import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import Link from "next/link";
 import { register } from "@/app/utils/api/auth";
 
+
 export default function Register() {
   const { locale } = useLocale();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -92,7 +93,7 @@ export default function Register() {
       await register(dataToSend);
       setSuccess(true);
       setTimeout(() => {
-        window.location.href = "/login"; // Redirection après succès
+        window.location.href = '/login'; // Redirection après succès
       }, 2000);
     } catch (error) {
       if (error instanceof Error) {

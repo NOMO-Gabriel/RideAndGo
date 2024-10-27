@@ -1,63 +1,65 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useUser } from '@/app/utils/hooks/useUser'; // Importer le hook
-
+import { useState, FormEvent } from 'react';  
+import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
 
 interface LoginData {
-  identifier: string ;
+  identifier: string;
   password: string;
 }
 
 const LoginForm = () => {
-  const { login } = useUser(); // Récupérer la fonction de connexion du contexte
+  const { login } = useUser(); // Récupère la fonction de connexion du contexte
   const [loginData, setLoginData] = useState<LoginData>({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Fonction pour détecter le type de l'identifiant
+  // Détection du type d'identifiant
   const getIdentifierType = (identifier: string): 'email' | 'phoneNumber' | 'pseudo' => {
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const phoneRegex = /^\+?\d{10,15}$/; // Pour téléphone (incluant international)
-    
+    const phoneRegex = /^\+?\d{10,15}$/;
+
     if (emailRegex.test(identifier)) return 'email';
     if (phoneRegex.test(identifier)) return 'phoneNumber';
     return 'pseudo';
   };
 
+  // Mise à jour des données de connexion
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     const identifierType = getIdentifierType(loginData.identifier);
-
+  
     try {
-      await login(loginData.identifier, loginData.password, identifierType); // Appel au hook de connexion
+      await login(identifierType, loginData.identifier, loginData.password);
       setSuccess(true);
       setTimeout(() => {
-        window.location.href = '/dashboard'; // Redirection après succès
+        window.location.href = '/dashboard'; // Redirection sécurisée
       }, 2000);
-    } catch (err) {
-      setError('Erreur de connexion. Veuillez vérifier vos identifiants.');
+    } catch (error: any) { 
+      setError(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.');
+      setSuccess(false); 
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/images/bg_register.jpeg)" }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
         <div className="flex justify-center items-center min-h-screen">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-6 text-center">Se Connecter</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && <p className="text-red-500 text-center">{error}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulaire de connexion">
+              {error && <p className="text-red-500 text-center" role="alert">{error}</p>}
               {success && <p className="text-green-500 text-center">Connexion réussie ! Redirection...</p>}
               
               <input
@@ -67,6 +69,7 @@ const LoginForm = () => {
                 onChange={handleChange}
                 placeholder="Email, Pseudo ou Téléphone"
                 className="w-full p-2 border border-gray-300 rounded"
+                aria-label="Identifiant (Email, Pseudo ou Téléphone)"
                 required
               />
 
@@ -77,6 +80,7 @@ const LoginForm = () => {
                 onChange={handleChange}
                 placeholder="Mot de passe"
                 className="w-full p-2 border border-gray-300 rounded"
+                aria-label="Mot de passe"
                 required
               />
 
