@@ -7,8 +7,8 @@ import {
   faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationMessage from '../cards/ConfirmationMessage';
-import { getAllActiveUsers } from '@/api/user';
-import { useUserContext } from '@/app/context/UserContext';
+import { getAllActiveUsers } from '@/app/utils/api/user';
+import { useUserContext } from '@/app/utils/contexts/UserContext';
 
 const userContent = {
   en: {

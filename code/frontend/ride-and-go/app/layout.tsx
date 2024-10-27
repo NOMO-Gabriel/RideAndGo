@@ -7,8 +7,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { SearchFilterProvider } from "./utils/contexts/SearchFilterContext";
 
-import ScrollToTopButton from "./components/ScrollToTopButton";
-import { UserProvider } from "./context/UserContext";
+import ScrollToTopButton from "./components/buttons/ScrollToTopButton";
+import { UserProvider } from "./utils/contexts/UserContext";
 
 
 
@@ -24,15 +24,15 @@ export default function RootLayout({
       <body  className={`antialiased `}>
         <UserProvider>
           <LocaleProvider>
-        <ThemeProvider>
-        <SearchFilterProvider>
-          <Header/>
-          <main>{children}</main> 
-          <Footer/>
-        </SearchFilterProvider>
-      </ThemeProvider>
-      </LocaleProvider>
-      <ScrollToTopButton/>
+            <ThemeProvider>
+              <SearchFilterProvider>
+                <Header/>
+                <main>{children}</main> 
+                <Footer/>
+              </SearchFilterProvider>
+            </ThemeProvider>
+          </LocaleProvider>
+          <ScrollToTopButton/>
         </UserProvider>
       
       </body>
