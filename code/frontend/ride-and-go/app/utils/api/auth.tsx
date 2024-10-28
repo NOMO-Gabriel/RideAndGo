@@ -18,7 +18,7 @@ import { API_URL } from './api_infos';
     isDriver: boolean;
     
     }) => {
-      console.log(JSON.stringify(userData));
+      
 
     const response = await fetch(`${API_URL}/register`, {
         method: 'POST',

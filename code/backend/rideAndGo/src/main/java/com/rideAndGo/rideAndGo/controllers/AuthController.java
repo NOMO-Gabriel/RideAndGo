@@ -10,7 +10,6 @@ import com.rideAndGo.rideAndGo.services.UserService;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -118,7 +117,14 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
         }
     
     List<String> roles = new ArrayList<>();
-    roles.add("ROLE_TRAVELLER");
+    if(registrationRequest.getIsDriver()== true){
+        roles.add("ROLE_DRIVER");
+        roles.add("ROLE_TRAVELLER");
+    }else{
+        roles.add("ROLE_TRAVELLER");
+    }
+    
+
     Instant now = Instant.now();  // Pour les champs TIMESTAMP
     LocalDate birthDate = registrationRequest.getBirthDate();  // Pour le champ DATE
 
