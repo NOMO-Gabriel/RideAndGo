@@ -13,9 +13,9 @@ import UpgradeBtn from "./UpgradeBtn";
 export default function Sidebar() {
   const { locale } = useLocale();
   const { updateDashboardFilter } = useDashboardContext();
-  const { user, isAuthenticated } = useUser(); // Utilisation du hook
+  const { user, isAuthenticated } = useUser();
 
-  const roles = user?.roles || ['ROLE_GUEST']; // Définir les rôles par défaut si l'utilisateur n'est pas connecté
+  const roles = user?.roles || ['ROLE_GUEST']; 
 
   const content = {
     en: [
