@@ -1,6 +1,4 @@
-// api/user.tsx
-
-const BASE_URL = 'http://localhost:8080/api/users';
+import { API_URL } from './api_infos';
 
 export const getAllActiveUsers = async () => {
     try {

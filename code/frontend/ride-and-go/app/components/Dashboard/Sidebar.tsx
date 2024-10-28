@@ -1,6 +1,8 @@
 'use client';
+
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import { useDashboardContext } from "@/app/utils/contexts/DashboardContext";
+import { useUser } from "@/app/utils/hooks/useUser"; // Import du hook
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser, faBell, faCogs, faClipboard, faRoute, faChartBar,
@@ -8,9 +10,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import UpgradeBtn from "./UpgradeBtn";
 
-export default function Component() {
+export default function Sidebar() {
   const { locale } = useLocale();
   const { updateDashboardFilter } = useDashboardContext();
+  const { user, isAuthenticated } = useUser();
+
+  const roles = user?.roles || ['ROLE_GUEST']; 
 
   const content = {
     en: [
@@ -20,10 +25,10 @@ export default function Component() {
       { name: "My Complaints", icon: faClipboard, id: 4 },
       { name: "My Places and Itineraries", icon: faRoute, id: 5 },
       { name: "Statistics", icon: faChartBar, id: 6 },
-      { name: "Subscriptions", icon: faHandshake, id: 7 },
+      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Subscriptions", icon: faHandshake, id: 7 }] : []),
       { name: "Finances", icon: faWallet, id: 8 },
       { name: "Chat", icon: faComments, id: 9 },
-      { name: "Manage Users", icon: faUserShield, id: 10 },
+      ...(roles.includes('ROLE_ADMIN') ? [{ name: "Manage Users", icon: faUserShield, id: 10 }] : []),
     ],
     fr: [
       { name: "Informations personnelles", icon: faUser, id: 1 },
@@ -32,10 +37,10 @@ export default function Component() {
       { name: "Mes réclamations", icon: faClipboard, id: 4 },
       { name: "Mes Lieux et itinéraires", icon: faRoute, id: 5 },
       { name: "Statistiques", icon: faChartBar, id: 6 },
-      { name: "Abonnements", icon: faHandshake, id: 7 },
+      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Abonnements", icon: faHandshake, id: 7 }] : []),
       { name: "Finances", icon: faWallet, id: 8 },
       { name: "Chat", icon: faComments, id: 9 },
-      { name: "Utilisateurs", icon: faUserShield, id: 10 },
+      ...(roles.includes('ROLE_ADMIN') ? [{ name: "Utilisateurs", icon: faUserShield, id: 10 }] : []),
     ],
   };
 

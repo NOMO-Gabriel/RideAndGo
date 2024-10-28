@@ -1,7 +1,5 @@
-
 import { useContext } from 'react';
 import { UserContext } from '@/app/utils/contexts/UserContext';
-
 
 export const useUser = () => {
   const context = useContext(UserContext);
@@ -9,19 +7,13 @@ export const useUser = () => {
     throw new Error('useUser must be used within a UserProvider');
   }
 
-  const { user, token, ...rest } = context;
+  const { user, ...rest } = context;
 
-  const isAuthenticated = !!token;
-  const userRole = user?.roles[0] || 'ROLE_GUEST';
-
-  const hasRole = (role: string) => user?.roles.includes(role);
-
+  const isAuthenticated = !!user; 
+ 
   return {
     ...rest,
     user,
-    token,
-    isAuthenticated,
-    userRole,
-    hasRole,
+    isAuthenticated
   };
 };

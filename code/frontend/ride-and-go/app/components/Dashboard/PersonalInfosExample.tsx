@@ -4,7 +4,7 @@ import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useUser } from '@/app/utils/hooks/useUser';
-import { getUser, UpdateUsersInfo } from '@/app/utils/api/users';
+import { getUser,UpdateUsersInfo } from '@/app/utils/api/users';
 
 // Définir le contenu des informations personnelles avec des types
 type Content = {
@@ -20,7 +20,7 @@ type Content = {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
-  passwordRequirementsIntro: string;
+  passwordRequirementsIntro: string; // Texte introductif pour les exigences de mot de passe
   passwordRequirements: {
     minLength: string;
     lowercase: string;
@@ -30,58 +30,58 @@ type Content = {
 };
 
 const content: Record<string, Content> = {
-    en: {
-      personalInfo: "Personal Information",
-      surname: "First Name :",
-      name: "Last Name :",
-      pseudo: "Pseudo :",
-      dateOfBirth: "Date of Birth :",
-      gender: "Gender :",
-      email: "Email :",
-      phone: "Phone :",
-      changePassword: "Change Password",
-      currentPassword: "Current Password :",
-      newPassword: "New Password :",
-      confirmPassword: "Confirm Password :",
-      passwordRequirementsIntro: "Please ensure your new password meets the following requirements:",
-      passwordRequirements: {
-        minLength: "* Minimum 8 characters long - the more, the better",
-        lowercase: "* At least one lowercase",
-        uppercase: "* At least one uppercase character",
-        symbolOrNumber: "* At least one number, symbol or whitespace character",
-      },
+  en: {
+    personalInfo: "Personal Information",
+    surname: "First Name :",
+    name: "Last Name :",
+    pseudo: "Pseudo :",
+    dateOfBirth: "Date of Birth :",
+    gender: "Gender :",
+    email: "Email :",
+    phone: "Phone :",
+    changePassword: "Change Password",
+    currentPassword: "Current Password :",
+    newPassword: "New Password :",
+    confirmPassword: "Confirm Password :",
+    passwordRequirementsIntro: "Please ensure your new password meets the following requirements:",
+    passwordRequirements: {
+      minLength: "* Minimum 8 characters long - the more, the better",
+      lowercase: "* At least one lowercase",
+      uppercase: "* At least one uppercase character",
+      symbolOrNumber: "* At least one number, symbol or whitespace character",
     },
-    fr: {
-      personalInfo: "Informations Personnelles",
-      surname: "Prénom :",
-      name: "Nom :",
-      pseudo: "Pseudo :",
-      dateOfBirth: "Date de Naissance :",
-      gender: "Genre :",
-      email: "Email :",
-      phone: "Téléphone :",
-      changePassword: "Changer le Mot de Passe",
-      currentPassword: "Mot de passe actuel :",
-      newPassword: "Nouveau Mot de Passe :",
-      confirmPassword: "Confirmer le Mot de Passe :",
-      passwordRequirementsIntro: "Veuillez vous assurer que votre nouveau mot de passe respecte les exigences suivantes :",
-      passwordRequirements: {
-        minLength: "* Minimum 8 caractères - plus c'est long, mieux c'est",
-        lowercase: "* Au moins une minuscule",
-        uppercase: "* Au moins une majuscule",
-        symbolOrNumber: "* Au moins un chiffre, symbole ou espace",
-      },
-  }
+  },
+  fr: {
+    personalInfo: "Informations Personnelles",
+    surname: "Prénom :",
+    name: "Nom :",
+    pseudo: "Pseudo :",
+    dateOfBirth: "Date de Naissance :",
+    gender: "Genre :",
+    email: "Email :",
+    phone: "Téléphone :",
+    changePassword: "Changer le Mot de Passe",
+    currentPassword: "Mot de passe actuel :",
+    newPassword: "Nouveau Mot de Passe :",
+    confirmPassword: "Confirmer le Mot de Passe :",
+    passwordRequirementsIntro: "Veuillez vous assurer que votre nouveau mot de passe respecte les exigences suivantes :",
+    passwordRequirements: {
+      minLength: "* Minimum 8 caractères - plus c'est long, mieux c'est",
+      lowercase: "* Au moins une minuscule",
+      uppercase: "* Au moins une majuscule",
+      symbolOrNumber: "* Au moins un chiffre, symbole ou espace",
+    },
+  },
 };
 
 export default function PersonalInfo() {
-  
   const { locale } = useLocale();
   const currentContent = locale === 'en' ? content.en : content.fr;
   const { user } = useUser();
 
   const [userInfo, setUserInfo] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
+
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -89,7 +89,7 @@ export default function PersonalInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        if (!user) return;
+        if(!user) return;
         const data = await getUser(user.id);
         setUserInfo(data);
       } catch (error) {
@@ -99,40 +99,19 @@ export default function PersonalInfo() {
     fetchUserInfo();
   }, [user?.id]);
 
-  const handleSave = async () => {
-    try {
-      await UpdateUsersInfo({
-        id: user?.id,
-        personnalInfos: {
-          name: userInfo.name,
-          surname: userInfo.surname,
-          pseudo: userInfo.pseudo,
-          email: userInfo.email,
-          phoneNumber: userInfo.phoneNumber,
-          birthday: userInfo.dateOfBirth,
-          gender: userInfo.gender,
-        },
-      });
-      alert('Informations mises à jour avec succès!');
-      setIsEditing(false); 
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour des informations:', error);
-      alert('Erreur lors de la mise à jour des informations. Veillez reessayer');
-    }
-  };
-
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert('Les mots de passe ne correspondent pas!');
       return;
     }
+    // Logique API pour changer le mot de passe
     alert('Mot de passe changé avec succès!');
     setNewPassword('');
     setConfirmPassword('');
   };
 
-  if (!userInfo) return <p>Chargement...</p>;
+  if (!userInfo) return <p>Chargement...</p>; // Afficher un message pendant le chargement
 
   return (
     <div className="p-4 bg-white rounded-lg shadow flex flex-col space-y-8">
@@ -145,33 +124,35 @@ export default function PersonalInfo() {
         </div>
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: currentContent.name, value: 'name' },
-            { label: currentContent.surname, value: 'surname' },
-            { label: currentContent.pseudo, value: 'pseudo' },
-            { label: currentContent.dateOfBirth, value: 'dateOfBirth', type: 'date' },
-            { label: currentContent.gender, value: 'gender' },
-            { label: currentContent.email, value: 'email', type: 'email' },
-            { label: currentContent.phone, value: 'phoneNumber', type: 'tel' },
+            { label: currentContent.name, value: userInfo.name },
+            { label: currentContent.surname, value: userInfo.surname },
+            { label: currentContent.pseudo, value: userInfo.pseudo},
+            { label: currentContent.dateOfBirth, value: userInfo.dateOfBirth, type: 'date' },
+            { label: currentContent.gender, value: userInfo.gender },
+            { label: currentContent.email, value: userInfo.email, type: 'email' },
+            { label: currentContent.phone, value: userInfo.phoneNumber, type: 'tel' },
           ].map((field, index) => (
             <div key={index}>
               <label className="block mb-1 font-bold">{field.label}</label>
               <input
                 type={field.type || 'text'}
-                value={userInfo[field.value]}
-                onChange={(e) => setUserInfo({ ...userInfo, [field.value]: e.target.value })}
+                value={field.value}
+                onChange={(e) => setUserInfo({ ...userInfo, [field.label]: e.target.value })}
                 className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
                 disabled={!isEditing}
               />
             </div>
           ))}
         </div>
-        {isEditing && (
-          <div className="flex justify-center mt-4">
-            <button onClick={handleSave} className="bg-blue-500 text-white py-2 px-4 rounded">
-              Enregistrer
-            </button>
-          </div>
-        )}
+            {
+              isEditing && (
+                <div className='flex flex-row item-center justify-center'>
+                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+                  Enregistrer
+                </button>
+              </div>
+              )
+            }
       </div>
 
       <div className="border border-gray-200 shadow-xl rounded-lg p-6">
@@ -203,9 +184,7 @@ export default function PersonalInfo() {
               />
             </div>
           </div>
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-            Changer le mot de passe
-          </button>
+
         </form>
       </div>
     </div>

@@ -1,124 +1,81 @@
-'use client';
-
 import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import { API_URL } from '@/app/utils/api/api_infos';
+import Cookies from 'js-cookie';
 
 interface User {
   id: string;
-  name: string;
+  pseudo: string;
   email: string;
-  roles: string[]; // Liste de rôles attribués
+  roles: string[];
   [key: string]: any;
 }
 
 interface UserContextType {
-  users: User[];
   user: User | null;
-  token: string | null;
-  fetchUsers: () => Promise<void>;
-  fetchUser: (id: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  login: (
+    identifierType: 'email' | 'phoneNumber' | 'pseudo',
+    identifierValue: string,
+    password: string
+  ) => Promise<void>;
   logout: () => void;
-  hasRole: (role: string) => boolean; // Vérification du rôle
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
 
-  // Charger le token depuis le localStorage au montage du composant
+  // Charger les informations utilisateur depuis le cookie au montage du composant
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) setToken(savedToken);
+    const savedUser = Cookies.get('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser)); // Charger l'utilisateur si le cookie est présent
+    }
   }, []);
 
-  // Mettre à jour l'utilisateur connecté en fonction du token
-  useEffect(() => {
-    if (token) fetchUserProfile();
-  }, [token]);
-
-  const fetchUserProfile = async () => {
+  const login = async (
+    identifierType: 'email' | 'phoneNumber' | 'pseudo',
+    identifierValue: string,
+    password: string
+  ): Promise<void> => {
     try {
-      const response = await fetch(`${API_URL}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch user profile');
-      const data = await response.json();
-      setUser(data);
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      logout(); // Déconnecter si le token est invalide
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${API_URL}/users/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
-
-  const fetchUser = async (id: string) => {
-    try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error(`Failed to fetch user with ID: ${id}`);
-      const data = await response.json();
-      setUser(data);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    }
-  };
-
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const endpoint = `${API_URL}/loginBy${capitalize(identifierType)}`;
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ [identifierType]: identifierValue, password }),
       });
 
-      if (!response.ok) throw new Error('Login failed');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur de connexion.');
+      }
+
       const data = await response.json();
-      setToken(data.token);
-      localStorage.setItem('token', data.token);
-      await fetchUserProfile(); // Charger les informations utilisateur après connexion
-    } catch (error) {
-      console.error('Login error:', error);
+      const userData = {
+        id: data.user.id,
+        pseudo: data.user.pseudo,
+        email: data.user.email,
+        roles: data.user.roles || ['ROLE_GUEST'],
+      };
+
+      Cookies.set('user', JSON.stringify(userData), { expires: 7 }); // Stocker l'utilisateur dans un cookie
+      setUser(userData); // Mettre à jour l'état
+    } catch (error: any) {
+      throw error;
     }
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
+    setUser(null); // Réinitialiser l'utilisateur dans l'état local
+    Cookies.remove('user'); // Supprimer le cookie utilisateur
   };
 
-  const hasRole = (role: string): boolean => {
-    return user?.roles.includes(role) || false;
-  };
+  // Fonction pour capitaliser le premier caractère (utilisée pour les endpoints)
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
-    <UserContext.Provider value={{ users, user, token, fetchUsers, fetchUser, login, logout, hasRole }}>
+    <UserContext.Provider value={{ user, login, logout }}>
       {children}
     </UserContext.Provider>
   );

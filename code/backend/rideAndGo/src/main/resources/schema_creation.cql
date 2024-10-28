@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS user (
     updatedAt TIMESTAMP,
     createdAt TIMESTAMP,
     averageRating FLOAT,
-    roles LIST<TEXT>,  -- traveller, driver, admin
+    roles LIST<TEXT>,  --  ROLE_TRAVELLER, ROLE_DRIVER,ROLE_ADMIN, ROLE_SUPER_ADMIN
     myComplaints LIST<UUID>,
     myPlace LIST<UUID>,
     myItineraries LIST<UUID>,
