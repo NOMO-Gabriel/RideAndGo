@@ -1,5 +1,6 @@
 package com.rideAndGo.rideAndGo.controllers;
 
+import com.rideAndGo.rideAndGo.dto.AdminIdRequest;
 import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.PasswordChangeRequest;
@@ -23,6 +24,12 @@ import java.util.stream.StreamSupport;
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
+    // Méthode pour vérifier si un utilisateur est administrateur
+private boolean isAdmin(UUID adminId) {
+    Optional<User> admin = userService.getUserById(adminId);
+    return admin.isPresent() && admin.get().getRoles().contains("ROLE_ADMIN");
+}
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
@@ -100,43 +107,58 @@ public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest passw
 
 
 // Suppression fictive d'un utilisateur
-@PutMapping("/softDelete/{id}")
-public ResponseEntity<?> softDeleteUser(@PathVariable UUID id) {
+@PutMapping("/delete/{id}")
+public ResponseEntity<?> softDeleteUser(@PathVariable UUID id, @RequestBody AdminIdRequest deleteRequest) {
+    if (!isAdmin(deleteRequest.getAdminId())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Unauthorized: Only admins can delete users."));
+    }
+
     Optional<User> user = userService.getUserById(id);
     if (!user.isPresent()) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
     }
-    
+
     user.get().setIsDeleted(true);
     userService.updateUser(user.get());
     return ResponseEntity.ok(new AuthResponse("User has been softly deleted."));
 }
 
 // Suspension d'un utilisateur
-@PutMapping("/suspend/{id}")
-public ResponseEntity<?> suspendUser(@PathVariable UUID id) {
+@PutMapping("/suspendUser/{id}")
+public ResponseEntity<?> suspendUser(@PathVariable UUID id, @RequestBody AdminIdRequest suspendRequest) {
+    if (!isAdmin(suspendRequest.getAdminId())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Unauthorized: Only admins can suspend users."));
+    }
+
     Optional<User> user = userService.getUserById(id);
     if (!user.isPresent()) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
     }
-    
+
     user.get().setIsSuspend(true);
     userService.updateUser(user.get());
     return ResponseEntity.ok(new AuthResponse("User has been suspended."));
 }
 
 // Réactiver un utilisateur suspendu
-@PutMapping("/reactivate/{id}")
-public ResponseEntity<?> reactivateUser(@PathVariable UUID id) {
+@PutMapping("/reactivateUser/{id}")
+public ResponseEntity<?> reactivateUser(@PathVariable UUID id, @RequestBody AdminIdRequest reactivateRequest) {
+    if (!isAdmin(reactivateRequest.getAdminId())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Unauthorized: Only admins can reactivate users."));
+    }
+
     Optional<User> user = userService.getUserById(id);
     if (!user.isPresent()) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("User not found."));
     }
-    
+
     user.get().setIsSuspend(false);
     userService.updateUser(user.get());
     return ResponseEntity.ok(new AuthResponse("User has been reactivated."));
 }
+
+
+
 
     //to update personnal infos of a user
     @PutMapping("/updatePersonnalInfos")
