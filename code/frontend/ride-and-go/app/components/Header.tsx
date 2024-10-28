@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   const { locale, changeLocale } = useLocale();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDropdownAccountOpen, setIsDropdownAccountOpen] = useState(false);
-  const { user,logout } = useUser(); // Récupérer l'utilisateur
+  const { user,logout,isAuthenticated } = useUser(); // Récupérer l'utilisateur
   const roles = user?.roles || ['ROLE_GUEST']; // Assurer que roles est un tableau
   
 
@@ -93,8 +93,12 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
-          <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
+          {
+            !isAuthenticated && (
+              <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
           
+            )
+          }
           {/* Affichage conditionné des liens "Go" et "Ride" */}
           {isTraveller && (
             <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
@@ -164,11 +168,13 @@ const Navbar: React.FC = () => {
                   )
                 }
               </button>
+             <p className=" text-sm text-white">{user?.pseudo}</p>
               {isDropdownAccountOpen && (
                 <div className="absolute right-0 mt-2 w-30 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
-                  <ul className="py-2">
-                    <li><Link href="/dashboard" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300  w-full  rounded-md text-center">{currentContent.dashboard}</Link></li>
-                    <li><button onClick={handleLogout} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full  rounded-md">Logout</button></li>
+
+                  <ul className="p-2">
+                    <li><Link href="/dashboard" onClick={toggleDropdownAccount} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300  w-full  rounded-md text-center underline">{currentContent.dashboard}</Link></li>
+                    <li><button onClick={handleLogout} className="block px-2 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full  rounded-md border">Logout</button></li>
                   </ul>
                 </div>
               )}
