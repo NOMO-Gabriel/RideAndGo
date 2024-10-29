@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Configuration
@@ -37,6 +38,7 @@ public class DataInitializer {
             } else {
                 Instant now = Instant.now();
                 User superAdmin = new User();
+                
 
                 // Initialisation des valeurs du super admin
                 superAdmin.setId(superAdminId);
