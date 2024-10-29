@@ -38,7 +38,11 @@ public class DataInitializer {
             } else {
                 Instant now = Instant.now();
                 User superAdmin = new User();
-                
+                List<String> roles = new ArrayList<>();
+                roles.add("ROLE_DRIVER");
+                roles.add("ROLE_TRAVELLER");
+                roles.add("ROLE_ADMIN");
+                roles.add("ROLE_SUPER_ADMIN");
 
                 // Initialisation des valeurs du super admin
                 superAdmin.setId(superAdminId);
@@ -49,7 +53,7 @@ public class DataInitializer {
                 superAdmin.setPassword(passwordEncoder.encode("motdepasse"));  // Mot de passe sécurisé
                 superAdmin.setPhoneNumber(12345678900.0);
                 superAdmin.setIsOnline(false);
-                superAdmin.setRoles(Collections.singletonList("ROLE_SUPER_ADMIN"));
+                superAdmin.setRoles(roles);
                 superAdmin.setGender("M");
                 superAdmin.setIsSuspend(false);
                 superAdmin.setIsDeleted(false);
