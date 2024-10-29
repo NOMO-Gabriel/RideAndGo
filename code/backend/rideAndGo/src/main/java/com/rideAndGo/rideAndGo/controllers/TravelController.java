@@ -29,7 +29,13 @@ public class TravelController {
      
      //get a travel by id
     @GetMapping("/{id}")
-    public Travel getTravelById(@PathVariable UUID id) {
+    public Travel getTravelById(@PathVariable UUID id) {  
+        /*Optional<Travel> travel = travelService.getTravelById(id);
+        if (!travel.isPresent() ) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("Travel not found"));
+        }
+        return ResponseEntity.ok(user.get());
+        */
         return travelService.getTravelById(id).orElse(null);
     }
     //get all travels
