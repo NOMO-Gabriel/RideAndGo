@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
   // Affichage conditionné des liens "Go" et "Ride"
   const isTraveller = roles.includes('ROLE_TRAVELLER');
   const isDriver = roles.includes('ROLE_DRIVER');
-  const handleLogout = () =>{
+  const handleLogout = () =>{ 
     logout();
     window.location.href = '/login';
   }

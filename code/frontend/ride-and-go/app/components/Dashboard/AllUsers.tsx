@@ -3,14 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faUser, faTrash, faPen, faEye, faUserShield, faBan,faCheckCircle,
+  faUser, faTrash, faEye,
   faPauseCircle, faTasks, faBell, faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationMessage from '../cards/ConfirmationMessage';
-import { getAllActiveUsers } from '@/app/utils/api/user';
-import { useUserContext } from '@/app/utils/contexts/UserContext';
+import { getUsers, deleteUser, suspendUser, setRoles, createAdmin } from '@/app/utils/api/admin';
+import { useUser } from '@/app/utils/hooks/useUser';
+import Link from 'next/link';
 
-const userContent = {
+type User = {
+  id: string | undefined;
+  name: string;
+  surname: string;
+  roles: string[];
+  createdat: string;
+  updatedat: string;
+};
+
+const content = {
   en: {
     title: "Users",
     filter: "Filter by Role",
@@ -31,169 +41,136 @@ const userContent = {
   },
 };
 
-const roleHierarchy = ['superAdmin', 'admin', 'user'];
-
-const getHighestRole = (roles: string[]) => {
-  for (const role of roleHierarchy) {
-    if (roles.includes(role)) {
-      return role;
-    }
-  }
-  return 'user'; // Default role if no match is found
+const roleHierarchy = ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_DRIVER', 'ROLE_TRAVELLER'];
+const roleDisplayMap: Record<string, string> = {
+  ROLE_SUPER_ADMIN: "super administrateur",
+  ROLE_ADMIN: "administrateur",
+  ROLE_DRIVER: "conducteur",
+  ROLE_TRAVELLER: "voyageur",
+  ROLE_GUEST: "invité", // Ajoutez un rôle par défaut si nécessaire
 };
 
-const Users = () => {
-  const { locale } = useLocale(); // Gestion de l'internationalisation
-  const localizedContent = userContent[locale as 'fr' | 'en'];
-  const { users, fetchUsers, fetchUser, user } = useUserContext();
+const getHighestRole = (roles: string[]): string => {
+  for (const role of roleHierarchy) {
+    if (roles.includes(role)) {
+      return roleDisplayMap[role] || role; // Retourne le nom lisible
+    }
+  }
+  return roleDisplayMap['ROLE_GUEST']; // Rôle par défaut
+};
+
+const Users: React.FC = () => {
+  const { locale } = useLocale();
+  const localizedContent = locale === 'en' ? content.en : content.fr;
+  const { user } = useUser();
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState<boolean>(false);
+
+  const fetchUsers = async () => {
+    try {
+      const data = await getUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des utilisateurs:', error);
+      alert('Erreur lors de la récupération des utilisateurs.');
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
-  
-  const [uusers, setUsers] = useState([
-    {"name":"eleo",
-      "roles":["user"]
-    },
-    {"name":"eleo2",
-      "roles":["admin"]
-
-    }
-
-  ]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-      const fetchUsers = async () => {
-          try {
-              const data = await getAllActiveUsers();
-              setUsers(data);
-              console.log("Yo");
-              console.log(users);
-
-          } catch (error) {
-              setError(error.message);
-              console.log("Erorrr");
-              
-          }
-      };
-
-      fetchUsers();
   }, []);
-  
 
-  const [roleFilter, setRoleFilter] = useState<'all' | 'customer' | 'driver' | 'admin'>('all');
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [userToDelete, setUserToDelete] = useState(null);
-  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-
-  // Gestion de la suppression d'un utilisateur
-  const handleDelete = (id: string) => {
-    // Implement the delete logic here, e.g., call an API to delete the user
-    try{
-      setIsDeletePopupOpen(true);
-      console.log('deleting user with ID:', id); // Log for debugging
-      fetchUser(id);
-      setUserToDelete(id);
-    }catch(error){
-      console.error('Error fetching uer:', error);
-    } 
+  const handleDelete = (id: string | undefined) => {
+    setIsDeletePopupOpen(true);
+    setUserToDelete(users.find((user) => user.id === id) || null);
   };
-  
-  const handleFinalDelete = (id: string) => {
-    // Implement the delete logic here, e.g., call an API to delete the user
-    try{
-      console.log('Final deleting user with ID:', id); // Log for debugging
+
+  const handleFinalDelete = async () => {
+    if (!userToDelete?.id) return;
+
+    try {
+      await deleteUser({ adminId: user?.id }, userToDelete.id);
+
       ConfirmationMessage({
         icon: <FontAwesomeIcon icon={faUser} />,
-        message: 'Action successful!',
+        message: 'User successfully deleted!',
       });
+
+      fetchUsers(); // Recharger la liste des utilisateurs
       setIsDeletePopupOpen(false);
-
-    }catch(error){
+      setUserToDelete(null);
+    } catch (error) {
       ConfirmationMessage({
         icon: <FontAwesomeIcon icon={faUser} />,
-        message: 'Action successful!',
+        message: 'Error deleting user.',
       });
-      console.error('Error fetching user:', error);
-    } 
-  };
-
-  // Gestion du filtrage par rôle
-  const filteredUsers = roleFilter === 'all' ? users : users.filter(user => user.roles.includes(roleFilter));
-
-  const handleView = (id: string) => {
-    try{
-          console.log('VIEWING user with ID:', id); // Log for debugging
-          fetchUser(id);
-          setSelectedUser(id);
-    }catch(error){
-      console.error('Error fetching uer:', error);
     }
-    
   };
+
+  const filteredUsers = roleFilter === 'all'
+    ? users
+    : users.filter((user) => user.roles.includes(roleFilter));
 
   const handleClosePopup = () => {
     setSelectedUser(null);
   };
+
   const handleCloseDeletePopup = () => {
     setUserToDelete(null);
+    setIsDeletePopupOpen(false);
   };
 
   return (
     <div className="p-4">
       <h2 className="font-bold text-lg mb-8 text-center">{localizedContent.title}</h2>
 
-      {/* Filtre des rôles */}
       <div className="mb-6 text-center">
         <label htmlFor="roleFilter" className="mr-4">{localizedContent.filter}:</label>
         <select
           id="roleFilter"
           value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value as 'all' | 'customer' | 'driver' | 'admin')}
+          onChange={(e) => setRoleFilter(e.target.value)}
           className="border p-2 rounded"
         >
           <option value="all">All</option>
-          <option value="customer">Customer</option>
-          <option value="driver">Driver</option>
-          <option value="admin">Admin</option>
+          <option value="ROLE_TRAVELLER">Traveller</option>
+          <option value="ROLE_DRIVER">Driver</option>
+          <option value="ROLE_ADMIN">Admin</option>
+
         </select>
       </div>
 
-      {/* Liste des utilisateurs */}
       <div className="flex flex-col space-y-4">
-        {filteredUsers.map(user => (
-          <div key={user.id} className="bg-gray-50 p-4 rounded-xl shadow-md border flex items-center justify-between">
-            {/* Informations de l'utilisateur */}
+        {filteredUsers.map((currentUser) => (
+          <div key={currentUser.id} className="bg-gray-50 p-4 rounded-xl shadow-md border flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
               <div>
-                <h3 className="font-bold"></h3>
-                <h3 className="font-bold">{user.name} {user.surname} {user.averagerating}</h3>
-                <p className="text-sm">{getHighestRole(user.roles)}</p>
-                <span className="text-xs">Created: {new Date(user.createdat).toLocaleDateString()}</span>
+                <h3 className="font-bold">{currentUser.name} {currentUser.surname}</h3>
+                <p className="text-sm">{getHighestRole(currentUser.roles)}</p>
+                <span className="text-xs">Created: {new Date(currentUser.createdat).toLocaleDateString()}</span>
                 <br />
-                <span className="text-xs">Last connection: {new Date(user.updatedat).toLocaleDateString()}</span>
+                <span className="text-xs">Last connection: {new Date(currentUser.updatedat).toLocaleDateString()}</span>
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex space-x-4 text-xl">
-              <button className="text-green-600" title={localizedContent.actions.view} onClick={() => handleView(user.id)}>
+              <Link className="text-green-600" title={localizedContent.actions.view} href={`view/${currentUser.id}`}>
                 <FontAwesomeIcon icon={faEye} />
-              </button>
+              </Link>
 
-              <button className="text-gray-600" title={localizedContent.actions.activity}>
-                <FontAwesomeIcon icon={faTasks} />
-              </button>
               <button className="text-orange-600" title={localizedContent.actions.suspend}>
                 <FontAwesomeIcon icon={faPauseCircle} />
               </button>
-
               <button className="text-purple-600" title={localizedContent.actions.alert}>
                 <FontAwesomeIcon icon={faBell} />
               </button>
-              <button className="text-red-600" onClick={() => handleDelete(user.id)} title={localizedContent.actions.delete}>
+              <button className="text-red-600" onClick={() => handleDelete(currentUser.id)} title={localizedContent.actions.delete}>
                 <FontAwesomeIcon icon={faTrash} />
               </button>
             </div>
@@ -201,71 +178,17 @@ const Users = () => {
         ))}
       </div>
 
-      {/* Popup affiche infos de l'utilisateur*/}
-      {selectedUser && user && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white w-[500px] h-[500px] p-10 rounded-lg shadow-lg relative">
-      <button className="absolute top-2 right-2 text-red-600 focus:outline-none" onClick={handleClosePopup}>
-        <FontAwesomeIcon icon={faTimes} />
-      </button>
-      <div className="flex items-center space-x-6">
-        {/*<img src={user.avatar[0]} alt={localizedContent.alt} className="w-16 h-16 rounded-full object-cover" />*/}
-        <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
-        
-        <div>
-          <h3 className="text-2xl font-bold">{user.name} {user.surname}</h3>
-          <p className="text-lg">{getHighestRole(user.roles)}</p>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-500 text-sm">Created:</span>
-            <span className="text-sm">{new Date(user.createdat).toLocaleDateString()}</span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-500 text-sm">Last connection:</span>
-            <span className="text-sm">{new Date(user.updatedat).toLocaleDateString()}</span>
+      {userToDelete && isDeletePopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-[500px] h-[500px] p-10 rounded-lg shadow-lg relative">
+            <button className="absolute top-2 right-2 text-red-600 focus:outline-none" onClick={handleCloseDeletePopup}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <p>Are you sure you want to delete {userToDelete.name}?</p>
+            <button onClick={handleFinalDelete} className="mt-4 bg-red-500 text-white p-2 rounded">Confirm</button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-)}
-{/* Popup suppression de l'utilisateur*/}
-{userToDelete && user && isDeletePopupOpen &&( // Show user info and delete button only if user is selected
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white w-[500px] h-[500px] p-10 rounded-lg shadow-lg relative">
-      <button className="absolute top-2 right-2 text-red-600 focus:outline-none" onClick={handleCloseDeletePopup}>
-        <FontAwesomeIcon icon={faTimes} />
-      </button>
-      <h3 className="text-xl font-bold mb-4">Are you sure you want to delete this user?</h3>
-      <div className="flex items-center space-x-6">
-        {/*<img src={user.avatar[0]} alt={localizedContent.alt} className="w-16 h-16 rounded-full object-cover" />*/}
-        <FontAwesomeIcon icon={faUser} className="w-12 h-12 text-blue-600" />
-        
-        <div>
-          <h3 className="text-2xl font-bold">{user.name} {user.surname}</h3>
-          <p className="text-lg">{getHighestRole(user.roles)}</p>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-500 text-sm">Created:</span>
-            <span className="text-sm">{new Date(user.createdat).toLocaleDateString()}</span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-500 text-sm">Last connection:</span>
-            <span className="text-sm">{new Date(user.updatedat).toLocaleDateString()}</span>
-          </div>
-        </div>
-      </div>
-      <button className="text-red-600 ml-4" onClick={() => handleFinalDelete(user.id)}> {/* Delete button */}
-        <FontAwesomeIcon icon={faTrash} /> {localizedContent.actions.delete}
-      </button>
-      <button className="text-red-600 ml-4" onClick={() => setIsDeletePopupOpen(false)}> {/* Delete button */}
-        <FontAwesomeIcon icon={faTrash} /> Abandon
-      </button>
-      
-      
-    </div>
-  </div>
-
-
-)}
+      )}
     </div>
   );
 };

@@ -1,103 +1,168 @@
 'use client';
-import { useLocale } from "@/app/utils/hooks/useLocale.js";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { getUser, updateUserPreferences } from '@/app/utils/api/users';
+import { useUser } from '@/app/utils/hooks/useUser';
 
-
-type Option = {
-  value: string | number;
-  label: { en: string; fr: string };
+// Définir le contenu des préférences avec des types
+type PreferencesContent = {
+  preferences: string;
+  language: string;
+  theme: string;
+  timeZone: string;
+  location: string;
+  save: string;
+  updateSuccess: string;
+  updateError: string;
 };
 
-// Génération des fuseaux horaires GMT-12 à GMT+12
-const timezones: Option[] = Array.from({ length: 25 }, (_, i) => ({
-  value: i - 12,
-  label: { en: `GMT${i - 12 >= 0 ? `+${i - 12}` : i - 12}`, fr: `GMT${i - 12 >= 0 ? `+${i - 12}` : i - 12}` },
-}));
+const content: Record<string, PreferencesContent> = {
+  en: {
+    preferences: 'Preferences',
+    language: 'Language :',
+    theme: 'Theme :',
+    timeZone: 'Time Zone :',
+    location: 'Enable Location :',
+    save: 'Save Preferences',
+    updateSuccess: 'Preferences updated successfully!',
+    updateError: 'Error updating preferences. Please try again.',
+  },
+  fr: {
+    preferences: 'Préférences',
+    language: 'Langue :',
+    theme: 'Thème :',
+    timeZone: 'Fuseau horaire :',
+    location: 'Activer la localisation :',
+    save: 'Enregistrer les Préférences',
+    updateSuccess: 'Préférences mises à jour avec succès!',
+    updateError: 'Erreur lors de la mise à jour des préférences. Veuillez réessayer.',
+  },
+};
 
 export default function Preferences() {
-  const { locale, changeLocale } = useLocale();
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [timezone, setTimezone] = useState<number>(0);
-  const [locationEnabled, setLocationEnabled] = useState<boolean>(!false);
+  const { locale } = useLocale();
+  const { user } = useUser();
+  const currentContent = locale === 'en' ? content.en : content.fr;
 
-  const preferences = [
-    {
-      key: 'language',
-      label: { en: 'Language', fr: 'Langue' },
-      value: locale,
-      options: [
-        { value: 'en', label: { en: 'English', fr: 'Anglais' } },
-        { value: 'fr', label: { en: 'French', fr: 'Français' } },
-      ],
-      onChange: (value: string) => changeLocale(value as 'en' | 'fr'),
-    },
-    {
-      key: 'theme',
-      label: { en: 'Theme', fr: 'Thème' },
-      value: theme,
-      options: [
-        { value: 'light', label: { en: 'Light', fr: 'Clair' } },
-        { value: 'dark', label: { en: 'Dark', fr: 'Sombre' } },
-      ],
-      onChange: (value: string) => setTheme(value as 'light' | 'dark'),
-    },
-    {
-      key: 'timezone',
-      label: { en: 'Time Zone', fr: 'Fuseau horaire' },
-      value: timezone,
-      options: timezones,
-      onChange: (value: string) => setTimezone(Number(value)),
-    },
-  ];
+  const [preferences, setPreferences] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      try {
+        if (!user) return;
+        const data = await getUser(user.id);
+        setPreferences({
+          language: data.language,
+          theme: data.theme,
+          timeZone: data.timeZone,
+          isLocationEnabled: data.isLocationEnabled,
+        });
+      } catch (error) {
+        console.error('Erreur lors de la récupération des préférences:', error);
+      }
+    };
+    fetchPreferences();
+  }, [user?.id]);
+
+  const handleSave = async () => {
+    try {
+      await updateUserPreferences({
+        id: user?.id,
+        preferences,
+      });
+      alert(currentContent.updateSuccess);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des préférences:', error);
+      alert(currentContent.updateError);
+    }
+  };
+
+  const toggleLocation = () => {
+    if (!isEditing) return; // Empêche le changement si on n'est pas en mode édition
+    setPreferences((prev: any) => ({
+      ...prev,
+      isLocationEnabled: !prev.isLocationEnabled,
+    }));
+  };
+
+  if (!preferences) return <p>Chargement...</p>;
 
   return (
-    <div className="flex flex-col p-4 space-y-6">
-      <div className="text-bleu-nuit font-bold text-xl">
-        {locale === 'en' ? 'Preferences' : 'Préférences'}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {preferences.map(({ key, label, value, options, onChange }) => (
-          <div key={key} className="flex flex-col space-y-2">
-            <div className="text-bleu-nuit font-bold">
-              {label[locale as 'en' | 'fr']} :
-            </div>
-            <div className="border-2 border-gray-200 p-2 text-center text-bleu-nuit w-[300px]">
-              <select
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className="w-full bg-white text-center"
-              >
-                {options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label[locale as 'en' | 'fr']}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className="p-4 bg-white rounded-lg shadow flex flex-col space-y-8">
+      <div className="border border-gray-200 shadow-xl rounded-lg p-6">
+        <div className="flex justify-between mb-4">
+          <h2 className="font-bold text-lg">{currentContent.preferences}</h2>
+          <button onClick={() => setIsEditing(!isEditing)}>
+            <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1 font-bold">{currentContent.language}</label>
+            <select
+              value={preferences.language}
+              onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
+              className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
+              disabled={!isEditing}
+            >
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+            </select>
           </div>
-        ))}
-      </div>
 
-      {/* Toggle Switch for Location */}
-      <div className="flex justify-start items-center border-2 border-gray-200 p-2 text-center text-bleu-nuit w-[300px]">
-        <div className="flex flex-row items-center justify-between space-x-16">
-          <span className={`text-bleu-nuit font-bold ${locale==='fr'?"text-sm":""}`} >
-            {locale === 'en' ? 'Enable Location' : 'Activer Localisation'} 
-          </span>
-          <div
-            className={`w-20 h-8 flex items-center rounded-full p-1 cursor-pointer ${
-              locationEnabled ? 'bg-bleu-nuit' : 'bg-gray-400'
-            }`}
-            onClick={() => setLocationEnabled(!locationEnabled)}
-          >
-            <div
-              className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${
-                locationEnabled ? 'translate-x-12' : 'translate-x-0'
-              }` }
+          <div>
+            <label className="block mb-1 font-bold  ">{currentContent.theme}</label>
+            <select
+              value={preferences.theme}
+              onChange={(e) => setPreferences({ ...preferences, theme: e.target.value })}
+              className={`border w-max ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
+              disabled={!isEditing}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block mb-1 font-bold">{currentContent.timeZone}</label>
+            <input
+              type="number"
+              value={preferences.timeZone}
+              onChange={(e) => setPreferences({ ...preferences, timeZone: +e.target.value })}
+              className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
+              disabled={!isEditing}
             />
           </div>
+
+          <div className="flex items-center">
+            <label className="block font-bold mr-2">{currentContent.location}</label>
+            <div
+              className={`w-20 h-8 flex items-center rounded-full p-1 cursor-pointer ${
+                preferences.isLocationEnabled ? 'bg-blue-500' : 'bg-gray-400'
+              }`}
+              onClick={toggleLocation}
+            >
+              <div
+                className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform ${
+                  preferences.isLocationEnabled ? 'translate-x-12' : 'translate-x-0'
+                }`}
+              />
+            </div>
+          </div>
         </div>
+
+        {isEditing && (
+          <button
+            onClick={handleSave}
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            {currentContent.save}
+          </button>
+        )}
       </div>
     </div>
   );

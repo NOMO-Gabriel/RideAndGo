@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -58,12 +60,16 @@ public class AdminController {
         User admin = new User();
         Instant now = Instant.now();
         LocalDate birthDate = request.getAdminToCreate().getBirthday();
-
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_DRIVER");
+        roles.add("ROLE_TRAVELLER");
+        roles.add("ROLE_ADMIN");
+        roles.add("ROLE_SUPER_ADMIN");
         admin.setId(UUID.randomUUID());
         admin.setPseudo(request.getAdminToCreate().getPseudo());
         admin.setPassword(passwordEncoder.encode(request.getAdminToCreate().getPassword()));
         admin.setEmail(request.getAdminToCreate().getEmail());
-        admin.setRoles(Collections.singletonList("ROLE_ADMIN"));
+        admin.setRoles(roles);
         admin.setName(request.getAdminToCreate().getName());
         admin.setSurname(request.getAdminToCreate().getSurname());
         admin.setPhoneNumber(request.getAdminToCreate().getPhoneNumber());

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class UpdatePreferencesRequestDTO {
     private UUID id;
-    private preferencesDTO preferencesDTO;
+    private preferencesDTO preferences;
 
     @Data
     public static class preferencesDTO {

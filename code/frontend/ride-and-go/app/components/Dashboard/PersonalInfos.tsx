@@ -4,7 +4,7 @@ import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useUser } from '@/app/utils/hooks/useUser';
-import { getUser, UpdateUsersInfo } from '@/app/utils/api/users';
+import { getUser, UpdateUsersInfo,changePassword } from '@/app/utils/api/users';
 
 // Définir le contenu des informations personnelles avec des types
 type Content = {
@@ -84,6 +84,7 @@ export default function PersonalInfo() {
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
 
   // Charger les informations utilisateur au montage du composant
   useEffect(() => {
@@ -94,6 +95,7 @@ export default function PersonalInfo() {
         setUserInfo(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des informations utilisateur:', error);
+        alert('Erreur lors de la récupération des informations utilisateur:');
       }
     };
     fetchUserInfo();
@@ -116,21 +118,33 @@ export default function PersonalInfo() {
       alert('Informations mises à jour avec succès!');
       setIsEditing(false); 
     } catch (error) {
-      console.error('Erreur lors de la mise à jour des informations:', error);
+     
       alert('Erreur lors de la mise à jour des informations. Veillez reessayer');
     }
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert('Les mots de passe ne correspondent pas!');
       return;
     }
-    alert('Mot de passe changé avec succès!');
-    setNewPassword('');
-    setConfirmPassword('');
+    try {
+      await changePassword({
+        id: user?.id,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      });
+      alert('Mot de passe changé avec succès!');
+      setNewPassword('');
+      setConfirmPassword('');
+      setCurrentPassword('');
+    } catch (error) {
+      console.error('Erreur lors du changement de mot de passe:', error);
+      alert('Erreur lors du changement de mot de passe. Veuillez réessayer');
+    }
   };
+  
 
   if (!userInfo) return <p>Chargement...</p>;
 
@@ -179,7 +193,15 @@ export default function PersonalInfo() {
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
             <label>{currentContent.currentPassword}</label>
-            <input type="password" className="border rounded px-2 py-1 w-full" required />
+            <input 
+              
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="border rounded px-2 py-1 w-full"
+              required
+            />
+           
           </div>
           <div className="flex space-x-4">
             <div className="w-1/2">

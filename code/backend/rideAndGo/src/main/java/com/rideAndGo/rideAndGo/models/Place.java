@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.data.cassandra.core.mapping.Column;
 
-import java.time.Instant;
+
 import java.util.UUID;
 
 
@@ -16,10 +16,10 @@ public class Place {
     @Id
     private UUID id;
 
-    @Column("mapName")
+    @Column("mapname")
     private String mapName;
 
-    @Column("currentName")
+    @Column("currentname")
     private String currentName;
 
     @Column("description")
