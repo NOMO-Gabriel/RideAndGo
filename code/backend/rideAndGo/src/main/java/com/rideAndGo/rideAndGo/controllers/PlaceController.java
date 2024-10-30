@@ -2,7 +2,6 @@ package com.rideAndGo.rideAndGo.controllers;
 
 import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.PlaceCreationRequest;
-import com.rideAndGo.rideAndGo.dto.PlaceUpdateRequest;
 import com.rideAndGo.rideAndGo.models.Place;
 import com.rideAndGo.rideAndGo.services.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,13 +73,13 @@ public class PlaceController {
     //     }
     // }
 
-//     @PutMapping("/edit/{id}")
-//     public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody PlaceUpdateRequest placeDetails) {
-//         try {
-//             Place updatedPlace = placeService.updatePlace(id, placeDetails);
-//             return ResponseEntity.ok(updatedPlace);
-//         } catch (Exception e) {
-//             return ResponseEntity.status(500).body(new AuthResponse("Error updating place " + e.getMessage()));
-//         }
-//     }
-// }
+    // @PutMapping("/edit/{id}")
+    // public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody Place placeDetails) {
+    //     try {
+    //         Place updatedPlace = placeService.updatePlace(id, placeDetails);
+    //         return ResponseEntity.ok(updatedPlace);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(500).body(new AuthResponse("Error updating place " + e.getMessage()));
+    //     }
+    // }
+}
