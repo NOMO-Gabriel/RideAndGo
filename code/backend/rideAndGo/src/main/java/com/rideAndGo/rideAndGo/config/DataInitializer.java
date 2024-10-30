@@ -10,7 +10,6 @@ import com.rideAndGo.rideAndGo.services.UserService;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -26,6 +25,14 @@ public class DataInitializer {
         this.passwordEncoder = passwordEncoder;
     }
 
+        /**
+         * Cette méthode est exécutée au démarrage de l'application.
+         * Elle crée un super administrateur avec des informations par défaut.
+         * Si le super administrateur existe déjà dans la base de données,
+         * alors la méthode ne fait rien.
+         * La méthode utilise l'interface {@link UserService} pour sauvegarder le super administrateur.
+         * Elle utilise également le {@link PasswordEncoder} pour crypter le mot de passe.
+         */
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {

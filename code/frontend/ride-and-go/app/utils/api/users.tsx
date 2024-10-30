@@ -43,3 +43,24 @@ export const UpdateUsersInfo = async (
     }
     return response.json();
   };
+
+  // Changer le mot de passe
+export const changePassword = async (
+    passwordChangeRequest: {
+                  id: string | undefined;
+                  currentPassword: string;    
+                  newPassword: string;
+                }
+) => {
+  const response = await fetch(`${API_URL}/users/changePassword`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(passwordChangeRequest),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Erreur lors du changement de mot de passe');
+  }
+  return response.json();
+};

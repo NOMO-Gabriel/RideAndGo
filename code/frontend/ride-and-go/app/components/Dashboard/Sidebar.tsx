@@ -16,6 +16,7 @@ export default function Sidebar() {
   const { user, isAuthenticated } = useUser();
 
   const roles = user?.roles || ['ROLE_GUEST']; 
+  console.log(roles);
 
   const content = {
     en: [
