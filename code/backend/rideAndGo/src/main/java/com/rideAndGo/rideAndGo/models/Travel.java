@@ -13,11 +13,11 @@ import java.util.UUID;
 public class Travel {
     @Id
     private UUID id;
-
-    @Column("startPointId")
+    
+    @Column("startpointid")
     private UUID startPointId;
 
-    @Column("endPointId")
+    @Column("endpointid")
     private UUID endPointId;
 
     @Column("driver")
@@ -29,13 +29,13 @@ public class Travel {
     @Column("date")
     private Instant date;
 
-    @Column("travellerRating")
+    @Column("travellerrating")
     private Double travellerRating;
 
-    @Column("driverRating")
+    @Column("driverrating")
     private Double driverRating;
 
-    @Column("numberOfSeats")
+    @Column("numberofseats")
     private Double numberOfSeats;
 
     @Column("price")

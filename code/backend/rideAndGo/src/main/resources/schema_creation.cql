@@ -162,3 +162,5 @@ CREATE TABLE IF NOT EXISTS rating (
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
+CREATE INDEX IF NOT EXISTS place_mapname_idx ON place (mapName);
+CREATE INDEX IF NOT EXISTS place_currentname_idx ON place (currentName);

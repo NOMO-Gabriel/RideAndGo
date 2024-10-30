@@ -57,7 +57,7 @@ public class TravelController {
     public void deleteTravel(@PathVariable UUID id) {
         travelService.deleteTravel(id);
     }
-
+    
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateTravel(@PathVariable UUID id, @RequestBody Travel travelDetails) {
         Optional<Travel> existingTravel = travelService.getTravelById(id);
