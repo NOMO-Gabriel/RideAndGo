@@ -1,4 +1,5 @@
-    import { API_URL } from './api_infos';
+
+import { API_URL } from './api_infos';
 
     const getHeaders = () => ({
     'Content-Type': 'application/json',
@@ -14,11 +15,16 @@
     surname: string;
     birthday: string;
     gender: 'MALE' | 'FEMALE';
+    isDriver: boolean;
+    
     }) => {
+      
+
     const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: getHeaders(),
         body: JSON.stringify(userData),
+        
     });
 
     if (!response.ok) {

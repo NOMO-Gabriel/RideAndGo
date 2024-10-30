@@ -10,8 +10,8 @@ import com.rideAndGo.rideAndGo.services.UserService;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Configuration
@@ -25,6 +25,14 @@ public class DataInitializer {
         this.passwordEncoder = passwordEncoder;
     }
 
+        /**
+         * Cette méthode est exécutée au démarrage de l'application.
+         * Elle crée un super administrateur avec des informations par défaut.
+         * Si le super administrateur existe déjà dans la base de données,
+         * alors la méthode ne fait rien.
+         * La méthode utilise l'interface {@link UserService} pour sauvegarder le super administrateur.
+         * Elle utilise également le {@link PasswordEncoder} pour crypter le mot de passe.
+         */
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {
@@ -37,6 +45,10 @@ public class DataInitializer {
             } else {
                 Instant now = Instant.now();
                 User superAdmin = new User();
+                List<String> roles = new ArrayList<>();
+                roles.add("ROLE_TRAVELLER");
+                roles.add("ROLE_ADMIN");
+                roles.add("ROLE_SUPER_ADMIN");
 
                 // Initialisation des valeurs du super admin
                 superAdmin.setId(superAdminId);
@@ -47,7 +59,7 @@ public class DataInitializer {
                 superAdmin.setPassword(passwordEncoder.encode("motdepasse"));  // Mot de passe sécurisé
                 superAdmin.setPhoneNumber(12345678900.0);
                 superAdmin.setIsOnline(false);
-                superAdmin.setRoles(Collections.singletonList("ROLE_SUPER_ADMIN"));
+                superAdmin.setRoles(roles);
                 superAdmin.setGender("M");
                 superAdmin.setIsSuspend(false);
                 superAdmin.setIsDeleted(false);

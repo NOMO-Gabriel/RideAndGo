@@ -214,9 +214,9 @@ public ResponseEntity<?> reactivateUser(@PathVariable UUID id, @RequestBody Admi
     
         // Extraction de l'utilisateur
         User userToUpdate = optionalUser.get();
-        UpdatePreferencesRequestDTO.preferencesDTO newPreferences = preferencesToUpdate.getPreferencesDTO();
+        UpdatePreferencesRequestDTO.preferencesDTO newPreferences = preferencesToUpdate.getPreferences();
         System.out.println("ID: " + preferencesToUpdate.getId());
-        System.out.println("Preferences: " + preferencesToUpdate.getPreferencesDTO());
+        System.out.println("Preferences: " + preferencesToUpdate.getPreferences());
 
         if(newPreferences==null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new HTTPResponse("You can not update empty preferences."));

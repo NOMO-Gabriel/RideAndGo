@@ -49,7 +49,7 @@ Notez l’ID du conteneur et remplacez **cassandra-container** par cet ID dans l
 ```bash
 docker exec -it cassandra-container cqlsh -f /data.cql
 ```
-
+  
 ---
 
 ### **4. Accéder à l’interface CQL de Cassandra**  
