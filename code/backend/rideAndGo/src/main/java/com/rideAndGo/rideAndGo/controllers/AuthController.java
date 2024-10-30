@@ -164,7 +164,7 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
     newUser.setLanguage("en");
     newUser.setTheme("light");
     newUser.setIsLocalisable(false);
-
+    
     userService.save(newUser);
 
 
