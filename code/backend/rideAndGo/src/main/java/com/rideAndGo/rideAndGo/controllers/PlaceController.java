@@ -60,7 +60,7 @@ public class PlaceController {
             Place createdPlace = placeService.createPlace(placeToSave);
             return ResponseEntity.status(201).body(createdPlace);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new AuthResponse("Error creating place" + e.getMessage()));
+            return ResponseEntity.status(500).body("Error creating place" + e.getMessage());
         }
     }
 
@@ -74,13 +74,19 @@ public class PlaceController {
     //     }
     // }
 
-//     @PutMapping("/edit/{id}")
-//     public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody PlaceUpdateRequest placeDetails) {
-//         try {
-//             Place updatedPlace = placeService.updatePlace(id, placeDetails);
-//             return ResponseEntity.ok(updatedPlace);
-//         } catch (Exception e) {
-//             return ResponseEntity.status(500).body(new AuthResponse("Error updating place " + e.getMessage()));
-//         }
-//     }
-// }
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody PlaceUpdateRequest placeDetails) {
+        try {
+            Place updatedPlace = new Place();
+            Place placeToUpdate = new Place();
+            placeToUpdate = placeService.getPlaceById(id).get();
+            updatedPlace.setId(id);
+            updatedPlace.setMapName(placeToUpdate.getMapName());
+            updatedPlace.setCurrentName(placeDetails.getCurrentName());
+            updatedPlace.setDescription(placeDetails.getDescription());
+            return ResponseEntity.ok(updatedPlace);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating place " + e.getMessage());
+        }
+    }
+}
