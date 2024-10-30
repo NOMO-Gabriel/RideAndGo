@@ -32,7 +32,7 @@ public class AdminController {
     public ResponseEntity<HTTPResponse> createAdmin(@RequestBody CreateAdminRequest request) {
 
         // Vérification si l'utilisateur avec superadminId a le rôle ROLE_SUPER_ADMIN
-        User superAdmin = userService.getUserById(request.getSuperadminId())
+        User superAdmin = userService.getUserById(request.getSuperAdminId())
                 .orElse(null);
 
         if (superAdmin == null || !superAdmin.getRoles().contains("ROLE_SUPER_ADMIN")) {
