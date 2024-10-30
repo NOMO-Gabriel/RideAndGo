@@ -95,6 +95,7 @@ export default function PersonalInfo() {
         setUserInfo(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des informations utilisateur:', error);
+        alert('Erreur lors de la récupération des informations utilisateur:');
       }
     };
     fetchUserInfo();
