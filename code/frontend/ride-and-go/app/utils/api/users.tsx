@@ -64,3 +64,29 @@ export const changePassword = async (
   }
   return response.json();
 };
+
+ // Changer les preferences
+ export const updateUserPreferences = async (
+  updatePreferencesRequest: {
+                id: string | undefined;
+                preferences:{
+                language:string;
+                theme: string;
+                timeZone: number;
+                isLocationEnabled: boolean;
+
+                }
+              }
+) => {
+const response = await fetch(`${API_URL}/users/updatePreferences`, {
+  method: 'PUT',
+  headers: getHeaders(),
+  body: JSON.stringify(updatePreferencesRequest),
+});
+
+if (!response.ok) {
+  const errorData = await response.json();
+  throw new Error(errorData.message || 'Erreur lors de la mise a jour des preferences');
+}
+return response.json();
+};

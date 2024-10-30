@@ -46,7 +46,6 @@ public class DataInitializer {
                 Instant now = Instant.now();
                 User superAdmin = new User();
                 List<String> roles = new ArrayList<>();
-                roles.add("ROLE_DRIVER");
                 roles.add("ROLE_TRAVELLER");
                 roles.add("ROLE_ADMIN");
                 roles.add("ROLE_SUPER_ADMIN");
