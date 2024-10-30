@@ -18,6 +18,7 @@ export const getUser = async (id: string) => {
   return response.json();
 };
 
+
 // update infos of a user
 export const UpdateUsersInfo = async (
     userData:{  
@@ -90,3 +91,6 @@ if (!response.ok) {
 }
 return response.json();
 };
+
+
+

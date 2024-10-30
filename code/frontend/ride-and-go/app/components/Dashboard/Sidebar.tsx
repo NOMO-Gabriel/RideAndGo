@@ -9,6 +9,7 @@ import {
   faWallet, faComments, faUserShield, faHandshake
 } from "@fortawesome/free-solid-svg-icons";
 import UpgradeBtn from "./UpgradeBtn";
+import { useState } from "react"; // Importer useState
 
 export default function Sidebar() {
   const { locale } = useLocale();
@@ -47,6 +48,14 @@ export default function Sidebar() {
 
   const localizedContent = content[locale as "fr" | "en"] || content.en;
 
+  // Ajout de l'état pour l'élément sélectionné
+  const [selectedId, setSelectedId] = useState(null);
+
+  const handleItemClick = (id) => {
+    setSelectedId(id); // Met à jour l'ID de l'élément sélectionné
+    updateDashboardFilter(id); // Appelle la fonction de mise à jour
+  };
+
   return (
     <div>
       <div className="w-[250px] flex flex-col p-2 space-y-4 border-x-2 border-gray-200">
@@ -55,8 +64,9 @@ export default function Sidebar() {
           {localizedContent.map((item, index) => (
             <button
               key={index}
-              className="text-black hover:text-white hover:bg-bleu-nuit cursor-pointer h-10 rounded-lg flex flex-row items-center space-x-3 px-4"
-              onClick={() => updateDashboardFilter(item.id)}
+              className={`text-black cursor-pointer h-10 rounded-lg flex flex-row items-center space-x-3 px-4 
+                ${selectedId === item.id ? 'bg-blue-200' : 'hover:bg-bleu-nuit'}`} // Applique bg-blue-200 si sélectionné
+              onClick={() => handleItemClick(item.id)} // Utilise handleItemClick
             >
               <FontAwesomeIcon icon={item.icon} className="text-lg" />
               <span className="text-sm">{item.name}</span>
