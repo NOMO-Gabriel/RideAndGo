@@ -101,7 +101,7 @@ const Navbar: React.FC = () => {
           }
           {/* Affichage conditionné des liens "Go" et "Ride" */}
           {isTraveller && (
-            <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
+            <Link href="/newGo" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
           )}
           {isDriver && (
             <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>

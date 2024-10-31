@@ -1,6 +1,7 @@
 package com.rideAndGo.rideAndGo.services;
 
 import com.rideAndGo.rideAndGo.models.Travel;
+import com.rideAndGo.rideAndGo.dto.TravelRequestDTO;
 import com.rideAndGo.rideAndGo.repositories.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,11 @@ public class TravelService {
         this.travelRepository = travelRepository;
     }
 
-    //getting a single travel
     public Optional<Travel> getTravelById(UUID id) {
         return travelRepository.findById(id);
     }
 
-    //getting all travels
-    public Iterable<Travel> getAllTravels() {
+    public List<Travel> getAllTravels() {
         return travelRepository.findAll();
     }
 
@@ -37,22 +36,37 @@ public class TravelService {
         travelRepository.deleteById(id);
     }
 
-    public Travel updateTravel(UUID id, Travel travelDetails) {
-        Optional<Travel> optionalTravel = travelRepository.findById(id);
-        if (optionalTravel.isPresent()) {
-            Travel travel = optionalTravel.get();
-            travel.setStartPointId(travelDetails.getStartPointId());
-            travel.setEndPointId(travelDetails.getEndPointId());
-            travel.setDriver(travelDetails.getDriver());
-            travel.setTraveller(travelDetails.getTraveller());
-            travel.setDate(travelDetails.getDate());
-            travel.setTravellerRating(travelDetails.getTravellerRating());
-            travel.setDriverRating(travelDetails.getDriverRating());
-            travel.setNumberOfSeats(travelDetails.getNumberOfSeats());
-            travel.setPrice(travelDetails.getPrice());
-            return travelRepository.save(travel);
-        } else {
-            throw new RuntimeException("Travel not found with id " + id);
-        }
+    // public Travel updateTravel(UUID id, TravelRequestDTO travelRequestDTO) {
+    //     Travel travel = travelRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel not found"));
+    //     travel.setStartPointId(travelRequestDTO.getStartPointId());
+    //     travel.setEndPointId(travelRequestDTO.getEndPointId());
+    //     travel.setDriver(travelRequestDTO.getDriver());
+    //     travel.setTraveller(travelRequestDTO.getTraveller());
+    //     travel.setDate(travelRequestDTO.getDate());
+    //     travel.setTravellerRating(travelRequestDTO.getTravellerRating());
+    //     travel.setDriverRating(travelRequestDTO.getDriverRating());
+    //     travel.setNumberOfSeats(travelRequestDTO.getNumberOfSeats());
+    //     travel.setPrice(travelRequestDTO.getPrice());
+    //     return travelRepository.save(travel);
+
+    // }
+
+
+    public void rateTraveller(UUID id, Double travellerRating) {
+        Travel travel = travelRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel not found"));
+        travel.setTravellerRating(travellerRating);
+        travelRepository.save(travel);
+    }
+    
+    public void rateDriver(UUID id, Double driverRating) {
+        Travel travel = travelRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel not found"));
+        travel.setDriverRating(driverRating);
+        travelRepository.save(travel);
+    }
+    
+    public void assignDriver(UUID id, UUID driver) {
+        Travel travel = travelRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel not found"));
+        travel.setDriver(driver);
+        travelRepository.save(travel);
     }
 }
