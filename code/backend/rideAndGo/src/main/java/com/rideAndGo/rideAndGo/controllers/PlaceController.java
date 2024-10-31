@@ -2,6 +2,7 @@ package com.rideAndGo.rideAndGo.controllers;
 
 import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.PlaceCreationRequest;
+import com.rideAndGo.rideAndGo.dto.PlaceUpdateRequest;
 import com.rideAndGo.rideAndGo.models.Place;
 import com.rideAndGo.rideAndGo.services.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;

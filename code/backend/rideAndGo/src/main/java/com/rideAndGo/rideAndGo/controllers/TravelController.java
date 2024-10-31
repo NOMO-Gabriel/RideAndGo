@@ -27,7 +27,7 @@ public class TravelController {
     public TravelController (TravelService travelService){
         this.travelService = travelService;
     }
-     
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getTravelById(@PathVariable UUID id) {
         Optional<Travel> travel = travelService.getTravelById(id);
@@ -41,9 +41,9 @@ public class TravelController {
     @GetMapping("/")
     public ResponseEntity<List<TravelResponseDTO>> getAllTravels() {
         List<TravelResponseDTO> travels = travelService.getAllTravels()
-                                                      .stream()
-                                                      .map(TravelResponseDTO::new)
-                                                      .collect(Collectors.toList());
+                                                        .stream()
+                                                        .map(TravelResponseDTO::new)
+                                                        .collect(Collectors.toList());
         return ResponseEntity.ok(travels);
     }
 
