@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';  
 import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
+import FlashMessage from '@/app/components/flash_message/FlashMessage';
 
 interface LoginData {
   identifier: string;
@@ -59,7 +60,7 @@ const LoginForm = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-6 text-center">Se Connecter</h2>
             <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulaire de connexion">
-              {error && <p className="text-red-500 text-center" role="alert">{error}</p>}
+              {error && <FlashMessage type="error" message={error}/>}
               {success && <p className="text-green-500 text-center">Connexion réussie ! Redirection...</p>}
               
               <input
@@ -100,6 +101,7 @@ const LoginForm = () => {
                   Créer un compte
                 </a>
               </div>
+              <FlashMessage type="info" message="test" />
             </form>
           </div>
         </div>
