@@ -65,13 +65,14 @@ CREATE TABLE IF NOT EXISTS alert (
 );
 
 -- Table Preference
-CREATE TABLE IF NOT EXISTS preference (
-    id UUID PRIMARY KEY,
-    language TEXT,
-    theme TEXT,
-    timeZone INT,
-    isLocalisable BOOLEAN
-);
+--CREATE TABLE IF NOT EXISTS preference (
+--  id UUID PRIMARY KEY,
+--    language TEXT,
+--   theme TEXT,
+--    timeZone INT,
+--    isLocalisable BOOLEAN
+--);
+--je pense que cette table est inutile car ces champs sont deja dans la table user
 
 -- Table Complaint
 CREATE TABLE IF NOT EXISTS complaint (
@@ -86,12 +87,8 @@ CREATE TABLE IF NOT EXISTS complaint (
 );
 
 -- Table Place
-CREATE TABLE IF NOT EXISTS place (
-    id UUID PRIMARY KEY,
-    mapName TEXT,
-    currentName TEXT,
-    description TEXT
-);
+---In the file inser_points_with_uuid.cql
+
 
 -- Table Itinerary
 CREATE TABLE IF NOT EXISTS itinerary (
@@ -163,6 +160,6 @@ CREATE TABLE IF NOT EXISTS rating (
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
-CREATE INDEX IF NOT EXISTS place_mapname_idx ON place (mapName);
-CREATE INDEX IF NOT EXISTS place_currentname_idx ON place (currentName);
+
+
 

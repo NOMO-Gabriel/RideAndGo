@@ -33,6 +33,9 @@ private boolean isAdmin(UUID adminId) {
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
+
+        
+
     }
 
     // Récupérer tous les utilisateurs
@@ -40,7 +43,7 @@ private boolean isAdmin(UUID adminId) {
    @GetMapping("/")
 public ResponseEntity<Iterable<User>> getAllActiveUsers() {
     Iterable<User> users = StreamSupport.stream(userService.getAllUsers().spliterator(), false)
-                                        .filter(user -> !user.getIsDeleted() && !user.getIsSuspend())
+                                        .filter(user -> !user.getIsDeleted())
                                         .collect(Collectors.toList());
     return ResponseEntity.ok(users);
 }
