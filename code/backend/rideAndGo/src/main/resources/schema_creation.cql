@@ -166,3 +166,4 @@ CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
 CREATE INDEX IF NOT EXISTS place_mapname_idx ON place (mapName);
 CREATE INDEX IF NOT EXISTS place_currentname_idx ON place (currentName);
+CREATE INDEX IF NOT EXISTS subscription_label_idx ON subscription (label);
