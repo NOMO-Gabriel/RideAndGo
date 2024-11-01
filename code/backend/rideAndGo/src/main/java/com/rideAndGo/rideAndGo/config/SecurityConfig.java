@@ -33,7 +33,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") // Ajustez ce chemin selon vos routes
-                .allowedOrigins("http://localhost:3000","http://localhos") // Spécifiez l'origine autorisée
+                .allowedOrigins("http://localhost:3000","http://localhost") // Spécifiez l'origine autorisée
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Méthodes autorisées
                 .allowCredentials(true);
     }
