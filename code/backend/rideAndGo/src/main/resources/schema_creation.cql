@@ -65,13 +65,14 @@ CREATE TABLE IF NOT EXISTS alert (
 );
 
 -- Table Preference
-CREATE TABLE IF NOT EXISTS preference (
-    id UUID PRIMARY KEY,
-    language TEXT,
-    theme TEXT,
-    timeZone INT,
-    isLocalisable BOOLEAN
-);
+--CREATE TABLE IF NOT EXISTS preference (
+--  id UUID PRIMARY KEY,
+--    language TEXT,
+--   theme TEXT,
+--    timeZone INT,
+--    isLocalisable BOOLEAN
+--);
+--je pense que cette table est inutile car ces champs sont deja dans la table user
 
 -- Table Complaint
 CREATE TABLE IF NOT EXISTS complaint (
@@ -165,3 +166,4 @@ CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
 CREATE INDEX IF NOT EXISTS place_mapname_idx ON place (mapName);
 CREATE INDEX IF NOT EXISTS place_currentname_idx ON place (currentName);
+CREATE INDEX IF NOT EXISTS subscription_label_idx ON subscription (label);

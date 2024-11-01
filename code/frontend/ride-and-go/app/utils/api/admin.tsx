@@ -32,13 +32,26 @@ export const suspendUser = async (admin: {adminId:string | undefined}, id: strin
     }
     return response.json();
     };
+  export const reactivateUser = async (admin: {adminId:string | undefined}, id: string | undefined) => {
+    const response = await fetch(`${API_URL}/users/reactivateUser/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(admin),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erreur lors de la suspension du user');
+    }
+    return response.json();
+    };  
   
   // changer les roles
   export const setRoles = async (
       setRolesRequest: {
-          AdminId:string | undefined;
+          adminId:string | undefined;
           userId: string | undefined;
-          newRoles:[string];
+          newRoles:string[];
       }) => {
     const response = await fetch(`${API_URL}/admin/setRoles`, {
       method: 'PUT',
@@ -48,11 +61,11 @@ export const suspendUser = async (admin: {adminId:string | undefined}, id: strin
     
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Erreur lors de mise a jour des roles ');
+      throw new Error(errorData.message || 'Erreur lors de la mise a jour du role du user');
     }
     return response.json();
-    };
-  
+      
+ }
   
   // creer un admin
   export const createAdmin = async (
@@ -98,4 +111,18 @@ export const deleteUser = async (admin: {adminId:string | undefined}, id: string
   }
   return response.json();
   };
-    
+  
+  // alerter l'utilisateur
+export const alertUser = async (admin: {adminId:string | undefined}, id: string | undefined) => {
+  const response = await fetch(`${API_URL}/users/reactivateUser/${id}`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(admin),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Erreur lors de la suspension du user');
+  }
+  return response.json();
+  };

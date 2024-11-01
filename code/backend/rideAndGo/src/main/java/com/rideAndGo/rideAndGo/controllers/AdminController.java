@@ -61,7 +61,6 @@ public class AdminController {
         Instant now = Instant.now();
         LocalDate birthDate = request.getAdminToCreate().getBirthday();
         List<String> roles = new ArrayList<>();
-        roles.add("ROLE_DRIVER");
         roles.add("ROLE_TRAVELLER");
         roles.add("ROLE_ADMIN");
         roles.add("ROLE_SUPER_ADMIN");
@@ -105,17 +104,23 @@ public class AdminController {
         UUID userId = request.getUserId();
 
         List<String> newRoles = request.getNewRoles();
+        System.out.println("nouvelle requete de change ment des roles");
+        System.out.println(request);
         
-        if (adminId == null || userId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Admin ID or User ID must not be null");
+        if (adminId == null ) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Admin ID  must not be null");
         }
+        if ( userId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" User ID must not be null");
+        }
+
         
         if (!userService.existsById(adminId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin ID not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Admin  not found");
         }
 
         if (!userService.existsById(userId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User ID not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User  not found");
         }
 
         // Récupération et mise à jour des rôles de l'utilisateur
@@ -123,7 +128,7 @@ public class AdminController {
         user.setRoles(newRoles);
         userService.save(user);
 
-        return ResponseEntity.ok("User roles updated successfully");
+        return ResponseEntity.ok(new HTTPResponse("Roles updated successfully"));
     }
 
 }
