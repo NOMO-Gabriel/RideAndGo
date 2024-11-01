@@ -110,7 +110,8 @@ CREATE TABLE IF NOT EXISTS travel (
     endPointId UUID,
     driver UUID,  -- driver id
     traveller UUID,  -- list of traveller ids
-    date TIMESTAMP,
+    date DATE,
+    departureTime TIME, 
     travellerRating DOUBLE,
     driverRating DOUBLE,
     numberOfSeats DOUBLE,

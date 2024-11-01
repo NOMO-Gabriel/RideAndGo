@@ -5,15 +5,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.data.cassandra.core.mapping.Column;
 
-import java.time.Instant;
+
+
 import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Table("travel")
 public class Travel {
     @Id
     private UUID id;
-    
+
     @Column("startpointid")
     private UUID startPointId;
 
@@ -27,7 +30,10 @@ public class Travel {
     private UUID traveller;
 
     @Column("date")
-    private Instant date;
+    private LocalDate date;
+
+    @Column("departuretime")
+    private LocalTime departureTime;
 
     @Column("travellerrating")
     private Double travellerRating;

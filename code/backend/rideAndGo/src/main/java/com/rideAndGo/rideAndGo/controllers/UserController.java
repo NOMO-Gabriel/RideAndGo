@@ -32,7 +32,7 @@ private boolean isAdmin(UUID adminId) {
 }
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.passwordEncoder=passwordEncoder;
+        this.passwordEncoder=passwordEncoder; save
     }
 
     // Récupérer tous les utilisateurs
