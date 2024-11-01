@@ -65,13 +65,14 @@ CREATE TABLE IF NOT EXISTS alert (
 );
 
 -- Table Preference
-CREATE TABLE IF NOT EXISTS preference (
-    id UUID PRIMARY KEY,
-    language TEXT,
-    theme TEXT,
-    timeZone INT,
-    isLocalisable BOOLEAN
-);
+--CREATE TABLE IF NOT EXISTS preference (
+--  id UUID PRIMARY KEY,
+--    language TEXT,
+--   theme TEXT,
+--    timeZone INT,
+--    isLocalisable BOOLEAN
+--);
+--je pense que cette table est inutile car ces champs sont deja dans la table user
 
 -- Table Complaint
 CREATE TABLE IF NOT EXISTS complaint (

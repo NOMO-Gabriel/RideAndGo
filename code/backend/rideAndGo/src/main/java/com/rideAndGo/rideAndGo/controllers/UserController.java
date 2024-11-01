@@ -40,7 +40,7 @@ private boolean isAdmin(UUID adminId) {
    @GetMapping("/")
 public ResponseEntity<Iterable<User>> getAllActiveUsers() {
     Iterable<User> users = StreamSupport.stream(userService.getAllUsers().spliterator(), false)
-                                        .filter(user -> !user.getIsDeleted() && !user.getIsSuspend())
+                                        .filter(user -> !user.getIsDeleted())
                                         .collect(Collectors.toList());
     return ResponseEntity.ok(users);
 }
