@@ -33,6 +33,12 @@ private boolean isAdmin(UUID adminId) {
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
+<<<<<<< HEAD
+=======
+
+        
+
+>>>>>>> d4a652338f68f15dcc11084ffc7131af2d552c6d
     }
 
     // Récupérer tous les utilisateurs
