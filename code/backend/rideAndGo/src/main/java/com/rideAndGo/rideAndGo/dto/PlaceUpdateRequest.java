@@ -4,6 +4,10 @@ import lombok.Data;
 
 @Data
 public class PlaceUpdateRequest {
-    private String currentName;
+    private Long osmId;
+    private String name;
+    private Double latitude;
+    private Double longitude;
+    private String way;
     private String description;
 }

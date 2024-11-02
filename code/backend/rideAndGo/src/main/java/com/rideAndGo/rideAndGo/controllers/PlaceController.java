@@ -1,11 +1,11 @@
 package com.rideAndGo.rideAndGo.controllers;
 
-import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.PlaceCreationRequest;
 import com.rideAndGo.rideAndGo.dto.PlaceUpdateRequest;
 import com.rideAndGo.rideAndGo.models.Place;
 import com.rideAndGo.rideAndGo.services.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,73 +20,73 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
+    // Récupérer un lieu par son ID
     @GetMapping("/searchById/{id}")
     public ResponseEntity<?> getPlaceById(@PathVariable UUID id) {
         Optional<Place> place = placeService.getPlaceById(id);
         if (place.isPresent()) {
             return ResponseEntity.ok(place.get());
         } else {
-            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponse("Place not found", "Place with id " + id + " does not exist"));
-        
-            return ResponseEntity.status(404).body("Place not found, place with id " + id + " does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Place not found, place with ID " + id + " does not exist");
         }
     }
 
+    // Rechercher des lieux par nom
     @GetMapping("/searchByName/{name}")
     public ResponseEntity<?> searchPlacesByName(@PathVariable String name) {
         List<Place> places = placeService.searchPlacesByName(name);
         if (!places.isEmpty()) {
             return ResponseEntity.ok(places);
         } else {
-            return ResponseEntity.status(404).body("No places found containing: " + name);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No places found containing: " + name);
         }
     }
 
+    // Obtenir tous les lieux
     @GetMapping("/")
     public ResponseEntity<Iterable<Place>> getAllPlaces() {
         Iterable<Place> places = placeService.getAllPlaces();
         return ResponseEntity.ok(places);
     }
 
+    // Créer un lieu
     @PostMapping("/create")
-    public ResponseEntity<?> createPlace(@RequestBody PlaceCreationRequest place) {
+    public ResponseEntity<?> createPlace(@RequestBody PlaceCreationRequest placeRequest) {
         try {
-            UUID placeId=UUID.randomUUID();
-            Place placeToSave=new Place();
-            placeToSave.setMapName(place.getMapName());
-            placeToSave.setCurrentName(place.getCurrentName());
-            placeToSave.setDescription(place.getDescription());
+            UUID placeId = UUID.randomUUID();
+            Place placeToSave = new Place();
             placeToSave.setId(placeId);
+            placeToSave.setOsmId(placeRequest.getOsmId());
+            placeToSave.setName(placeRequest.getName());
+            placeToSave.setLatitude(placeRequest.getLatitude());
+            placeToSave.setLongitude(placeRequest.getLongitude());
+            placeToSave.setWay(placeRequest.getWay());
+            placeToSave.setDescription(placeRequest.getDescription());
             Place createdPlace = placeService.createPlace(placeToSave);
-            return ResponseEntity.status(201).body(createdPlace);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPlace);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error creating place" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating place: " + e.getMessage());
         }
     }
 
-    // @DeleteMapping("/delete/{id}")
-    // public ResponseEntity<?> deletePlace(@PathVariable UUID id) {
-    //     try {
-    //         placeService.deletePlace(id);
-    //         return ResponseEntity.status(204).build();
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(500).body(new AuthResponse("Error deleting place " + e.getMessage()));
-    //     }
-    // }
-
+    // Mettre à jour un lieu
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody PlaceUpdateRequest placeDetails) {
-        try {
-            Place updatedPlace = new Place();
-            Place placeToUpdate = new Place();
-            placeToUpdate = placeService.getPlaceById(id).get();
-            updatedPlace.setId(id);
-            updatedPlace.setMapName(placeToUpdate.getMapName());
-            updatedPlace.setCurrentName(placeDetails.getCurrentName());
-            updatedPlace.setDescription(placeDetails.getDescription());
-            return ResponseEntity.ok(updatedPlace);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error updating place " + e.getMessage());
-        }
+public ResponseEntity<?> updatePlace(@PathVariable UUID id, @RequestBody PlaceUpdateRequest placeDetails) {
+    Optional<Place> existingPlaceOpt = placeService.getPlaceById(id);
+    if (!existingPlaceOpt.isPresent()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Place with ID " + id + " does not exist");
     }
+
+    Place existingPlace = existingPlaceOpt.get();
+    existingPlace.setName(placeDetails.getName());
+    existingPlace.setDescription(placeDetails.getDescription());
+    existingPlace.setLatitude(placeDetails.getLatitude());
+    existingPlace.setLongitude(placeDetails.getLongitude());
+    existingPlace.setWay(placeDetails.getWay());
+    existingPlace.setOsmId(placeDetails.getOsmId());
+
+    Place updatedPlace = placeService.updatePlace(id, existingPlace);
+    return ResponseEntity.ok(updatedPlace);
+}
+
 }

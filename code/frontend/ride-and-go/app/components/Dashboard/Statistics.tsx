@@ -36,7 +36,22 @@ export default function Statistics() {
     itineraries: 0,
     places: 0,
   });
+  const [statistics, setStatistics] = useState(null);
 
+    useEffect(() => {
+        const fetchStatistics = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/statistics');
+                const data = await response.json();
+                setStatistics(data);
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching statistics:', error);
+            }
+        };
+
+        fetchStatistics();
+    }, []);
   const content = {
     en: {
       mostVisited: "Most Visited Places",

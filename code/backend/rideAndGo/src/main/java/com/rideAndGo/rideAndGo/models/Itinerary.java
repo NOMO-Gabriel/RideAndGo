@@ -24,5 +24,5 @@ public class Itinerary {
     private UUID endPoint;
 
     @Column("owner")
-    private Map<String, Integer> owner;
+    private UUID owner;
 }
