@@ -6,7 +6,9 @@ import {
   faEdit, faTrash, faInfoCircle, faUtensils, faSchool,
   faHospital, faStore, faHotel, faMapMarkerAlt,faRoute,faMapMarked
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchItineraries, deleteItinerary, updateItinerary } from "@/app/utils/api/itineraries";
+
 
 // Types
 type Place = {
@@ -20,8 +22,8 @@ type Place = {
 
 type Itinerary = {
   id: number;
-  startPoint: Place;
-  endPoint: Place;
+  startPoint: number;
+  endPoint: number;
   description: string;
 };
 
@@ -45,7 +47,7 @@ const places: Place[] = [
   { id: 5, name: 'Hôpital Général', description: 'Hôpital moderne.', latitude: 3.870, longitude: 11.508, category: 'hospital' },
 ];
 
-const itineraries: Itinerary[] = [
+const dummyItineraries: Itinerary[] = [
   { id: 1, startPoint: places[0], endPoint: places[1], description: 'De l\'école au restaurant.' },
   { id: 2, startPoint: places[0], endPoint: places[2], description: 'De l\'école au marché.' },
   { id: 3, startPoint: places[0], endPoint: places[3], description: 'De l\'école à l\'hôtel.' },
@@ -57,13 +59,50 @@ export default function Itineraries() {
   const [filter, setFilter] = useState<'places' | 'itineraries'>('places');
   const [hoveredPlace, setHoveredPlace] = useState<Place | null>(null);
   const [infoPlace, setInfoPlace] = useState<Place | null>(null);
-
+  const [itineraries, setItineraries] = useState<Itinerary[]>(dummyItineraries);
+  
   const content = {
     en: { places: 'My Places', itineraries: 'My Itineraries', info: 'Infos', showMap: 'Show on Map', delete: 'Delete', order: 'Order' },
     fr: { places: 'Mes Lieux', itineraries: 'Mes Itinéraires', info: 'Infos', showMap: 'Voir sur la Carte', delete: 'Supprimer', order: 'Commander' },
   };
   const localizedText = content[locale as 'fr' | 'en'] || content.en;
 
+   // Fetch itineraries when component mounts
+   useEffect(() => {
+    const loadItineraries = async () => {
+      try {
+        const itineraries = await fetchItineraries();
+        setItineraries(itineraries);
+        console.log("Itineraries fetched:", itineraries);
+        console.log("Itineraries :", itineraries);
+
+      } catch (error) {
+        console.error("Failed to fetch itineraries:", error);
+      }
+    };
+    loadItineraries();
+  }, []);
+
+  // Function to handle itinerary deletion
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteItinerary(id);
+      setItineraries(itineraries.filter(itinerary => itinerary.id !== id));
+    } catch (error) {
+      console.error("Failed to delete itinerary:", error);
+    }
+  };
+
+  // Function to handle itinerary editing
+  const handleEdit = async (id: number, updatedDescription: string) => {
+    const updatedItinerary = { id, description: updatedDescription };
+    try {
+      const data = await updateItinerary(id, updatedItinerary);
+      setItineraries(itineraries.map(itinerary => (itinerary.id === id ? data : itinerary)));
+    } catch (error) {
+      console.error("Failed to update itinerary:", error);
+    }
+  };
   const renderPlace = (place: Place) => (
     <div className=" w-max h-max bg-gray-200 bg-opacity-90 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-extrabold text-orange-btn">{place.name}</h2>
@@ -133,18 +172,18 @@ export default function Itineraries() {
             <div key={itinerary.id} className="p-4 border rounded-lg shadow-md">
               <h2 className="text-lg font-semibold">
                 <span onMouseEnter={() => setHoveredPlace(itinerary.startPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.startPoint.name}
+                  {itinerary.startPoint}
                 </span>
                 →
                 <span onMouseEnter={() => setHoveredPlace(itinerary.endPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.endPoint.name}
+                  {itinerary.endPoint}
                 </span>
               </h2>
               <p className="text-gray-600">{itinerary.description}</p>
               <div>
-                {hoveredPlace?.id === itinerary.startPoint.id && renderPlace(itinerary.startPoint)}
-                {hoveredPlace?.id === itinerary.endPoint.id && renderPlace(itinerary.endPoint)}
-              </div>
+                {hoveredPlace?.id === itinerary.startPoint && renderPlace(itinerary.startPoint)}
+                {hoveredPlace?.id === itinerary.endPoint && renderPlace(itinerary.endPoint)}
+              </div> 
               <div className="flex space-x-4 mt-4">
                 <button className="px-3 py-1 bg-bleu-nuit hover:bg-blue-800 text-white rounded" title={localizedText.showMap}>
                   <FontAwesomeIcon icon={faMapMarked} />
