@@ -1,28 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
 import { useSearchFilter } from "@/app/utils/hooks/useSearchFilter"; 
+import { getAllPlaces } from "@/app/utils/api/places"; // Importer la fonction pour récupérer tous les lieux
+
+// Définir l'interface pour Location
+interface Location {
+  id: string;
+  osmId: number | null;
+  name: string;
+  latitude: number;
+  longitude: number;
+  way: string;
+  description: string | null;
+}
 
 const Header: React.FC = () => {
   const { locale } = useLocale(); 
   const [isItinerary, setIsItinerary] = useState<boolean>(true); 
   const { updateSearchData } = useSearchFilter(); 
-  
-  const polytechYaounde = { 
-    latitude: 3.8480, 
-    longitude: 11.5021, 
-    description: "École Nationale Supérieure Polytechnique de Yaoundé" 
-  };
-  
-  const posteCentrale = { 
-    latitude: 3.8662, 
-    longitude: 11.5160, 
-    description: "Poste Centrale de Yaoundé" 
-  };
-  const polytech = {
-    latitude: 3.8480,
-    longitude: 11.5021,
-    name: "École Nationale Supérieure Polytechnique ",
-  };
+
+  const [startingPoint, setStartingPoint] = useState("");
+  const [destinationPoint, setDestinationPoint] = useState("");
+  const [places, setPlaces] = useState<Location[]>([]); // Stocker tous les lieux
+  const [suggestions, setSuggestions] = useState<Location[]>([]); // Stocker les suggestions
 
   const content = {
     fr: {
@@ -45,7 +45,6 @@ const Header: React.FC = () => {
     },
   };
   const currentContent = locale === 'en' ? content.en : content.fr;
- 
 
   const handleToggle = () => {
     setIsItinerary((prev) => !prev); 
@@ -55,21 +54,58 @@ const Header: React.FC = () => {
     const data = isItinerary
       ? {
           isItinerary: true,
-          startingPoint: polytechYaounde,
-          destinationPoint: posteCentrale,
+          startingPoint: startingPoint,
+          destinationPoint: destinationPoint,
         }
       : {
           isItinerary: false,
-          place: polytech,
+          place: suggestions.find(suggestion => suggestion.name === startingPoint), // Trouver la place correspondante
         };
 
     updateSearchData(data); 
   };
 
+  const fetchAllPlaces = async () => {
+    try {
+      const data = await getAllPlaces(); // Récupérer tous les lieux
+      setPlaces(data); // Stocker les lieux dans l'état
+    } catch (error) {
+      console.error("Erreur lors de la récupération des lieux", error);
+    }
+  };
+
+  // Appel de la fonction pour récupérer tous les lieux au chargement du composant
+  useEffect(() => {
+    fetchAllPlaces();
+  }, []);
+
+  // Filtre les suggestions en fonction de l'entrée de l'utilisateur
+  const getFilteredSuggestions = (input: string) => {
+    return places.filter(suggestion => 
+      suggestion.name.toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    // Met à jour les suggestions lorsque l'utilisateur tape dans le champ de départ
+    if (startingPoint.length > 0) {
+      setSuggestions(getFilteredSuggestions(startingPoint)); // Met à jour les suggestions
+    } else {
+      setSuggestions([]); // Efface les suggestions si l'entrée est vide
+    }
+  }, [startingPoint, places]);
+
+  useEffect(() => {
+    // Met à jour les suggestions lorsque l'utilisateur tape dans le champ de destination
+    if (destinationPoint.length > 0) {
+      setSuggestions(getFilteredSuggestions(destinationPoint)); // Met à jour les suggestions
+    } else {
+      setSuggestions([]); // Efface les suggestions si l'entrée est vide
+    }
+  }, [destinationPoint, places]);
+
   return (
     <div className="text-center flex flex-col space-y-4 mt-4 justify-center">
-      {/* <h1 className="text-3xl font-bold mt-3 text-orange-600">{getContent('title')}</h1> */}
-      
       <div className={`flex justify-center mt-4 ${isItinerary ? '-translate-x-8' : '-translate-x-8'}`}>
         <div className="relative flex items-center justify-center">
           <button
@@ -91,21 +127,57 @@ const Header: React.FC = () => {
       
       {isItinerary ? (
         <div className="flex flex-row space-x-6 mt-4 justify-center">
-          <input
-            id="starting-point"
-            type="text"
-            placeholder={currentContent.startingPoint} 
-            className="border border-gray-300 rounded p-2"
-          />
-          <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2  rounded-full w-max ">
+          <div className="relative">
+            <input
+              id="starting-point"
+              type="text"
+              placeholder={currentContent.startingPoint} 
+              className="border border-gray-300 rounded p-2"
+              value={startingPoint}
+              onChange={(e) => setStartingPoint(e.target.value)} // Mettre à jour l'état à chaque frappe
+            />
+            {startingPoint && suggestions.length > 0 && (
+              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full">
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setStartingPoint(suggestion.name)} // Mettre à jour l'entrée avec le nom de la suggestion
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                  >
+                    {suggestion.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2 rounded-full w-max ">
               {currentContent.search}
           </button>
-          <input
-            id="destination-point"
-            type="text"
-            placeholder={currentContent.destinationPoint} 
-            className="border border-gray-300 rounded p-2"
-          />
+          
+          <div className="relative">
+            <input
+              id="destination-point"
+              type="text"
+              placeholder={currentContent.destinationPoint} 
+              className="border border-gray-300 rounded p-2"
+              value={destinationPoint}
+              onChange={(e) => setDestinationPoint(e.target.value)} // Mettre à jour l'état à chaque frappe
+            />
+            {destinationPoint && suggestions.length > 0 && (
+              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full">
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setDestinationPoint(suggestion.name)} // Mettre à jour l'entrée avec le nom de la suggestion
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                  >
+                    {suggestion.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <div className="mt-4 flex flex-row space-x-6 justify-center">
@@ -114,15 +186,14 @@ const Header: React.FC = () => {
             type="text"
             placeholder={currentContent.searchPlace} 
             className="border border-gray-300 rounded p-2"
+            value={startingPoint}
+            onChange={(e) => setStartingPoint(e.target.value)} // Mettre à jour l'état à chaque frappe
           />
-          <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2  rounded-full w-max ">
+          <button onClick={handleSearch} className="bg-bleu-nuit hover:bg-orange-500 text-white px-4 py-2 rounded-full w-max ">
               {currentContent.search}
           </button>
-      </div>
-     
+        </div>
       )}
-
-
     </div>
   );
 };
