@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';  
 import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
-import FlashMessage from '@/app/components/flash_message/FlashMessage';
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 interface LoginData {
   identifier: string;
@@ -11,10 +11,9 @@ interface LoginData {
 
 const LoginForm = () => {
   const { login } = useUser(); // Récupère la fonction de connexion du contexte
+  const { showFlashMessage } = useFlashMessage(); // Récupère la fonction pour afficher les flash messages
   const [loginData, setLoginData] = useState<LoginData>({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   // Détection du type d'identifiant
   const getIdentifierType = (identifier: string): 'email' | 'phoneNumber' | 'pseudo' => {
@@ -35,19 +34,17 @@ const LoginForm = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
   
     const identifierType = getIdentifierType(loginData.identifier);
   
     try {
       await login(identifierType, loginData.identifier, loginData.password);
-      setSuccess(true);
+      showFlashMessage('Connexion réussie ! Redirection en cours...', 'success', true);
       setTimeout(() => {
         window.location.href = '/dashboard'; // Redirection sécurisée
       }, 2000);
     } catch (error: any) { 
-      setError(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.');
-      setSuccess(false); 
+      showFlashMessage(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.', 'error');
     } finally {
       setLoading(false);
     }
@@ -60,8 +57,6 @@ const LoginForm = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-6 text-center">Se Connecter</h2>
             <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulaire de connexion">
-              {error && <FlashMessage type="error" message={error}/>}
-              {success && <p className="text-green-500 text-center">Connexion réussie ! Redirection...</p>}
               
               <input
                 type="text"
@@ -101,7 +96,6 @@ const LoginForm = () => {
                   Créer un compte
                 </a>
               </div>
-              <FlashMessage type="info" message="test" />
             </form>
           </div>
         </div>

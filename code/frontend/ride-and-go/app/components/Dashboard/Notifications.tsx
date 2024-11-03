@@ -1,78 +1,89 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faTrash, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { getAllNotifications } from '@/app/utils/api/notifications';
 
 // Type pour les notifications
+// interface Notification {
+//   id: number;
+//   title: string;
+//   miniDescription: string;
+//   content: string; // Contenu complet de la notification
+//   time: string;
+//   type: 'alert' | 'new' | 'archived'; // Type de notification
+//   imageUrl: string; // URL de l'image
+// }
+
 interface Notification {
   id: number;
   title: string;
-  miniDescription: string;
-  content: string; // Contenu complet de la notification
-  time: string;
-  type: 'alert' | 'new' | 'archived'; // Type de notification
-  imageUrl: string; // URL de l'image
+  message: string;
+  date: Date;
+  state: string;
 }
 
+
+
 // Données fictives pour les notifications
-const fakeNotifications: Notification[] = [
-  {
-    id: 1,
-    title: 'Server Down Alert',
-    miniDescription: 'The server is down for maintenance.',
-    content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
-    time: '10:00 AM',
-    type: 'alert',
-    imageUrl: '/images/profileImage.png',
-  },
-  {
-    id: 2,
-    title: 'New Feature Available',
-    miniDescription: 'Check out the new feature we just released.',
-    content: 'We have released a new feature that allows you to do more with our platform.',
-    time: '11:00 AM',
-    type: 'new',
-    imageUrl: '/images/profileImageBoy.jpeg',
-  },
-  {
-    id: 3,
-    title: 'Archived Notification',
-    miniDescription: 'This notification has been archived.',
-    content: 'This notification has been archived for future reference.',
-    time: '12:00 AM',
-    type: 'archived',
-    imageUrl: '/images/profileImageGirl.jpeg',
-  },
-  {
-    id: 4,
-    title: 'Server Down Alert',
-    miniDescription: 'The server is down for maintenance.',
-    content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
-    time: '1:00 PM',
-    type: 'alert',
-    imageUrl: '/images/profileImage.png',
-  },
-  {
-    id: 5,
-    title: 'New Feature Available',
-    miniDescription: 'Check out the new feature we just released.',
-    content: 'We have released a new feature that allows you to do more with our platform.',
-    time: '2:00 PM',
-    type: 'new',
-    imageUrl: '/images/profileImageBoy.jpeg',
-  },
-  {
-    id: 6,
-    title: 'Archived Notification',
-    miniDescription: 'This notification has been archived.',
-    content: 'This notification has been archived for future reference.',
-    time: '3:00 PM',
-    type: 'archived',
-    imageUrl: '/images/profileImageGirl.jpeg',
-  },
-];
+// const fakeNotifications: Notification[] = [
+//   {
+//     id: 1,
+//     title: 'Server Down Alert',
+//     miniDescription: 'The server is down for maintenance.',
+//     content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
+//     time: '10:00 AM',
+//     type: 'alert',
+//     imageUrl: '/images/profileImage.png',
+//   },
+//   {
+//     id: 2,
+//     title: 'New Feature Available',
+//     miniDescription: 'Check out the new feature we just released.',
+//     content: 'We have released a new feature that allows you to do more with our platform.',
+//     time: '11:00 AM',
+//     type: 'new',
+//     imageUrl: '/images/profileImageBoy.jpeg',
+//   },
+//   {
+//     id: 3,
+//     title: 'Archived Notification',
+//     miniDescription: 'This notification has been archived.',
+//     content: 'This notification has been archived for future reference.',
+//     time: '12:00 AM',
+//     type: 'archived',
+//     imageUrl: '/images/profileImageGirl.jpeg',
+//   },
+//   {
+//     id: 4,
+//     title: 'Server Down Alert',
+//     miniDescription: 'The server is down for maintenance.',
+//     content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
+//     time: '1:00 PM',
+//     type: 'alert',
+//     imageUrl: '/images/profileImage.png',
+//   },
+//   {
+//     id: 5,
+//     title: 'New Feature Available',
+//     miniDescription: 'Check out the new feature we just released.',
+//     content: 'We have released a new feature that allows you to do more with our platform.',
+//     time: '2:00 PM',
+//     type: 'new',
+//     imageUrl: '/images/profileImageBoy.jpeg',
+//   },
+//   {
+//     id: 6,
+//     title: 'Archived Notification',
+//     miniDescription: 'This notification has been archived.',
+//     content: 'This notification has been archived for future reference.',
+//     time: '3:00 PM',
+//     type: 'archived',
+//     imageUrl: '/images/profileImageGirl.jpeg',
+//   },
+// ];
 
 const content = {
   en: {
@@ -105,14 +116,28 @@ const content = {
 
 const Notifications = () => {
   const [filter, setFilter] = useState<'all' | 'alert' | 'new' | 'archived'>('all');
-  const [notifications, setNotifications] = useState<Notification[]>(fakeNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [expandedNotification, setExpandedNotification] = useState<number | null>(null);
   const { locale } = useLocale(); // Hook d'internationalisation
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await getAllNotifications();
+      setNotifications(data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des notifications:', error);
+      alert('Erreur lors de la récupération des notifications.');
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   // Filtrer les notifications selon le filtre sélectionné
   const filteredNotifications = notifications.filter((notification) => {
     if (filter === 'all') return true;
-    return notification.type === filter;
+    return notification.state  === filter;
   });
 
   // Fonction pour supprimer une notification
@@ -144,17 +169,10 @@ const Notifications = () => {
           <div key={notification.id} className="bg-gray-50 p-4 rounded-xl shadow-md border flex flex-col">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Image
-                  width={100}
-                  height={100}
-                  alt={localizedContent.alt}
-                  className="w-12 h-12 rounded-full"
-                  src={notification.imageUrl}
-                />
                 <div>
                   <h3 className="font-bold">{notification.title}</h3>
-                  <p className="text-sm">{notification.miniDescription}</p>
-                  <span className="text-xs text-blue-600">{notification.time}</span>
+                  <p className="text-sm">{notification.message}</p>
+                  <span className="text-xs text-blue-600">{notification.date.toString()}</span>
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -180,7 +198,7 @@ const Notifications = () => {
             </div>
             {expandedNotification === notification.id && (
               <div className="mt-4 bg-white p-4 rounded shadow-lg">
-                <p className='text-start text-base'>{notification.content}</p>
+                <p className='text-start text-base'>{notification.message}</p>
               </div>
             )}
           </div>
