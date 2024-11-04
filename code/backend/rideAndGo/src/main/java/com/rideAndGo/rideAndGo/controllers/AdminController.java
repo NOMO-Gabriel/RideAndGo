@@ -1,9 +1,11 @@
 package com.rideAndGo.rideAndGo.controllers;
 
+import com.rideAndGo.rideAndGo.models.Subscription;
 import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.dto.CreateAdminRequest;
 import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.SetRolesRequest;
+import com.rideAndGo.rideAndGo.services.SubscriptionService;
 import com.rideAndGo.rideAndGo.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,6 +32,9 @@ public class AdminController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final SubscriptionService subscriptionService = new SubscriptionService();
 
     @PostMapping("/createAdmin")
     public ResponseEntity<HTTPResponse> createAdmin(@RequestBody CreateAdminRequest request) {
@@ -60,6 +66,7 @@ public class AdminController {
         User admin = new User();
         Instant now = Instant.now();
         LocalDate birthDate = request.getAdminToCreate().getBirthday();
+        Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_TRAVELLER");
         roles.add("ROLE_ADMIN");
@@ -84,7 +91,7 @@ public class AdminController {
         admin.setMyPlace(Collections.singletonList(UUID.randomUUID()));
         admin.setMyItineraries(Collections.singletonList(UUID.randomUUID()));
         admin.setMyTravels(Collections.singletonList(UUID.randomUUID()));
-        admin.setMySuscription(UUID.randomUUID());
+        admin.setSubscription(defaultSubscription.get().getId());
         admin.setVehicle(UUID.randomUUID());
         admin.setPiece(Collections.singletonList(UUID.randomUUID()));
         admin.setPicture(Collections.singletonList(UUID.randomUUID()));

@@ -16,15 +16,15 @@ public class Subscription {
     @Id
     private UUID id;
 
-    @Column
+    @Column("label")
     private String label;
 
-    @Column
-    private Double number;
+    @Column("prix")
+    private Double price;
 
-    @Column
+    @Column("description")
     private String description;
 
-    @Column
+    @Column("features")
     private List<String> features;
 }

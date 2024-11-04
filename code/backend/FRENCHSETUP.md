@@ -47,7 +47,7 @@ Notez l’ID du conteneur et remplacez **cassandra-container** par cet ID dans l
 
 #### **Étape 3 : Exécuter le script dans le conteneur**
 ```bash
-docker exec -it cassandra-container cqlsh -f /data.cql
+ 
 ```
   
 ---

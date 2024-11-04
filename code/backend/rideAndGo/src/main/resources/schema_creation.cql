@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user (
     myItineraries LIST<UUID>,
     myTravels LIST<UUID>,
     mySuscription UUID,
+    paiementDate TIMESTAMP,
     vehicle UUID,
     piece LIST<UUID>,
     picture LIST<UUID>,
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS travel (
 CREATE TABLE IF NOT EXISTS subscription (
     id UUID PRIMARY KEY,
     label TEXT,
-    prix DOUBLE,
+    price DOUBLE,
     features LIST<TEXT>,
     description TEXT
 );
