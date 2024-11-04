@@ -5,6 +5,7 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.cassandra.repository.Query;
 
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,4 +18,5 @@ public interface PlaceRepository extends CassandraRepository<Place, UUID> {
     
     @Query("SELECT COUNT(p) FROM Place p")
     int countPlaces();
+    
 }

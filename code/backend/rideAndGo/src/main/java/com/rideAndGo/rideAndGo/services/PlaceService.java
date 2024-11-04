@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.cassandra.repository.Query;
 
+import java.util.stream.Collectors;
 
 import java.util.stream.Collectors;
 import java.util.List;
@@ -19,9 +20,12 @@ public class PlaceService {
     private PlaceRepository placeRepository;
 
     // Récupérer un lieu par ID
+    // Récupérer un lieu par ID
     public Optional<Place> getPlaceById(UUID id) {
         return placeRepository.findById(id);
     }
+
+    
 
     // Rechercher des lieux par nom
     public List<Place> searchPlacesByName(String name) {
@@ -32,10 +36,12 @@ public class PlaceService {
     }
 
     // Récupérer tous les lieux
+    // Récupérer tous les lieux
     public Iterable<Place> getAllPlaces() {
         return placeRepository.findAll();
     }
 
+    // Créer un nouveau lieu
     // Créer un nouveau lieu
     public Place createPlace(Place place) {
         return placeRepository.save(place);
@@ -49,10 +55,14 @@ public class PlaceService {
     
 
     // Supprimer un lieu (optionnel si besoin d'une fonction de suppression)
+   
+    
+
+    // Supprimer un lieu (optionnel si besoin d'une fonction de suppression)
     public void deletePlace(UUID id) {
         if (placeRepository.existsById(id)) {
             placeRepository.deleteById(id);
-        } else {
+         } else {
             throw new RuntimeException("Place not found with ID " + id);
         }
     }
