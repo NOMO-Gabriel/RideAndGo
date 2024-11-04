@@ -53,7 +53,10 @@ public class User {
     private List<UUID> myTravels;
 
     @Column("mysuscription")
-    private UUID mySuscription;
+    private UUID subscription;
+
+    @Column("paiementdate")
+    private Instant paiementDate;
 
     @Column("vehicle")
     private UUID vehicle;

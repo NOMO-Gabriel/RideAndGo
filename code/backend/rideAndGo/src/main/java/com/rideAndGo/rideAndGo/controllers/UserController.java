@@ -33,9 +33,6 @@ public class UserController {
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
-
-        
-
     }
 
     // Récupérer tous les utilisateurs

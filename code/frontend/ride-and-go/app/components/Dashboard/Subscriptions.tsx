@@ -1,55 +1,18 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrown, faStar, faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faCrown, faStar } from '@fortawesome/free-solid-svg-icons';
+import { useUser } from '@/app/utils/hooks/useUser';
+import { getSubscriptions, getUserSubscription, changeUserSubscription } from '@/app/utils/api/suscribtion';
 
 // Type pour les abonnements
 interface Subscription {
-  id: number;
-  name: string; // Nom de l'abonnement
-  price: string; // Prix de l'abonnement
-  paymentDate: string; // Date de paiement
-  details: string; // Détails supplémentaires de l'abonnement
-  icon: any; // Icône de l'abonnement
+  id: string | undefined;
+  label: string;
+  price: string;
+  features: string[];
 }
-
-// Données fictives pour les abonnements
-const currentSubscription: Subscription = {
-  id: 1,
-  name: 'Élite',
-  price: '1000 $/an',
-  paymentDate: '2024-10-15',
-  details: 'Accès illimité à toutes les fonctionnalités, support premium et mises à jour mensuelles.',
-  icon: faCrown,
-};
-
-const otherSubscriptions: Subscription[] = [
-  {
-    id: 2,
-    name: 'Standard',
-    price: '500 $/an',
-    paymentDate: '2024-10-01',
-    details: 'Accès à des fonctionnalités standard et support par e-mail.',
-    icon: faStar,
-  },
-  {
-    id: 3,
-    name: 'Basique',
-    price: '100 $/an',
-    paymentDate: '2024-09-25',
-    details: 'Accès limité aux fonctionnalités de base, sans support.',
-    icon: faCheck,
-  },
-  {
-    id: 4,
-    name: 'SUPER',
-    price: '1000 $/an',
-    paymentDate: '2024-09-25',
-    details: 'Accès limité aux fonctionnalités de base, sans support.',
-    icon: faExclamationTriangle,
-  },
-];
 
 const subscriptionContent = {
   en: {
@@ -76,77 +39,118 @@ const subscriptionContent = {
 
 const Subscription = () => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const { locale } = useLocale(); // Hook d'internationalisation
-
-  // Fonction pour fermer le popup
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
+  const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
+  const [otherSubscriptions, setOtherSubscriptions] = useState<Subscription[]>([]);
+  const { locale } = useLocale();
+  const { user } = useUser();
 
   // Obtenir le contenu localisé
   const localizedContent = subscriptionContent[locale as "fr" | "en"];
+
+  // Charger l'abonnement actuel de l'utilisateur
+  useEffect(() => {
+    const fetchCurrentSubscription = async () => {
+      if (user?.id) {
+        try {
+          const subscription = await getUserSubscription(user?.id);
+          setCurrentSubscription(subscription);
+        } catch (error) {
+          console.error("Failed to load current subscription:", error);
+        }
+      }
+    };
+    fetchCurrentSubscription();
+  }, [user?.id]);
+
+  // Charger les autres abonnements
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        const allSubscriptions = await getSubscriptions();
+        const filteredSubscriptions = allSubscriptions.filter(
+          (sub: Subscription) => sub.label !== currentSubscription?.label
+        );
+        setOtherSubscriptions(filteredSubscriptions);
+      } catch (error) {
+        console.error("Failed to load subscriptions:", error);
+        alert("Failed to load subscriptions");
+      }
+    };
+    fetchSubscriptions();
+  }, [currentSubscription]);
+
+  // Changer l'abonnement de l'utilisateur
+  const handleSubscriptionChange = async (subscriptionLabel: string) => {
+    if (user?.id) {
+      try {
+        await changeUserSubscription(subscriptionLabel, user.id);
+        alert(`Subscription changed to ${subscriptionLabel}`);
+        setCurrentSubscription(await getUserSubscription(user.id)); // Refresh current subscription
+      } catch (error) {
+        console.error("Failed to change subscription:", error);
+        alert("Failed to change subscription");
+      }
+    }
+  };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">{localizedContent.title}</h2>
 
-      {/* Rectangle pour l'abonnement actuel */}
-        
-    <div className='flex items-center justify-center w-full'>
-
-      <div className='flex flex-col justify-center items-center bg-orange-100 text-black shadow-md p-6 rounded-lg mb-4 text-center w-80'>
-          <div className=" ">
-            <h3 className="font-bold text-xl mb-2">{localizedContent.current}</h3>
-            <p className="text-base mb-1">{currentSubscription.name}</p>
-            <p className="text-base mb-1">{currentSubscription.price}</p>
-            <p className="text-base mb-4">{`Date de paiement : ${currentSubscription.paymentDate}`}</p>
-            <button
-              className="mt-2 text-yellow-600 underline text-sm"
-              onClick={() => setShowPopup(true)}
-            >
-              {localizedContent.moreDetails}
-            </button>
+      {/* Abonnement actuel */}
+      {currentSubscription && (
+        <div className="flex flex-col items-center bg-orange-100 text-black shadow-md p-6 rounded-lg mb-4 w-80 text-center">
+          <div className="flex space-x-1 items-center mb-2">
+            <FontAwesomeIcon icon={faCrown} className="text-orange-btn text-xl" />
+            <h3 className="font-bold text-xl">{localizedContent.current}</h3>
           </div>
-
-        {/* Popup pour afficher les détails supplémentaires de l'abonnement actuel */}
-        {showPopup && (
-          <div className="  flex justify-start items-center ">
-            <div className=" p-4 w-full">
-            
-              <p>{currentSubscription.details}</p>
-              <button
-                className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
-                onClick={handleClosePopup}
-              >
-                {localizedContent.popup.close}
-              </button>
+          <p className="text-base mb-1">{currentSubscription.label}</p>
+          <p className="text-base mb-4">{currentSubscription.price}</p>
+          <button
+            className="mt-2 text-yellow-600 underline text-sm"
+            onClick={() => setShowPopup(true)}
+          >
+            {localizedContent.moreDetails}
+          </button>
+          {showPopup && (
+            <div className="absolute top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+                <h4 className="text-lg font-bold mb-2">{currentSubscription.label}</h4>
+                <ul className="list-disc list-inside">
+                  {currentSubscription.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+                <button
+                  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+                  onClick={() => setShowPopup(false)}
+                >
+                  {localizedContent.popup.close}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-        </div>      
-    </div>
+          )}
+        </div>
+      )}
 
-
-      {/* Liste des autres abonnements */}
+      {/* Autres abonnements */}
       <h3 className="text-xl font-bold my-4">{localizedContent.otherSubscriptions}</h3>
-      <div className="flex flex-row space-x-16 w-max h-max justify-center items-center">
-        {otherSubscriptions.map(subscription => (
-          <div key={subscription.id} className="bg-gray-200 p-6 rounded-lg shadow-md text-base space-y-4 justify-start w-[240px] hover:translate-y-2 hover:shadow-lg shadow-bleu-nuit">
-            <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon={subscription.icon} className="text-orange-btn text-xl" />
-              <h4 className="font-bold text-xl text-center">{subscription.name}</h4>
+      <div className="flex flex-wrap gap-4">
+        {otherSubscriptions.map((subscription) => (
+          <div key={subscription.id} className="bg-gray-200 p-6 rounded-lg shadow-md w-80">
+            <div className="flex items-center space-x-2 mb-2">
+              <FontAwesomeIcon icon={faStar} className="text-orange-btn text-xl" />
+              <h4 className="font-bold text-xl">{subscription.label}</h4>
             </div>
-            <p className='text-orange-btn'>{subscription.price}</p>
-            <p>{subscription.details}</p>
-            <ul className='list-disc pl-4 space-y-2 text-black text-sm'>
-              <li>{locale === 'en' ? 'Faster service' : 'Service plus rapide'}</li>
-              <li>{locale === 'en' ? 'More clients' : 'Plus de clients'}</li>
-              <li>{locale === 'en' ? 'More storage' : 'Plus de stockage'}</li>
-              <li>{locale === 'en' ? 'More visibility' : 'Plus de visibilité'}</li>
+            <p className="text-orange-btn mb-2">{subscription.price}</p>
+            <ul className="list-disc list-inside">
+              {subscription.features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
             </ul>
             <button
-              className="w-full h-14 bg-bleu-nuit text-white font-extrabold rounded-lg hover:bg-blue-900 mt-4"
-              onClick={() => console.log(`Subscribing to ${subscription.name}`)}
+              className="w-full bg-blue-600 text-white font-bold rounded-lg py-2 mt-4 hover:bg-blue-700"
+              onClick={() => handleSubscriptionChange(subscription.label)}
             >
               {localizedContent.subscribe}
             </button>
