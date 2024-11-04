@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS notification (
     title TEXT,
     message TEXT,
     date TIMESTAMP,
-    receiver MAP<TEXT, INT>
+    receiver UUID
 );
 
 -- Table Alert
