@@ -9,6 +9,8 @@ import { SearchFilterProvider } from "./utils/contexts/SearchFilterContext";
 
 import ScrollToTopButton from "./components/buttons/ScrollToTopButton";
 import { UserProvider } from "./utils/contexts/UserContext";
+import { FlashMessageProvider } from "./utils/contexts/FlashMessageContext";
+import FlashMessage from "./components/flash_message/FlashMessage";
 
 
 
@@ -26,9 +28,12 @@ export default function RootLayout({
           <LocaleProvider>
             <ThemeProvider>
               <SearchFilterProvider>
-                <Header/>
-                <main>{children}</main> 
-                <Footer/>
+                <FlashMessageProvider>
+                  <Header/>
+                  <FlashMessage />
+                  <main>{children}</main> 
+                  <Footer/>
+                </FlashMessageProvider>
               </SearchFilterProvider>
             </ThemeProvider>
           </LocaleProvider>

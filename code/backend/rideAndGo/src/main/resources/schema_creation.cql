@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS notification (
     title TEXT,
     message TEXT,
     date TIMESTAMP,
-    receiver MAP<TEXT, INT>
+    receiver UUID
 );
 
 -- Table Alert
@@ -88,12 +88,8 @@ CREATE TABLE IF NOT EXISTS complaint (
 );
 
 -- Table Place
-CREATE TABLE IF NOT EXISTS place (
-    id UUID PRIMARY KEY,
-    mapName TEXT,
-    currentName TEXT,
-    description TEXT
-);
+---In the file inser_points_with_uuid.cql
+
 
 -- Table Itinerary
 CREATE TABLE IF NOT EXISTS itinerary (
@@ -165,6 +161,6 @@ CREATE TABLE IF NOT EXISTS rating (
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
-CREATE INDEX IF NOT EXISTS place_mapname_idx ON place (mapName);
-CREATE INDEX IF NOT EXISTS place_currentname_idx ON place (currentName);
-CREATE INDEX IF NOT EXISTS subscription_label_idx ON subscription (label);
+
+
+

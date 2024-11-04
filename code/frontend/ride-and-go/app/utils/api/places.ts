@@ -16,7 +16,7 @@ export const getAllPlaces = async () => {
 
 //Search places by name
 export const searchPlacesByName = async (name: string) => {
-  const response = await fetch(`${API_URL}/places/search?name=${name}`);
+  const response = await fetch(`${API_URL}/places/searchByName=${name}`);
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Erreur lors de la rcherche des lieux');

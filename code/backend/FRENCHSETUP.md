@@ -37,6 +37,7 @@ cd RideAndGo/code/backend/rideAndGo/src/main/resources
 #### **Étape 2 : Copier le script dans le conteneur Docker**
 ```bash
 sudo docker cp schema_creation.cql cassandra-container:/data.cql
+
 ```
 **Remarque :**  
 Si **cassandra-container** n’est pas trouvé, exécutez :  
@@ -49,7 +50,7 @@ Notez l’ID du conteneur et remplacez **cassandra-container** par cet ID dans l
 ```bash
  
 ```
-  
+
 ---
 
 ### **4. Accéder à l’interface CQL de Cassandra**  
