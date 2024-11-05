@@ -82,8 +82,8 @@ public class DataInitializer {
                 superAdmin.setSubscription(defaultSubscription.get().getId());
                 superAdmin.setVehicle(UUID.randomUUID());
                 superAdmin.setPiece(defaultUUIDList);
-                superAdmin.setPicture(defaultUUIDList);
-                superAdmin.setAvatar(defaultUUIDList);
+                superAdmin.setPicture(null);
+                superAdmin.setAvatar(null);
 
                 // Champs supplémentaires
                 superAdmin.setCreatedAt(now);
@@ -146,8 +146,8 @@ public class DataInitializer {
             user.setSubscription(defaultSubscription.get().getId());
             user.setVehicle(UUID.randomUUID());
             user.setPiece(defaultUUIDList);
-            user.setPicture(defaultUUIDList);
-            user.setAvatar(defaultUUIDList);
+            user.setPicture(null);
+            user.setAvatar(null);
 
             // Champs supplémentaires
             user.setCreatedAt(now);
@@ -165,3 +165,4 @@ public class DataInitializer {
         }
     }
 }
+

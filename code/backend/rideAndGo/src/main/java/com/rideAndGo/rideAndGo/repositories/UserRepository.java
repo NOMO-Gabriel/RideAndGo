@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface UserRepository extends CassandraRepository<User, UUID> { 
     
     Optional<User> findByPseudo(String pseudo);
+    
+    @Query("SELECT * FROM user WHERE email=?0 ALLOW FILTERING")
     Optional<User> findByEmail(String email);
     Optional<User> findByPhoneNumber(Double phoneNumber);
     boolean existsByPseudo(String pseudo);

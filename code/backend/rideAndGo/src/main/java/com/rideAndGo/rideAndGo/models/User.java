@@ -4,6 +4,9 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.CassandraType.Name;
+
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -65,10 +68,12 @@ public class User {
     private List<UUID> piece;
 
     @Column("picture")
-    private List<UUID> picture;
+    @CassandraType(type = Name.BLOB)
+    private byte[] picture;
 
     @Column("avatar")
-    private List<UUID> avatar;
+    @CassandraType(type = Name.BLOB)
+    private byte[] avatar;
 
     @Column("createdat")
     private Instant createdAt;  // Utilisation de Instant pour TIMESTAMP
@@ -98,9 +103,14 @@ public class User {
     private String language;
     @Column("theme")
     private String theme;
+
     @Column("islocalisable")
     private Boolean isLocalisable;
+
+    @Column("isauthenticatedasdriver")
+    private Boolean isAuthenticatedAsDriver;
     
     @Column("timezone")
     private Double timeZone;
+
 }

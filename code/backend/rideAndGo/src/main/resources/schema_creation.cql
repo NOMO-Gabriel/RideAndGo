@@ -28,11 +28,12 @@ CREATE TABLE IF NOT EXISTS user (
     paiementDate TIMESTAMP,
     vehicle UUID,
     piece LIST<UUID>,
-    picture LIST<UUID>,
-    avatar LIST<UUID>,
+    picture BLOB,
+    avatar BLOB,
     lastConnection TIMESTAMP,
     isSuspend BOOLEAN,
     isDeleted BOOLEAN,
+    isAuthenticatedAsDriver BOOLEAN, --turns true only when documents are authenticated and driver has paid subscription
     gender TEXT,
     
     -- Nouvelles colonnes pour les préférences
@@ -156,6 +157,16 @@ CREATE TABLE IF NOT EXISTS rating (
     id UUID PRIMARY KEY,
     score FLOAT,
     comment TEXT
+);
+
+-- Table Piece
+CREATE TABLE IF NOT EXISTS Piece (
+    id UUID PRIMARY KEY,
+    file BLOB,
+    type TEXT, 
+    name TEXT,
+    ownerId UUId,
+    uploadDate TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
