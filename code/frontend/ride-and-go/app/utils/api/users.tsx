@@ -5,7 +5,7 @@ const getHeaders = () => ({
 });
 
 // get data of a user
-export const getUser = async (id: string) => {
+export const getUser = async (id: string | undefined) => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: 'GET',
     headers: getHeaders(),

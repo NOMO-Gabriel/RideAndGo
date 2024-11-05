@@ -6,22 +6,29 @@ import {
   faEdit, faTrash, faInfoCircle, faUtensils, faSchool,
   faHospital, faStore, faHotel, faMapMarkerAlt,faRoute,faMapMarked
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { fetchItineraries, deleteItinerary, updateItinerary } from "@/app/utils/api/itineraries";
+import { fetchUserPlaces, deleteUserPlace } from "@/app/utils/api/userPlaces";
+
 
 // Types
 type Place = {
-  id: number;
+  id: string;
+  userId: number;
+  osmId: number;
   name: string;
-  description: string;
   latitude: number;
   longitude: number;
+  way: string;
+  description: string;
   category: Category;
 };
 
 type Itinerary = {
   id: number;
-  startPoint: Place;
-  endPoint: Place;
+  startPoint: number;
+  endPoint: number;
   description: string;
 };
 
@@ -38,18 +45,9 @@ const categoryIcons: Record<Category, any> = {
 
 // Données factices
 const places: Place[] = [
-  { id: 1, name: 'Ecole Nationale', description: 'Une école de référence.', latitude: 3.864, longitude: 11.502, category: 'school' },
-  { id: 2, name: 'Restaurant Le Gourmet', description: 'Cuisine délicieuse.', latitude: 3.855, longitude: 11.515, category: 'restaurant' },
-  { id: 3, name: 'Marché Central', description: 'Grand marché local.', latitude: 3.865, longitude: 11.500, category: 'market' },
-  { id: 4, name: 'Hôtel Hilton', description: 'Hôtel de luxe.', latitude: 3.867, longitude: 11.514, category: 'hotel' },
-  { id: 5, name: 'Hôpital Général', description: 'Hôpital moderne.', latitude: 3.870, longitude: 11.508, category: 'hospital' },
 ];
 
-const itineraries: Itinerary[] = [
-  { id: 1, startPoint: places[0], endPoint: places[1], description: 'De l\'école au restaurant.' },
-  { id: 2, startPoint: places[0], endPoint: places[2], description: 'De l\'école au marché.' },
-  { id: 3, startPoint: places[0], endPoint: places[3], description: 'De l\'école à l\'hôtel.' },
-  { id: 4, startPoint: places[0], endPoint: places[4], description: 'De l\'école à l\'hôpital.' },
+const dummyItineraries: Itinerary[] = [
 ];
 
 export default function Itineraries() {
@@ -57,6 +55,8 @@ export default function Itineraries() {
   const [filter, setFilter] = useState<'places' | 'itineraries'>('places');
   const [hoveredPlace, setHoveredPlace] = useState<Place | null>(null);
   const [infoPlace, setInfoPlace] = useState<Place | null>(null);
+  const [itineraries, setItineraries] = useState<Itinerary[]>(dummyItineraries);
+  const [userPlaces, setUserPlaces] = useState<Place[]>(places);
 
   const content = {
     en: { places: 'My Places', itineraries: 'My Itineraries', info: 'Infos', showMap: 'Show on Map', delete: 'Delete', order: 'Order' },
@@ -64,6 +64,70 @@ export default function Itineraries() {
   };
   const localizedText = content[locale as 'fr' | 'en'] || content.en;
 
+   // Fetch itineraries when component mounts
+   useEffect(() => {
+    const loadItineraries = async () => {
+      try {
+        const itineraries = await fetchItineraries();
+        setItineraries(itineraries);
+        console.log("Itineraries fetched:", itineraries);
+        console.log("Itineraries :", itineraries);
+
+      } catch (error) {
+        console.error("Failed to fetch itineraries:", error);
+      }
+    };
+    loadItineraries();
+  }, []);
+
+
+
+  // Function to handle itinerary deletion
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteItinerary(id);
+      setItineraries(itineraries.filter(itinerary => itinerary.id !== id));
+    } catch (error) {
+      console.error("Failed to delete itinerary:", error);
+    }
+  };
+
+  // Function to handle itinerary editing
+  const handleEdit = async (id: number, updatedDescription: string) => {
+    const updatedItinerary = { id, description: updatedDescription };
+    try {
+      const data = await updateItinerary(id, updatedItinerary);
+      setItineraries(itineraries.map(itinerary => (itinerary.id === id ? data : itinerary)));
+    } catch (error) {
+      console.error("Failed to update itinerary:", error);
+    }
+  };
+//Fetch places when component mounts
+  useEffect(() => {
+    const loadUserPlaces = async () => {
+      try {
+        const places = await fetchUserPlaces();
+        setUserPlaces(places);
+        console.log("User Places fetched:", places);
+      } catch (error) {
+        console.error("Failed to fetch user places:", error);
+      }
+    };
+    loadUserPlaces();
+  }, []);
+
+  // Function to handle place deletion
+
+const handleDeletePlace = async (id: string) => {
+  try {
+    await deleteUserPlace(id); // Call the delete function from the API
+    setUserPlaces(userPlaces.filter(place => place.id !== id)); // Update the state to remove the deleted place
+  } catch (error) {
+    console.error("Failed to delete user place:", error);
+  }
+};
+
+  
   const renderPlace = (place: Place) => (
     <div className=" w-max h-max bg-gray-200 bg-opacity-90 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-extrabold text-orange-btn">{place.name}</h2>
@@ -93,7 +157,7 @@ export default function Itineraries() {
 
       {filter === 'places' ? (
         <div className="space-y-6">
-          {places.map((place) => (
+          {userPlaces.map((place) => (
             <div key={place.id} className="p-4 border rounded-lg shadow-md relative">
               <div className="flex items-center space-x-3">
                 <FontAwesomeIcon icon={categoryIcons[place.category]} className="text-orange-btn text-xl" />
@@ -120,7 +184,7 @@ export default function Itineraries() {
                 <button className="px-3 py-1 bg-bleu-nuit hover:bg-blue-800 text-white rounded" title={localizedText.showMap}>
                   <FontAwesomeIcon icon={faMapMarked} />
                 </button>
-                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete}>
+                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete} onClick={() => handleDeletePlace(place.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
@@ -133,18 +197,18 @@ export default function Itineraries() {
             <div key={itinerary.id} className="p-4 border rounded-lg shadow-md">
               <h2 className="text-lg font-semibold">
                 <span onMouseEnter={() => setHoveredPlace(itinerary.startPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.startPoint.name}
+                  {itinerary.startPoint}
                 </span>
                 →
                 <span onMouseEnter={() => setHoveredPlace(itinerary.endPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.endPoint.name}
+                  {itinerary.endPoint}
                 </span>
               </h2>
               <p className="text-gray-600">{itinerary.description}</p>
               <div>
-                {hoveredPlace?.id === itinerary.startPoint.id && renderPlace(itinerary.startPoint)}
-                {hoveredPlace?.id === itinerary.endPoint.id && renderPlace(itinerary.endPoint)}
-              </div>
+                {hoveredPlace?.id === itinerary.startPoint && renderPlace(itinerary.startPoint)}
+                {hoveredPlace?.id === itinerary.endPoint && renderPlace(itinerary.endPoint)}
+              </div> 
               <div className="flex space-x-4 mt-4">
                 <button className="px-3 py-1 bg-bleu-nuit hover:bg-blue-800 text-white rounded" title={localizedText.showMap}>
                   <FontAwesomeIcon icon={faMapMarked} />

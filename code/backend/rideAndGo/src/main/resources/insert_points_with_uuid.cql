@@ -9,7 +9,18 @@ CREATE TABLE IF NOT EXISTS rideandgo.place (
     way TEXT,
     description TEXT
 );
-CREATE INDEX IF NOT EXISTS place_name_idx ON place (name);
+
+CREATE TABLE IF NOT EXISTS rideandgo.userPlace (
+    id UUID PRIMARY KEY,
+    userId UUID,
+    osmId BIGINT,
+    name TEXT,
+    latitude DOUBLE,
+    longitude DOUBLE,
+    way TEXT,
+    description TEXT
+);
+CREATE INDEX IF NOT EXISTS place_name_idx ON place (currentName);
 
 
 -- Sample POI data insertion

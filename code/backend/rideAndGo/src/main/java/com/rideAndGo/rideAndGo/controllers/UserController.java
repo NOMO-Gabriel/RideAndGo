@@ -26,16 +26,13 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // Méthode pour vérifier si un utilisateur est administrateur
-private boolean isAdmin(UUID adminId) {
-    Optional<User> admin = userService.getUserById(adminId);
-    return admin.isPresent() && admin.get().getRoles().contains("ROLE_ADMIN");
-}
+    private boolean isAdmin(UUID adminId) {
+        Optional<User> admin = userService.getUserById(adminId);
+        return admin.isPresent() && admin.get().getRoles().contains("ROLE_ADMIN");
+    }
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder=passwordEncoder;
-
-        
-
     }
 
     // Récupérer tous les utilisateurs

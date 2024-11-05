@@ -1,16 +1,20 @@
 package com.rideAndGo.rideAndGo.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.rideAndGo.rideAndGo.models.Subscription;
 import com.rideAndGo.rideAndGo.models.User;
+import com.rideAndGo.rideAndGo.services.SubscriptionService;
 import com.rideAndGo.rideAndGo.services.UserService;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -19,6 +23,9 @@ public class DataInitializer {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+     @Autowired
+    private final SubscriptionService subscriptionService = new SubscriptionService();
+
 
     public DataInitializer(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -38,6 +45,7 @@ public class DataInitializer {
         return args -> {
             // Identifiant unique et fixe pour le super administrateur
             UUID superAdminId = UUID.fromString("ff4340cd-6785-4582-92a2-3cc83554955f");
+            Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
 
             // Vérifie s’il existe déjà un super admin avec l’email ou le pseudo
             if (userService.existsByEmail("tdjotio@gmail.com") || userService.existsByPseudo("Thomas")) {
@@ -71,7 +79,7 @@ public class DataInitializer {
                 superAdmin.setMyPlace(defaultUUIDList);
                 superAdmin.setMyItineraries(defaultUUIDList);
                 superAdmin.setMyTravels(defaultUUIDList);
-                superAdmin.setMySuscription(UUID.randomUUID());
+                superAdmin.setSubscription(defaultSubscription.get().getId());
                 superAdmin.setVehicle(UUID.randomUUID());
                 superAdmin.setPiece(defaultUUIDList);
                 superAdmin.setPicture(defaultUUIDList);
@@ -80,6 +88,7 @@ public class DataInitializer {
                 // Champs supplémentaires
                 superAdmin.setCreatedAt(now);
                 superAdmin.setUpdatedAt(now);
+                superAdmin.setPaiementDate(now);
                 superAdmin.setAverageRating(0.0f);
                 superAdmin.setLanguage("en");
                 superAdmin.setTheme("light");
@@ -109,6 +118,7 @@ public class DataInitializer {
         } else {
             Instant now = Instant.now();
             User user = new User();
+             Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
          
            
 
@@ -133,7 +143,7 @@ public class DataInitializer {
             user.setMyPlace(defaultUUIDList);
             user.setMyItineraries(defaultUUIDList);
             user.setMyTravels(defaultUUIDList);
-            user.setMySuscription(UUID.randomUUID());
+            user.setSubscription(defaultSubscription.get().getId());
             user.setVehicle(UUID.randomUUID());
             user.setPiece(defaultUUIDList);
             user.setPicture(defaultUUIDList);
@@ -142,6 +152,7 @@ public class DataInitializer {
             // Champs supplémentaires
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
+            user.setPaiementDate(now);
             user.setAverageRating(0.0f);
             user.setLanguage("en");
             user.setTheme("light");

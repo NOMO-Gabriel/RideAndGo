@@ -5,13 +5,16 @@ import com.rideAndGo.rideAndGo.dto.AuthResponse;
 import com.rideAndGo.rideAndGo.dto.HTTPResponse;
 import com.rideAndGo.rideAndGo.dto.UserRegistrationRequest;
 import com.rideAndGo.rideAndGo.models.User;
+import com.rideAndGo.rideAndGo.services.SubscriptionService;
 import com.rideAndGo.rideAndGo.services.UserService;
+import com.rideAndGo.rideAndGo.models.Subscription;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +27,12 @@ public class AuthController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final SubscriptionService subscriptionService;
 
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder, SubscriptionService subscriptionService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.subscriptionService = subscriptionService;
     }
 
     @PostMapping("/loginByPseudo")
@@ -127,6 +132,7 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
 
     Instant now = Instant.now();  // Pour les champs TIMESTAMP
     LocalDate birthDate = registrationRequest.getBirthDate();  // Pour le champ DATE
+    Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
 
     User newUser = new User();
     newUser.setId(UUID.randomUUID());  // Génération automatique d'un ID
@@ -143,6 +149,7 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
     newUser.setIsDeleted(false);
     newUser.setLastConnection(now); 
     newUser.setBirthDate(birthDate);
+    newUser.setPaiementDate(now);
     // Valeurs statiques pour les autres champs
     List<UUID> defaultUUIDList = new ArrayList<>();
     defaultUUIDList.add(UUID.randomUUID());
@@ -151,7 +158,7 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
     newUser.setMyPlace(defaultUUIDList);       // Place par défaut
     newUser.setMyItineraries(defaultUUIDList); // Itineraries par défaut
     newUser.setMyTravels(defaultUUIDList);     // Travels par défaut
-    newUser.setMySuscription(UUID.randomUUID()); // Subscription par défaut
+    newUser.setSubscription( defaultSubscription.get().getId()); // Subscription par défaut
     newUser.setVehicle(UUID.randomUUID());      // Vehicle par défaut
     newUser.setPiece(defaultUUIDList);          // Pieces par défaut
     newUser.setPicture(defaultUUIDList);        // Pictures par défaut
