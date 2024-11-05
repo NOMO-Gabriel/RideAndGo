@@ -1,3 +1,4 @@
+ use rideandgo;
 
 CREATE TABLE IF NOT EXISTS rideandgo.place (
     id UUID PRIMARY KEY,
@@ -90,7 +91,7 @@ INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, descript
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 4097784049, 'Gendamery post', 5.625404799465584, 9.238845299999998, '0101000020110F0000AC05CF1BDF622F412546466F33242341', null);
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 4166155755, 'Presbytarian Church Hall', 5.627048499465488, 9.237364199999998, '0101000020110F0000B2FCA75B95612F4172D86628A3252341', null);
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 4166155753, 'Express Union', 5.626681399465509, 9.237020200000002, '0101000020110F0000F94A2DC548612F4123F4040851252341', null);
-INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 8593110114, 'Banque Internationale du Cameroun pour l\'Épargne et le Crédit', 5.754351599458101, 9.3147199, '0101000020110F0000A9BA96C0DBA42F411431752BE6942341', null);
+INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 8593110114, 'Banque Internationale du Cameroun pour l''Épargne et le Crédit', 5.754351599458101, 9.3147199, '0101000020110F0000A9BA96C0DBA42F411431752BE6942341', null);
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 8593110112, 'Église Presbytérienne Mamfé', 5.75278019945819, 9.314276899999998, '0101000020110F0000CD128C1F79A42F4186A4208B86932341', null);
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 8593110115, 'Cathédrale de Mamfé', 5.755572099458031, 9.310178499999997, '0101000020110F0000A871DDA8E8A02F41229BF246F7952341', null);
 INSERT INTO rideandgo.place (id, osmId, name, latitude, longitude, way, description) VALUES (uuid(), 8593110110, 'Mosquée Centrale', 5.7544266994580955, 9.312768699999998, '0101000020110F0000ED81D05629A32F41DF2581F9F6942341', null);

@@ -20,3 +20,5 @@ public interface PlaceRepository extends CassandraRepository<Place, UUID> {
     int countPlaces();
     
 }
+
+

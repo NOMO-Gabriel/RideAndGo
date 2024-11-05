@@ -80,8 +80,8 @@ const Header: React.FC = () => {
   }, []);
 
   // Filtre les suggestions en fonction de l'entrée de l'utilisateur
-  const getFilteredSuggestions = (input: string) => {
-    return places.filter(suggestion => 
+  const getFilteredSuggestions = (input: string): Location[] => {
+    return places.filter((suggestion): suggestion is Location => 
       suggestion.name.toLowerCase().includes(input.toLowerCase())
     );
   };
@@ -137,7 +137,7 @@ const Header: React.FC = () => {
               onChange={(e) => setStartingPoint(e.target.value)} // Mettre à jour l'état à chaque frappe
             />
             {startingPoint && suggestions.length > 0 && (
-              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full">
+              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full z-20">
                 {suggestions.map((suggestion, index) => (
                   <div
                     key={index}
@@ -165,7 +165,7 @@ const Header: React.FC = () => {
               onChange={(e) => setDestinationPoint(e.target.value)} // Mettre à jour l'état à chaque frappe
             />
             {destinationPoint && suggestions.length > 0 && (
-              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full">
+              <div className="absolute bg-white border border-gray-300 rounded mt-1 max-h-40 overflow-y-auto w-full z-20">
                 {suggestions.map((suggestion, index) => (
                   <div
                     key={index}

@@ -1,4 +1,4 @@
-package com.example.rideandgo.controller;
+package com.rideAndGo.rideAndGo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
