@@ -41,18 +41,18 @@ public class StatisticsService {
         return stats;
     }
 
-    private Map<String, Integer> getMostVisitedPlaces() {
-        // Logic to retrieve and calculate most visited places
-        Map<String, Integer> visitedPlaces = new HashMap<>();
-        // For example:
-        // visitedPlaces.put("Lieu 1", 40);
-        // visitedPlaces.put("Lieu 2", 30);
-        // Add logic to calculate based on your data
-        return visitedPlaces;
-    }
+    // private Map<String, Integer> getMostVisitedPlaces() {
+    //     // Logic to retrieve and calculate most visited places
+    //     Map<String, Integer> visitedPlaces = new HashMap<>();
+    //     // For example:
+    //     // visitedPlaces.put("Lieu 1", 40);
+    //     // visitedPlaces.put("Lieu 2", 30);
+    //     // Add logic to calculate based on your data
+    //     return visitedPlaces;
+    // }
 
-    private int calculateTotalAmountSpent() {
-        // Logic to calculate the total amount spent
-        return 0; // Replace with actual calculation
-    }
+    // private int calculateTotalAmountSpent() {
+    //     // Logic to calculate the total amount spent
+    //     return 0; // Replace with actual calculation
+    // }
 }
