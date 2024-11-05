@@ -1,10 +1,10 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useUser } from '@/app/utils/hooks/useUser';
-import { getUser, UpdateUsersInfo,changePassword } from '@/app/utils/api/users';
+import { getUser, UpdateUsersInfo, changePassword } from '@/app/utils/api/users';
 
 // Définir le contenu des informations personnelles avec des types
 type Content = {
@@ -27,55 +27,63 @@ type Content = {
     uppercase: string;
     symbolOrNumber: string;
   };
+  editPhoto: string;
+  uploadPhoto: string;
+  deletePhoto: string;
 };
 
 const content: Record<string, Content> = {
-    en: {
-      personalInfo: "Personal Information",
-      surname: "First Name :",
-      name: "Last Name :",
-      pseudo: "Pseudo :",
-      dateOfBirth: "Date of Birth :",
-      gender: "Gender :",
-      email: "Email :",
-      phone: "Phone :",
-      changePassword: "Change Password",
-      currentPassword: "Current Password :",
-      newPassword: "New Password :",
-      confirmPassword: "Confirm Password :",
-      passwordRequirementsIntro: "Please ensure your new password meets the following requirements:",
-      passwordRequirements: {
-        minLength: "* Minimum 8 characters long - the more, the better",
-        lowercase: "* At least one lowercase",
-        uppercase: "* At least one uppercase character",
-        symbolOrNumber: "* At least one number, symbol or whitespace character",
-      },
+  en: {
+    personalInfo: "Personal Information",
+    surname: "First Name :",
+    name: "Last Name :",
+    pseudo: "Pseudo :",
+    dateOfBirth: "Date of Birth :",
+    gender: "Gender :",
+    email: "Email :",
+    phone: "Phone :",
+    changePassword: "Change Password",
+    currentPassword: "Current Password :",
+    newPassword: "New Password :",
+    confirmPassword: "Confirm Password :",
+    passwordRequirementsIntro: "Please ensure your new password meets the following requirements:",
+    passwordRequirements: {
+      minLength: "* Minimum 8 characters long - the more, the better",
+      lowercase: "* At least one lowercase",
+      uppercase: "* At least one uppercase character",
+      symbolOrNumber: "* At least one number, symbol or whitespace character",
     },
-    fr: {
-      personalInfo: "Informations Personnelles",
-      surname: "Prénom :",
-      name: "Nom :",
-      pseudo: "Pseudo :",
-      dateOfBirth: "Date de Naissance :",
-      gender: "Genre :",
-      email: "Email :",
-      phone: "Téléphone :",
-      changePassword: "Changer le Mot de Passe",
-      currentPassword: "Mot de passe actuel :",
-      newPassword: "Nouveau Mot de Passe :",
-      confirmPassword: "Confirmer le Mot de Passe :",
-      passwordRequirementsIntro: "Veuillez vous assurer que votre nouveau mot de passe respecte les exigences suivantes :",
-      passwordRequirements: {
-        minLength: "* Minimum 8 caractères - plus c'est long, mieux c'est",
-        lowercase: "* Au moins une minuscule",
-        uppercase: "* Au moins une majuscule",
-        symbolOrNumber: "* Au moins un chiffre, symbole ou espace",
-      },
+    editPhoto: "Edit Photo",
+    uploadPhoto: "Upload Photo",
+    deletePhoto: "Delete Photo",
+  },
+  fr: {
+    personalInfo: "Informations Personnelles",
+    surname: "Prénom :",
+    name: "Nom :",
+    pseudo: "Pseudo :",
+    dateOfBirth: "Date de Naissance :",
+    gender: "Genre :",
+    email: "Email :",
+    phone: "Téléphone :",
+    changePassword: "Changer le Mot de Passe",
+    currentPassword: "Mot de passe actuel :",
+    newPassword: "Nouveau Mot de Passe :",
+    confirmPassword: "Confirmer le Mot de Passe :",
+    passwordRequirementsIntro: "Veuillez vous assurer que votre nouveau mot de passe respecte les exigences suivantes :",
+    passwordRequirements: {
+      minLength: "* Minimum 8 caractères - plus c'est long, mieux c'est",
+      lowercase: "* Au moins une minuscule",
+      uppercase: "* Au moins une majuscule",
+      symbolOrNumber: "* Au moins un chiffre, symbole ou espace",
+    },
+    editPhoto: "Modifier la Photo",
+    uploadPhoto: "Télécharger une Photo",
+    deletePhoto: "Supprimer la Photo",
   }
 };
 
 export default function PersonalInfo() {
-  
   const { locale } = useLocale();
   const currentContent = locale === 'en' ? content.en : content.fr;
   const { user } = useUser();
@@ -85,6 +93,8 @@ export default function PersonalInfo() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
+  const [isPhotoMenuOpen, setIsPhotoMenuOpen] = useState(false);
+  const photoMenuRef = useRef<HTMLDivElement>(null);
 
   // Charger les informations utilisateur au montage du composant
   useEffect(() => {
@@ -116,9 +126,8 @@ export default function PersonalInfo() {
         },
       });
       alert('Informations mises à jour avec succès!');
-      setIsEditing(false); 
+      setIsEditing(false);
     } catch (error) {
-     
       alert('Erreur lors de la mise à jour des informations. Veillez reessayer');
     }
   };
@@ -144,12 +153,50 @@ export default function PersonalInfo() {
       alert('Erreur lors du changement de mot de passe. Veuillez réessayer');
     }
   };
-  
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (photoMenuRef.current && !photoMenuRef.current.contains(event.target as Node)) {
+      setIsPhotoMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isPhotoMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isPhotoMenuOpen]);
 
   if (!userInfo) return <p>Chargement...</p>;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow flex flex-col space-y-8">
+      <div className="flex justify-center">
+        <div className="relative">
+          <div className="w-60 h-60 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center">
+            <img src={userInfo.photoUrl} alt="User Photo" className="w-full h-full object-cover" />
+          </div>
+          <a href="#" onClick={() => setIsPhotoMenuOpen(!isPhotoMenuOpen)} className="absolute bottom-0 left-0 bg-white rounded-full p-1">
+            <FontAwesomeIcon icon={faEdit} className="w-4 h-4 text-blue-500" />
+          </a>
+          {isPhotoMenuOpen && (
+            <div ref={photoMenuRef} className="absolute bottom-0 left-0 mt-8 bg-white border border-gray-200 rounded shadow-lg p-4">
+              <div className="flex items-center mb-2">
+                <label className="block mr-2 font-bold">{currentContent.uploadPhoto}</label>
+                <input type="file" className="border rounded px-2 py-1" />
+              </div>
+              <div>
+                <button className="text-red-500">{currentContent.deletePhoto}</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="border border-gray-200 shadow-xl rounded-lg p-6">
         <div className="flex justify-between mb-4">
           <h2 className="font-bold text-lg">{currentContent.personalInfo}</h2>
@@ -157,6 +204,7 @@ export default function PersonalInfo() {
             <FontAwesomeIcon icon={faEdit} className="w-6 h-6 text-blue-500" />
           </button>
         </div>
+
         <div className="grid grid-cols-3 gap-4">
           {[
             { label: currentContent.name, value: 'name' },
@@ -193,15 +241,13 @@ export default function PersonalInfo() {
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
             <label>{currentContent.currentPassword}</label>
-            <input 
-              
+            <input
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className="border rounded px-2 py-1 w-full"
               required
             />
-           
           </div>
           <div className="flex space-x-4">
             <div className="w-1/2">

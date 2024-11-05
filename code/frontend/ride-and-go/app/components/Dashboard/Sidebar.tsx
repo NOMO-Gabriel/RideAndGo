@@ -27,10 +27,12 @@ export default function Sidebar() {
       { name: "My Complaints", icon: faClipboard, id: 4 },
       { name: "My Places and Itineraries", icon: faRoute, id: 5 },
       { name: "Statistics", icon: faChartBar, id: 6 },
-      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Subscriptions", icon: faHandshake, id: 7 }] : []),
-      { name: "Finances", icon: faWallet, id: 8 },
+      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Subscriptions", icon: faHandshake, id: 7 },{ name: "My Documents", icon: faComments, id: 11 },  { name: "Finances", icon: faWallet, id: 8 }] : []),
+     
       { name: "Chat", icon: faComments, id: 9 },
-      ...(roles.includes('ROLE_ADMIN') ? [{ name: "Manage Users", icon: faUserShield, id: 10 }] : []),
+      
+
+      ...(roles.includes('ROLE_ADMIN') ? [{ name: "Manage Users", icon: faUserShield, id: 10}, { name: "Finances", icon: faWallet, id: 8 },] : []),
     ],
     fr: [
       { name: "Informations personnelles", icon: faUser, id: 1 },
@@ -39,9 +41,11 @@ export default function Sidebar() {
       { name: "Mes réclamations", icon: faClipboard, id: 4 },
       { name: "Mes Lieux et itinéraires", icon: faRoute, id: 5 },
       { name: "Statistiques", icon: faChartBar, id: 6 },
-      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Abonnements", icon: faHandshake, id: 7 }] : []),
-      { name: "Finances", icon: faWallet, id: 8 },
+      ...(roles.includes('ROLE_DRIVER') ? [{ name: "Abonnements", icon: faHandshake, id: 7 }, { name: "Mes Documents", icon: faComments, id: 11},{ name: "Finances", icon: faWallet, id: 8 }] : []),
+      
       { name: "Chat", icon: faComments, id: 9 },
+      
+     
       ...(roles.includes('ROLE_ADMIN') ? [{ name: "Utilisateurs", icon: faUserShield, id: 10 }] : []),
     ],
   };
