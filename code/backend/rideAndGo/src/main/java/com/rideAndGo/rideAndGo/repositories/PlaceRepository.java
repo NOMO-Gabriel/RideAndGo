@@ -12,4 +12,11 @@ public interface PlaceRepository extends CassandraRepository<Place, UUID> {
 
     // Recherche de lieux par nom (contient la chaîne de caractères spécifiée)
     List<Place> findByNameContaining(String name);
+   
+
+    
+
+    
 }
+
+

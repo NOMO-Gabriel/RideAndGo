@@ -34,6 +34,9 @@ public class PlaceService {
         return placeRepository.findAll();
     }
 
+    
+    
+
     // Créer un nouveau lieu
     public Place createPlace(Place place) {
         return placeRepository.save(place);

@@ -48,7 +48,7 @@ public class PlaceController {
         Iterable<Place> places = placeService.getAllPlaces();
         return ResponseEntity.ok(places);
     }
-
+   
     // Créer un lieu
     @PostMapping("/create")
     public ResponseEntity<?> createPlace(@RequestBody PlaceCreationRequest placeRequest) {
