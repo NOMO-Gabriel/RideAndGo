@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { AiOutlineCheckCircle, AiOutlineInfoCircle, AiOutlineWarning, AiOutlineCloseCircle } from 'react-icons/ai';
-import { useFlashMessage } from '@/app/utils/contexts/FlashMessageContext'; 
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage'; 
 import { FaCheckCircle, FaExclamationTriangle, FaInfoCircle, FaTimesCircle } from 'react-icons/fa';
 
 interface FlashMessageType {
