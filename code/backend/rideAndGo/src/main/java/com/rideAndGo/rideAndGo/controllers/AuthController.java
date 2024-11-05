@@ -161,8 +161,8 @@ public ResponseEntity<HTTPResponse> register(@RequestBody UserRegistrationReques
     newUser.setSubscription( defaultSubscription.get().getId()); // Subscription par défaut
     newUser.setVehicle(UUID.randomUUID());      // Vehicle par défaut
     newUser.setPiece(defaultUUIDList);          // Pieces par défaut
-    newUser.setPicture(defaultUUIDList);        // Pictures par défaut
-    newUser.setAvatar(defaultUUIDList);         // Avatar par défaut
+    newUser.setPicture(null);        // Pictures par défaut
+    newUser.setAvatar(null);         // Avatar par défaut
 
     newUser.setCreatedAt(now);          // Utilise Instant pour TIMESTAMP
     newUser.setUpdatedAt(now);          // Utilise Instant pour TIMESTAMP
