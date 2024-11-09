@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faTrash, faArchive } from '@fortawesome/free-solid-svg-icons';
 import { getAllNotifications } from '@/app/utils/api/notifications';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 // Type pour les notifications
 // interface Notification {
 //   id: number;
@@ -119,14 +119,14 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [expandedNotification, setExpandedNotification] = useState<number | null>(null);
   const { locale } = useLocale(); // Hook d'internationalisation
-
+  const { showFlashMessage } = useFlashMessage(); 
   const fetchNotifications = async () => {
     try {
       const data = await getAllNotifications();
       setNotifications(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des notifications:', error);
-      alert('Erreur lors de la récupération des notifications.');
+      showFlashMessage('Erreur lors de la récupération des notifications.', "error", true);
     }
   };
 

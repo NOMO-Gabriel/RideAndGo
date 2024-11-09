@@ -5,6 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useUser } from '@/app/utils/hooks/useUser';
 import { getUser, UpdateUsersInfo,changePassword } from '@/app/utils/api/users';
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 // Définir le contenu des informations personnelles avec des types
 type Content = {
@@ -79,7 +80,7 @@ export default function PersonalInfo() {
   const { locale } = useLocale();
   const currentContent = locale === 'en' ? content.en : content.fr;
   const { user } = useUser();
-
+  const { showFlashMessage } = useFlashMessage(); 
   const [userInfo, setUserInfo] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -95,7 +96,7 @@ export default function PersonalInfo() {
         setUserInfo(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des informations utilisateur:', error);
-        alert('Erreur lors de la récupération des informations utilisateur:');
+        showFlashMessage('Erreur lors de la récupération des informations utilisateur:', "error", true);
       }
     };
     fetchUserInfo();
@@ -115,18 +116,18 @@ export default function PersonalInfo() {
           gender: userInfo.gender,
         },
       });
-      alert('Informations mises à jour avec succès!');
+      showFlashMessage('Informations mises à jour avec succès!', "success", true);
       setIsEditing(false); 
     } catch (error) {
      
-      alert('Erreur lors de la mise à jour des informations. Veillez reessayer');
+      showFlashMessage('Erreur lors de la mise à jour des informations. Veillez reessayer',  "success", true);
     }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      alert('Les mots de passe ne correspondent pas!');
+      showFlashMessage('Les mots de passe ne correspondent pas!',  "error", true);
       return;
     }
     try {
@@ -135,13 +136,13 @@ export default function PersonalInfo() {
         currentPassword: currentPassword,
         newPassword: newPassword,
       });
-      alert('Mot de passe changé avec succès!');
+      showFlashMessage('Mot de passe changé avec succès!',  "success", true);
       setNewPassword('');
       setConfirmPassword('');
       setCurrentPassword('');
     } catch (error) {
       console.error('Erreur lors du changement de mot de passe:', error);
-      alert('Erreur lors du changement de mot de passe. Veuillez réessayer');
+      showFlashMessage('Erreur lors du changement de mot de passe. Veuillez réessayer', "error", true);
     }
   };
   

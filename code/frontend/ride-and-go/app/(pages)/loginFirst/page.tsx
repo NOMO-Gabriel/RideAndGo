@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 const Page = () => {
   const [isRegister, setIsRegister] = useState(false); // Etat pour basculer entre Login et Register
+  const { showFlashMessage } = useFlashMessage(); 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -31,7 +32,7 @@ const Page = () => {
 
     // Vérifier qu'au moins un champ est rempli
     if (!username && !phoneNumber && !email) {
-      alert(locale === 'en' ? "You must fill at least one of the fields: Username, Phone number or Email." : "Vous devez remplir au moins un des champs : Nom d'utilisateur, Numéro de téléphone ou Email.");
+      showFlashMessage(locale === 'en' ? "You must fill at least one of the fields: Username, Phone number or Email." : "Vous devez remplir au moins un des champs : Nom d'utilisateur, Numéro de téléphone ou Email.", "info", true);
       return;
     }
 

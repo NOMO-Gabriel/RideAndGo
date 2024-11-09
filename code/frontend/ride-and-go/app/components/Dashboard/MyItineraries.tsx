@@ -1,5 +1,5 @@
 'use client';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -63,6 +63,7 @@ export default function Itineraries() {
     fr: { places: 'Mes Lieux', itineraries: 'Mes Itinéraires', info: 'Infos', showMap: 'Voir sur la Carte', delete: 'Supprimer', order: 'Commander' },
   };
   const localizedText = content[locale as 'fr' | 'en'] || content.en;
+  const { showFlashMessage } = useFlashMessage(); // Récupère la fonction pour afficher les flash messages
 
    // Fetch itineraries when component mounts
    useEffect(() => {
@@ -146,10 +147,10 @@ const handleDeletePlace = async (id: string) => {
 
       <div className="space-x-4 mb-6 flex flex-row">
         <p className="text-bleu-nuit text-sm mt-2">{locale === "en"? "filter :":"filtre :"}</p>
-        <button onClick={() => setFilter('places')} title={localizedText.places} className="flex items-center px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
+        <button onClick={() => {setFilter('places') ;showFlashMessage(locale==="en"? "Only places": "Uniquement mes lieux", 'info', true)} }title={localizedText.places} className="flex items-center px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
           <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
         </button>
-        <button onClick={() => setFilter('itineraries')} title = {localizedText.itineraries} className="flex items-center px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
+        <button onClick={() => {setFilter('itineraries'); showFlashMessage(locale==="en"? "Only Itineraries": "Uniquement mes itinéraires", 'info', true)}} title = {localizedText.itineraries} className="flex items-center px-4 py-2 bg-bleu-nuit hover:bg-blue-900 text-white rounded text-sm">
           <FontAwesomeIcon icon={faRoute} className="mr-2" />
           
         </button>
@@ -184,7 +185,7 @@ const handleDeletePlace = async (id: string) => {
                 <button className="px-3 py-1 bg-bleu-nuit hover:bg-blue-800 text-white rounded" title={localizedText.showMap}>
                   <FontAwesomeIcon icon={faMapMarked} />
                 </button>
-                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete} onClick={() => handleDeletePlace(place.id)}>
+                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete} onClick={() => {handleDeletePlace(place.id); showFlashMessage(locale==="en"? "Place successfully deleted":"Lieu supprimé avec succès", "success", true)}}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
@@ -217,7 +218,7 @@ const handleDeletePlace = async (id: string) => {
                   <FontAwesomeIcon icon={faEdit} className="mr-2" />
               
                 </button>
-                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete}>
+                <button className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded" title={localizedText.delete} onClick={() => {handleDelete(itinerary.id); showFlashMessage(locale==="en"? "Itinerary successfully deleted":"Itinéraire supprimé avec succès", "success", true)}}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>

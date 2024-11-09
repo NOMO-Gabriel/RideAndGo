@@ -4,7 +4,7 @@ import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faTrash, faArchive } from '@fortawesome/free-solid-svg-icons';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 // Type pour les plaintes
 interface Complaint {
   id: number;
@@ -106,6 +106,7 @@ const Complaints = () => {
   const [complaints, setComplaints] = useState<Complaint[]>(fakeComplaints);
   const [expandedComplaint, setExpandedComplaint] = useState<number | null>(null);
   const { locale } = useLocale(); // Hook d'internationalisation
+  const { showFlashMessage } = useFlashMessage();
 
   // Filtrer les plaintes selon le filtre sélectionné
   const filteredComplaints = complaints.filter((complaint) => {
@@ -116,6 +117,15 @@ const Complaints = () => {
   // Fonction pour supprimer une plainte
   const handleDelete = (id: number) => {
     setComplaints(complaints.filter(complaint => complaint.id !== id));
+    showFlashMessage(locale==="en" ?'Complaint successfully deleted': 'Complainte supprimée avec succès', 'success', true);
+
+  };
+
+  // Fonction pour archiver une plainte
+  const handleArchive = (id: number) => {
+    setComplaints(complaints.filter(complaint => complaint.id !== id));
+    showFlashMessage(locale==="en" ?'Complaint successfully archived': 'Complainte archivée avec succès', 'success', true);
+
   };
 
   // Fonction pour afficher/fermer le contenu déroulant
@@ -178,7 +188,7 @@ const Complaints = () => {
                 </button>
                 <button
                   className="text-black"
-                  onClick={() => console.log(`Archiving complaint with id: ${complaint.id}`)}
+                  onClick={() => handleArchive(complaint.id)}
                 >
                   <FontAwesomeIcon icon={faArchive} />
                 </button>
