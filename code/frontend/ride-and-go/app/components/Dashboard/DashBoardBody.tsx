@@ -18,7 +18,8 @@ const componentsMap: Record<number, React.FC> = {
   5: Itineraries,
   6: Statistics,
   7: Subscriptions,
-  10: AllUsers
+  10: AllUsers,
+  11:MyDocuments
 };
 
 const DashBoardBody: React.FC = () => {

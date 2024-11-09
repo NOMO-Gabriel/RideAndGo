@@ -41,7 +41,7 @@ const LoginForm = () => {
       await login(identifierType, loginData.identifier, loginData.password);
       showFlashMessage('Connexion réussie ! Redirection en cours...', 'success', true);
       setTimeout(() => {
-        window.location.href = '/dashboard'; // Redirection sécurisée
+        window.location.href = '/'; // Redirection sécurisée
       }, 2000);
     } catch (error: any) { 
       showFlashMessage(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.', 'error');
