@@ -1,0 +1,6 @@
+{ "index": { "_index": "rideandgo", "_type": "_doc" }}
+{ "osmId": 1234567890, "name": "National Museum of Yaounde", "latitude": 3.8480, "longitude": 11.5021, "way": "Central way near City Hall", "description": "Museum showcasing Cameroon’s cultural artifacts" }
+{ "index": { "_index": "rideandgo", "_type": "_doc" }}
+{ "osmId": 1234567891, "name": "Basilica of Mary Queen of the Apostles", "latitude": 3.8543, "longitude": 11.5022, "way": "Religious Site", "description": "A Catholic basilica and popular pilgrimage site." }
+{ "index": { "_index": "rideandgo", "_type": "_doc" }}
+{ "osmId": 1234567892, "name": "Mfoundi Market", "latitude": 3.8684, "longitude": 11.5149, "way": "Market", "description": "One of the largest and most vibrant markets in Yaoundé." }

@@ -1,4 +1,4 @@
- use rideandgo;
+use rideandgo;
 
 CREATE TABLE IF NOT EXISTS rideandgo.place (
     id UUID PRIMARY KEY,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS rideandgo.userPlace (
     way TEXT,
     description TEXT
 );
-CREATE INDEX IF NOT EXISTS place_name_idx ON place (currentName);
+CREATE INDEX IF NOT EXISTS place_name_idx ON place (name);
 
 
 -- Sample POI data insertion

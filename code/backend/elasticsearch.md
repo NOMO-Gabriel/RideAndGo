@@ -5,5 +5,5 @@
 
 **Création d'un conteneur**
 
-        docker run --name search-container -d -p 9200:9200 -e "discovery.type=signel-node" elasticsearch:7.10.1
+        docker run --name search-container -d -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.10.1
 
