@@ -1,34 +1,36 @@
 package com.rideAndGo.rideAndGo.models;
 
+import java.util.Date;
 import java.util.UUID;
+
+import lombok.Data;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import lombok.Data;
-import java.time.Instant;
-
 @Data
-@Table("DriverDocuments")
-public class DriverDocument {
+@Table("profilImages")
+public class ProfilImages {
     @Id
     private UUID id;
 
-    @Column ("name")
-    private String type;
+    @Column("filePath")
+    private String filePath;
 
-    @Column("documentType")
-    private DocumentType documentType;
+    @Column("originalFileName")
+    private String originalFileName;
 
-    @Column("fileByte")
-    private byte[] fileBytes;
+    @Column("fileType")
+    private String fileType;
+
+    @Column("fileSize")
+    private long fileSize;
 
     @Column("ownerId")
     private UUID ownerId;
 
     @Column("uploadDate")
-    private Instant uploadDate;
+    private Date uploadDate;
 
-    
 }

@@ -169,17 +169,18 @@ CREATE TABLE IF NOT EXISTS Piece (
     uploadDate TIMESTAMP
 );
 
--- Table DriverDocument
-CREATE TABLE IF NOT EXISTS DriverDocument (
+-- Table profilImages
+CREATE TABLE IF NOT EXISTS profilImages (
     id UUID PRIMARY KEY,
-    filename TEXT,
-    type TEXT,
-    documentType TEXT,
-    fileByte BLOB,
-    ownerId UUID,
-    uploadDate
-
+    filePath TEXT,
+    originalFileName TEXT, 
+    fileType TEXT,
+    fileSize BIGINT,
+    ownerId UUId,
+    uploadDate TIMESTAMP
 );
+
+
 
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
