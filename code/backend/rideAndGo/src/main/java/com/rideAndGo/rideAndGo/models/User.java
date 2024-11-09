@@ -68,8 +68,7 @@ public class User {
     private List<UUID> piece;
 
     @Column("picture")
-    @CassandraType(type = Name.BLOB)
-    private byte[] picture;
+    private UUID pictureId;
 
     @Column("avatar")
     @CassandraType(type = Name.BLOB)

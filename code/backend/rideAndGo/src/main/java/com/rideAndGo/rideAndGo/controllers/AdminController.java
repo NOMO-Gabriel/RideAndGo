@@ -94,7 +94,7 @@ public class AdminController {
         admin.setSubscription(defaultSubscription.get().getId());
         admin.setVehicle(UUID.randomUUID());
         admin.setPiece(Collections.singletonList(UUID.randomUUID()));
-        admin.setPicture(null);
+        admin.setPictureId(null);
         admin.setAvatar(null);
         admin.setCreatedAt(now);
         admin.setUpdatedAt(now);

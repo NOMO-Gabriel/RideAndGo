@@ -23,13 +23,31 @@ public class DataInitializer {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-     @Autowired
-    private final SubscriptionService subscriptionService = new SubscriptionService();
+
+    private SubscriptionService subscriptionService;
+
+    UUID defaultSubscriptionId = UUID.fromString("ff4340cd-6785-4582-92a4-3cc83554955f");
+    ArrayList features = new ArrayList<String>();
+    Subscription defaultSubscription = new Subscription();
+
+    void initSubscription(){
+        features.add("acces illimite sur toutes les pages");
+        defaultSubscription.setLabel("default");
+        defaultSubscription.setDescription("abonnement par défaut");
+        defaultSubscription.setPrice(0.0);
+        defaultSubscription.setId(defaultSubscriptionId);
+        defaultSubscription.setFeatures(features);
+        subscriptionService.save(defaultSubscription);
+    }
+    
+    
 
 
-    public DataInitializer(UserService userService, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserService userService, PasswordEncoder passwordEncoder, SubscriptionService subscriptionService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.subscriptionService=subscriptionService;
+       
     }
 
     /**
@@ -43,9 +61,9 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initDatabase() {
         return args -> {
+            initSubscription();
             // Identifiant unique et fixe pour le super administrateur
             UUID superAdminId = UUID.fromString("ff4340cd-6785-4582-92a2-3cc83554955f");
-            Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
 
             // Vérifie s’il existe déjà un super admin avec l’email ou le pseudo
             if (userService.existsByEmail("tdjotio@gmail.com") || userService.existsByPseudo("Thomas")) {
@@ -79,10 +97,10 @@ public class DataInitializer {
                 superAdmin.setMyPlace(defaultUUIDList);
                 superAdmin.setMyItineraries(defaultUUIDList);
                 superAdmin.setMyTravels(defaultUUIDList);
-                superAdmin.setSubscription(defaultSubscription.get().getId());
+                superAdmin.setSubscription(defaultSubscription.getId());
                 superAdmin.setVehicle(UUID.randomUUID());
                 superAdmin.setPiece(defaultUUIDList);
-                superAdmin.setPicture(null);
+                superAdmin.setPictureId(null);
                 superAdmin.setAvatar(null);
 
                 // Champs supplémentaires
@@ -118,7 +136,7 @@ public class DataInitializer {
         } else {
             Instant now = Instant.now();
             User user = new User();
-             Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
+            //  Optional <Subscription> defaultSubscription = subscriptionService.findByLabel("default");
          
            
 
@@ -143,10 +161,10 @@ public class DataInitializer {
             user.setMyPlace(defaultUUIDList);
             user.setMyItineraries(defaultUUIDList);
             user.setMyTravels(defaultUUIDList);
-            user.setSubscription(defaultSubscription.get().getId());
+            user.setSubscription(defaultSubscription.getId());
             user.setVehicle(UUID.randomUUID());
             user.setPiece(defaultUUIDList);
-            user.setPicture(null);
+            user.setPictureId(null);
             user.setAvatar(null);
 
             // Champs supplémentaires
