@@ -6,10 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PieceRepository extends CassandraRepository<Piece, UUID> {
+    Optional<Piece> findByName(String name);
+    Optional <Piece> findByOwnerId(UUID ownerId);
 
-    List<Piece> findByOwnerId(UUID ownerId);
 
 }

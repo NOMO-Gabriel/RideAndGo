@@ -22,7 +22,7 @@ public class Piece {
 
     @Column("file")
     @CassandraType(type = Name.BLOB)
-    private byte[] file;
+    private byte[] picByte;
 
     @Column("type")
     private String type;
@@ -35,6 +35,19 @@ public class Piece {
 
     @Column("uploadDate")
     private Instant uploadDate;
+
+    public Piece() {
+        this.id = UUID.randomUUID(); // Générer un ID unique
+    }
+
+    public Piece(String name, String type, byte[] picByte, UUID ownerId, Instant uploadDate) {
+        this.id = UUID.randomUUID(); // Générer un ID unique
+        this.name = name;
+        this.type = type;
+        this.picByte = picByte;
+        this.ownerId = ownerId;
+        this.uploadDate = uploadDate;
+    }
 
     
 }

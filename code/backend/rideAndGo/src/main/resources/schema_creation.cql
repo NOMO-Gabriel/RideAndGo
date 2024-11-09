@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS user (
     paiementDate TIMESTAMP,
     vehicle UUID,
     piece LIST<UUID>,
-    picture BLOB,
+    picture UUID,
     avatar BLOB,
     lastConnection TIMESTAMP,
     isSuspend BOOLEAN,
@@ -167,6 +167,18 @@ CREATE TABLE IF NOT EXISTS Piece (
     name TEXT,
     ownerId UUId,
     uploadDate TIMESTAMP
+);
+
+-- Table DriverDocument
+CREATE TABLE IF NOT EXISTS DriverDocument (
+    id UUID PRIMARY KEY,
+    filename TEXT,
+    type TEXT,
+    documentType TEXT,
+    fileByte BLOB,
+    ownerId UUID,
+    uploadDate
+
 );
 
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
