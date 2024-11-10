@@ -7,7 +7,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.util.UUID;
 
 @Data
-@Document(indexName = "rideandgo") // Retirez l'attribut type
+
+@Document(indexName = "places") // Retirez l'attribut type
 public class SearchPlace {
 
     @Id
