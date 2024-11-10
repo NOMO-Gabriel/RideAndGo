@@ -12,7 +12,7 @@ import { useUser } from '@/app/utils/hooks/useUser';
 import Link from 'next/link';
 import CreateAdminForm from '@/app/components/Forms/CreateAdminForm';
 import { getUsers, deleteUser, suspendUser,reactivateUser,setRoles, alertUser} from '@/app/utils/api/admin';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 type User = {
   id: string | undefined;
   name: string;
@@ -67,7 +67,7 @@ const Users: React.FC = () => {
   const { locale } = useLocale();
   const localizedContent = locale === 'en' ? content.en : content.fr;
   const { user } = useUser();
-
+  const { showFlashMessage } = useFlashMessage(); 
   const [users, setUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
@@ -80,7 +80,7 @@ const Users: React.FC = () => {
       setUsers(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs:', error);
-      alert('Erreur lors de la récupération des utilisateurs.');
+      showFlashMessage(locale === "en"?'Error to fetch all users':'Erreur lors de la récupération des utilisateurs.', "error", true);
     }
   };
   
@@ -100,13 +100,13 @@ const Users: React.FC = () => {
     try {
       await deleteUser({ adminId: user?.id }, userToDelete?.id);
 
-      alert("user deleted succefully")
+      showFlashMessage(locale === "en" ?"User deleted succefully": "Utilisateur supprimé avec succès", "info", true)
 
       fetchUsers(); // Recharger la liste des utilisateurs
       setIsDeletePopupOpen(false);
       setUserToDelete(null);
     } catch (error) {
-      alert("Failed to delete User. Please try again later.");
+      showFlashMessage(locale === "en" ? "Failed to delete User. Please try again later.":"Echec dans la suppression de l'utilisateur, veuillez reéssayer", "info", true);
     }
   };
 
@@ -139,9 +139,9 @@ const handleSubmitForm = () =>{
     try{
         await reactivateUser({ adminId: user?.id }, userToActivate.id);
         await fetchUsers();
-        alert("utilisateur active avec succes");  
+        showFlashMessage(locale === "en" ?"User successfully deleted":"Utilisateur activé avec succes", "success", true);  
     }catch(error){
-      alert("failed to activate user, try again later.");
+      showFlashMessage(locale === "en" ?"Failed to activate user, try again later.":"Echec dans l'activation de l'utilsateur, veuillez reéssayer", "error", true);
     }
   }
   const handleSuspend = async (id:string | undefined) => {
@@ -150,9 +150,9 @@ const handleSubmitForm = () =>{
     try{
         await suspendUser({ adminId: user?.id }, userToSuspend.id);
         await fetchUsers();
-        alert("Utilisateur suspendu avec succes.");  
+        showFlashMessage(locale === "en" ?"User successfully suspended":"Utilisateur suspendu avec succes.", "success", true);  
     }catch(error){
-      alert("failed to suspend user, try again later.");
+      showFlashMessage(locale === "en" ?"Failed to suspend user, try again later.":"chec dans la suspension de l'utilsateur, veuillez reéssayer", "success", true);
     }
   }
   const handleAlert = async (id:string | undefined) => {
@@ -161,9 +161,9 @@ const handleSubmitForm = () =>{
     try{
         await alertUser({ adminId: user?.id }, userToAlert.id); 
         await fetchUsers(); 
-       alert("alerte envoyee avec succes"); 
+        showFlashMessage(locale === "en"? "Alert successfully sent":"Alerte envoyée avec succès", "success", true); 
     }catch(error){
-      alert("failed to Alert user, try again later.");
+      showFlashMessage(locale === "en"? "Failed to alert user, try again later.":"Échec dans l'envoi de l'alerte", "error", true);
     }
   }
 
@@ -186,13 +186,19 @@ const handleSubmitForm = () =>{
         try{
           const response = await setRoles(data);
       
-          alert(isAdmin ? "Rôle d'administrateur retiré." : "Utilisateur promu administrateur.");
-
+          showFlashMessage(
+            locale === "en"
+              ? (isAdmin ? "Admin role removed." : "User promoted to admin.")
+              : (isAdmin ? "Rôle d'administrateur retiré." : "Utilisateur promu administrateur."),
+            "info",
+            true
+          );
+          
         }catch(error ){
             if (error instanceof Error) {
-              alert("failed to update roles, try again later. :" + error);
+              showFlashMessage(locale === "en"?"Failed to update roles, try again later.":"Echec pour la modification des roles, reéssayer plutard" + error, "error", true);
           }else
-            alert("Échec de la mise à jour des rôles. Veuillez réessayer plus tard.");    
+          showFlashMessage(locale === "en"?"Failed to update roles, try again later.":"Échec de la mise à jour des rôles. Veuillez réessayer plus tard.", "error", true);    
         } finally {
           await fetchUsers();
          
@@ -256,9 +262,9 @@ const handleSubmitForm = () =>{
             </div>
 
             <div className="flex space-x-4 text-xl">
-              <Link className="text-green-600" title={localizedContent.actions.view} href={`view-activity/${currentUser.id}`}>
+              <button className="text-green-600" title={localizedContent.actions.view} >
                 <FontAwesomeIcon icon={faEye} />
-              </Link>
+              </button>
               <button
                   className={currentUser.roles.includes('ROLE_ADMIN') ? "text-blue-600" : "text-gray-600"}
                   title={currentUser.roles.includes('ROLE_ADMIN') ? "Demote to User" : "Promote to Admin"}

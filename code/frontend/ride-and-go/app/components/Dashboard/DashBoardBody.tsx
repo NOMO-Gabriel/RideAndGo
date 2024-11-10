@@ -9,7 +9,6 @@ import Itineraries from "@/app/components/Dashboard/MyItineraries"; // Exemple d
 import Statistics from "@/app/components/Dashboard/Statistics"; // Exemple d'import pour le composant
 import Subscriptions from "@/app/components/Dashboard/Subscriptions"; // Exemple d'import pour le composant
 import AllUsers from "@/app/components/Dashboard/AllUsers"; // Exemple d'import pour le composant
-import MyDocuments from "@/app/components/Dashboard/MyDocuments";
 
 const componentsMap: Record<number, React.FC> = {
   1: PersonalInfo,

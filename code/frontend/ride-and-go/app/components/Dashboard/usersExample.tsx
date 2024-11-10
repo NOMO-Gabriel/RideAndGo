@@ -11,7 +11,7 @@ import ConfirmationMessage from '../cards/ConfirmationMessage';
 import { getUsers, deleteUser, suspendUser, activateUser, setRoles, createAdmin, alertUser } from '@/app/utils/api/admin';
 import { useUser } from '@/app/utils/hooks/useUser';
 import Link from 'next/link';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 // Typage de l'utilisateur
 type User = {
   id: string | undefined;
@@ -38,6 +38,7 @@ const roleDisplayMap: Record<string, string> = { /* ...comme avant... */ };
 const getRoles = (roles: string[]): string => { /* ...comme avant... */ };
 
 const Users: React.FC = () => {
+  const { showFlashMessage } = useFlashMessage(); 
   const { locale } = useLocale();
   const localizedContent = locale === 'en' ? content.en : content.fr;
   const { user } = useUser();
@@ -67,7 +68,7 @@ const Users: React.FC = () => {
       });
       fetchUsers();
     } catch (error) {
-      alert('Failed to create admin. Please try again later.');
+      showFlashMessage('Failed to create admin. Please try again later.', "error", true);
     }
   };
 
@@ -84,10 +85,10 @@ const Users: React.FC = () => {
         });
         fetchUsers();
       } catch (error) {
-        alert('Failed to update role. Please try again later.');
+        showFlashMessage('Failed to update role. Please try again later.', "error", true);
       }
     } else {
-      alert('Invalid role. Please enter a valid role.');
+      showFlashMessage('Invalid role. Please enter a valid role.', "error", true);
     }
   };
 

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { getUser, updateUserPreferences } from '@/app/utils/api/users';
 import { useUser } from '@/app/utils/hooks/useUser';
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 // Définir le contenu des préférences avec des types
 type PreferencesContent = {
@@ -45,7 +46,7 @@ export default function Preferences() {
   const { locale } = useLocale();
   const { user } = useUser();
   const currentContent = locale === 'en' ? content.en : content.fr;
-
+  const { showFlashMessage } = useFlashMessage(); 
   const [preferences, setPreferences] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -73,11 +74,11 @@ export default function Preferences() {
         id: user?.id,
         preferences,
       });
-      alert(currentContent.updateSuccess);
+      showFlashMessage(currentContent.updateSuccess,"success", true);
       setIsEditing(false);
     } catch (error) {
       console.error('Erreur lors de la mise à jour des préférences:', error);
-      alert(currentContent.updateError);
+      showFlashMessage(currentContent.updateError,"error", true);
     }
   };
 

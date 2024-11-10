@@ -19,7 +19,7 @@ public class Subscription {
     @Column("label")
     private String label;
 
-    @Column("prix")
+    @Column("price")
     private Double price;
 
     @Column("description")

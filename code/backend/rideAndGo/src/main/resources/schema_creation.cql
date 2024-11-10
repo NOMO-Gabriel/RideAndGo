@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS user (
     paiementDate TIMESTAMP,
     vehicle UUID,
     piece LIST<UUID>,
-    picture BLOB,
+    picture UUID,
     avatar BLOB,
     lastConnection TIMESTAMP,
     isSuspend BOOLEAN,
@@ -168,6 +168,19 @@ CREATE TABLE IF NOT EXISTS Piece (
     ownerId UUId,
     uploadDate TIMESTAMP
 );
+
+-- Table profilImages
+CREATE TABLE IF NOT EXISTS profilImages (
+    id UUID PRIMARY KEY,
+    filePath TEXT,
+    originalFileName TEXT, 
+    fileType TEXT,
+    fileSize BIGINT,
+    ownerId UUId,
+    uploadDate TIMESTAMP
+);
+
+
 
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
