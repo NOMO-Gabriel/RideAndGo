@@ -179,7 +179,27 @@ CREATE TABLE IF NOT EXISTS profilImages (
     ownerId UUId,
     uploadDate TIMESTAMP
 );
-
+-- Table profilImages
+CREATE TABLE IF NOT EXISTS DriverDocuments(
+    id UUID PRIMARY KEY,
+    ownerId UUId,
+    documentType document_type,
+    originalFileName TEXT, 
+    fileSize BIGINT,
+    fileType TEXT,
+    filePath TEXT,
+    cloudinaryPublicId TEXT,
+    uploadDate TIMESTAMP
+);
+CREATE TYPE IF NOT EXISTS document_type AS ENUM (
+    'CNI', 
+    'PERMIS_DE_CONDUITE', 
+    'CARTE_GRISE', 
+    'ASSURANCE', 
+    'CERTIFICAT_DE_VISITE_TECHNIQUE', 
+    'VIGNETTE_AUTOMOBILE', 
+    'CARTE_DE_STATIONNEMENT'
+);
 
 
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
