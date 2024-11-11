@@ -41,15 +41,15 @@ public class DriverDocuments {
     private Date uploadDate;
 
 
-   // Getter et Setter pour documentType
-   public DocumentType getDocumentType() {
-    return documentType;
-}
+//    // Getter et Setter pour documentType
+//    public DocumentType getDocumentType() {
+//         return documentType.valueOf(documentType);
+//     }
 
-public void setDocumentType(DocumentType documentType) {
-    this.documentType = documentType;
-}
-   
+//     public void setDocumentType(DocumentType documentType) {
+//         this.documentType = documentType.getDescription();
+//     }
+    
     
     
     

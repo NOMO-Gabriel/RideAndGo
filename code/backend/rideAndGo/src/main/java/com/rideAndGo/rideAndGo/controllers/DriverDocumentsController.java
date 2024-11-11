@@ -26,10 +26,14 @@ public class DriverDocumentsController {
     public ResponseEntity <DriverDocuments> uploadDriverDocument(@PathVariable UUID ownerId , @RequestParam("file") MultipartFile file, @RequestParam("documentType") String documentTypeStr ) {
 
         try{
+            System.out.println("Cloud Name: " + System.getenv("CLOUDINARY_CLOUD_NAME"));
+            System.out.println("API Key: " + System.getenv("CLOUDINARY_API_KEY"));
+            System.out.println("API Secret: " + System.getenv("CLOUDINARY_API_SECRET"));
             DriverDocuments document = driverDocumentsService.uploadDriverDocuments(file, ownerId, documentTypeStr);
             return ResponseEntity.ok(document);
 
-;        }catch(IOException e){
+
+       }catch(IOException e){
             e.printStackTrace();
             return ResponseEntity.status(500).build();
 
