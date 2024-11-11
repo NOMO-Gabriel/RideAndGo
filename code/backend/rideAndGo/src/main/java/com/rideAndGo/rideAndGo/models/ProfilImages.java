@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.Table;
+import java.time.Instant;
 
 @Data
 @Table("profilImages")
@@ -31,6 +32,6 @@ public class ProfilImages {
     private UUID ownerId;
 
     @Column("uploadDate")
-    private Date uploadDate;
+    private Instant uploadDate;
 
 }
