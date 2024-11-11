@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown, faStar } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '@/app/utils/hooks/useUser';
 import { getSubscriptions, getUserSubscription, changeUserSubscription } from '@/app/utils/api/suscribtion';
-
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 // Type pour les abonnements
 interface Subscription {
   id: string | undefined;
@@ -43,7 +43,7 @@ const Subscription = () => {
   const [otherSubscriptions, setOtherSubscriptions] = useState<Subscription[]>([]);
   const { locale } = useLocale();
   const { user } = useUser();
-
+  const { showFlashMessage } = useFlashMessage(); 
   // Obtenir le contenu localisé
   const localizedContent = subscriptionContent[locale as "fr" | "en"];
 
@@ -73,7 +73,7 @@ const Subscription = () => {
         setOtherSubscriptions(filteredSubscriptions);
       } catch (error) {
         console.error("Failed to load subscriptions:", error);
-        alert("Failed to load subscriptions");
+        showFlashMessage("Failed to load subscriptions", "error", true);
       }
     };
     fetchSubscriptions();
@@ -84,11 +84,11 @@ const Subscription = () => {
     if (user?.id) {
       try {
         await changeUserSubscription(subscriptionLabel, user.id);
-        alert(`Subscription changed to ${subscriptionLabel}`);
+        showFlashMessage(`Subscription changed to ${subscriptionLabel}`, "info", true);
         setCurrentSubscription(await getUserSubscription(user.id)); // Refresh current subscription
       } catch (error) {
         console.error("Failed to change subscription:", error);
-        alert("Failed to change subscription");
+        showFlashMessage("Failed to change subscription", "error", true);
       }
     }
   };

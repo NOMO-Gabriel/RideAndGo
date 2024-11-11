@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-//import CompactFareCalculator from '@/app/components/Home/FareCalculator';
 
 interface HeroSectionProps {
   images: string[]; // Prop pour les images

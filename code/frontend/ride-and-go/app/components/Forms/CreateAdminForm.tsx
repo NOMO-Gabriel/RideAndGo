@@ -6,7 +6,7 @@ import { createAdmin } from "@/app/utils/api/admin";
 import { useUser } from "@/app/utils/hooks/useUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
- 
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 interface RegisterAdminProps {
   onFormSubmit: () => void;
@@ -15,7 +15,7 @@ interface RegisterAdminProps {
 export default function RegisterAdmin({ onFormSubmit }: RegisterAdminProps) {
   const { locale } = useLocale();
   const [passwordVisible, setPasswordVisible] = useState(false);
-
+  const {showFlashMessage} = useFlashMessage()
   const { user } = useUser();
 
   const togglePasswordVisibility = () => {
@@ -93,9 +93,9 @@ export default function RegisterAdmin({ onFormSubmit }: RegisterAdminProps) {
         await createAdmin({ superAdminId: user.id, adminToCreate : dataToSend }); 
       }; 
      
-      alert("admin cree avec succes");
+      showFlashMessage("admin cree avec succes", "success", true);
     } catch (error) {
-      alert("erreur lors de la creation d'un admin");
+      showFlashMessage("erreur lors de la creation d'un admin", "error", true);
     } finally {
       onFormSubmit();
     }

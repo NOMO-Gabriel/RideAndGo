@@ -1,7 +1,6 @@
-import { FC } from 'react';
-import { AiOutlineCheckCircle, AiOutlineInfoCircle, AiOutlineWarning, AiOutlineCloseCircle } from 'react-icons/ai';
-import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage'; 
+import { FC, useEffect, useState } from 'react';
 import { FaCheckCircle, FaExclamationTriangle, FaInfoCircle, FaTimesCircle } from 'react-icons/fa';
+import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 interface FlashMessageType {
   msg: string;
@@ -10,10 +9,21 @@ interface FlashMessageType {
 
 const FlashMessage: FC = () => {
   const { message } = useFlashMessage();
+  const [isVisible, setIsVisible] = useState(true);
 
-  if (!message) return null;
+  useEffect(() => {
+    if (!message) return;
 
-  // Utilisation de l'interface `FlashMessage` pour typer la prop `message`
+    setIsVisible(true); // Show message when updated
+    const timer = setTimeout(() => {
+      setIsVisible(false); // Hide after 3 seconds
+    }, 3000);
+
+    return () => clearTimeout(timer); // Cleanup on component unmount
+  }, [message]);
+
+  if (!message || !isVisible) return null;
+
   const getMessageIcon = (type: FlashMessageType['type']) => {
     switch (type) {
       case 'success':
@@ -36,17 +46,18 @@ const FlashMessage: FC = () => {
       case 'warning':
         return 'bg-yellow-100 border-yellow-500 text-yellow-800';
       default:
-        return 'bg-blue-100 border-blue-500 text-blue-800'; 
+        return 'bg-blue-100 border-blue-500 text-blue-800';
     }
   };
 
   return (
     <div
-      className={`fixed top-4 right-4 p-4 rounded shadow-lg flex items-center ${getMessageStyle(message.type)} z-50`}
+      className={`fixed top-4 right-4 p-4 rounded shadow-lg flex items-center transition-opacity duration-500 
+      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} ${getMessageStyle(message.type)} z-50`}
     >
       {getMessageIcon(message.type)}
-      <div className='border-l-2 border-gray-300 mx-3 h-6'></div>
-      <span className='flex-1'>{message.msg}</span>
+      <div className="border-l-2 border-gray-300 mx-3 h-6"></div>
+      <span className="flex-1">{message.msg}</span>
     </div>
   );
 };
