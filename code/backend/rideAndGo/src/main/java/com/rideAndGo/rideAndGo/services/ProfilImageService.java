@@ -9,8 +9,12 @@ import com.rideAndGo.rideAndGo.models.User;
 import com.rideAndGo.rideAndGo.repositories.ProfilImageRepository;
 import com.rideAndGo.rideAndGo.repositories.UserRepository;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.IOException;
+import org.springframework.http.HttpHeaders;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -86,6 +90,67 @@ public class ProfilImageService {
 
     }
 
+    // méthode pour supprimer une image
+
+    public void deleteProfileImage (UUID imageId) throws IOException{
+        Optional <ProfilImages> profilImageOptional = profilImageRepository.findById(imageId);
+
+        if(profilImageOptional.isPresent()){
+            ProfilImages profilImage = profilImageOptional.get();
+
+            // supprimer le fichier du disque
+             Path filPath = rootLocation.resolve(profilImage.getFilePath());
+             Files.deleteIfExists((filPath));
+
+             // supprimer les métadonnéesde la base de données
+             profilImageRepository.deleteById(imageId);
+
+             //mettre à jour l'utilisateur en supprimant l'ID de l'image
+
+             Optional <User> userOptional = userRepository.findById(profilImage.getOwnerId());
+             if(userOptional.isPresent()){
+                User user = userOptional.get();
+                user.setPictureId(null);
+                userRepository.save(user);
+             }
+        }else {
+            throw new IOException("Image de profil non trouvée pour l'ID donné");
+        }
+    }
+
+     // méthode pour update une image
+
+     public ProfilImages updateProfilImages (UUID imageId, MultipartFile newfile) throws IOException{
+
+        deleteProfileImage(imageId);
+        Optional <ProfilImages> existingImage = profilImageRepository.findById(imageId);
+
+        return uploadProfilImage(newfile, existingImage.get().getOwnerId());
+     }
+
+     // méthode pour get une image
+     public ResponseEntity<Resource> getProfilImageById (UUID imageId) throws IOException{
+        Optional <ProfilImages> profilImageOptional = profilImageRepository.findById(imageId);
+
+        if (profilImageOptional.isPresent()){
+            ProfilImages profilImage = profilImageOptional.get();
+            Path filePath = rootLocation.resolve(profilImage.getFilePath());
+
+            // Créer la ressource à partir du fichier
+
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists() || resource.isReadable()){
+                return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION , "attachement; filename= \"" + profilImage.getOriginalFileName() + "\"")
+                    .body(resource);
+            }else{
+                throw new IOException("fichier non trouvable ou non lisible");
+            }
+        }else{
+            throw new IOException("image de profil non trouvée pour l'ID donné");
+        }
+
+     }
 
 
 
