@@ -22,6 +22,9 @@ public class ProfilImages {
     @Column("originalFileName")
     private String originalFileName;
 
+    @Column("cloudinaryPublicId")
+    private String cloudinaryPublicId;
+
     @Column("fileType")
     private String fileType;
 

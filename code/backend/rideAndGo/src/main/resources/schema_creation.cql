@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS profilImages (
     fileSize BIGINT,
     ownerId UUId,
     uploadDate TIMESTAMP
+    cloudinaryPublicId TEXT,
 );
 
 -- Table DriverDocuments
