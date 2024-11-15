@@ -179,15 +179,7 @@ CREATE TABLE IF NOT EXISTS profilImages (
     ownerId UUId,
     uploadDate TIMESTAMP
 );
-CREATE TYPE IF NOT EXISTS document_type AS ENUM (
-    'CNI', 
-    'PERMIS_DE_CONDUITE', 
-    'CARTE_GRISE', 
-    'ASSURANCE', 
-    'CERTIFICAT_DE_VISITE_TECHNIQUE', 
-    'VIGNETTE_AUTOMOBILE', 
-    'CARTE_DE_STATIONNEMENT'
-);
+
 -- Table DriverDocuments
 CREATE TABLE IF NOT EXISTS DriverDocuments(
     id UUID PRIMARY KEY,
@@ -206,6 +198,8 @@ CREATE TABLE IF NOT EXISTS DriverDocuments(
 CREATE INDEX IF NOT EXISTS user_pseudo_idx ON user (pseudo);
 CREATE INDEX IF NOT EXISTS user_email_idx ON user (email);
 CREATE INDEX IF NOT EXISTS user_phonenumber_idx ON user (phoneNumber);
+CREATE INDEX IF NOT EXISTS idx_owner_id ON "DriverDocuments" ("ownerId");
+
 
 
 

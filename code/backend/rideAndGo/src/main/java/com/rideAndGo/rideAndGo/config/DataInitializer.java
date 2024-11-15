@@ -27,7 +27,7 @@ public class DataInitializer {
     private SubscriptionService subscriptionService;
 
     UUID defaultSubscriptionId = UUID.fromString("ff4340cd-6785-4582-92a4-3cc83554955f");
-    ArrayList features = new ArrayList<String>();
+    ArrayList <String>features = new ArrayList<String>();
     Subscription defaultSubscription = new Subscription();
 
     void initSubscription(){

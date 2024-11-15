@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -20,7 +21,7 @@ public class DriverDocuments {
 
 
     @Column("documentType")
-    private DocumentType documentType;
+    private String documentType;
 
     @Column("originalFileName")
     private String originalFileName;
@@ -52,7 +53,17 @@ public class DriverDocuments {
     
     
     
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType != null ? documentType.name() : null;
+    }
     
-   
    
 }

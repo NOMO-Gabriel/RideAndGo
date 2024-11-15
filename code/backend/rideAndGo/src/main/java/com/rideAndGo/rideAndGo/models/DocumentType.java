@@ -19,7 +19,17 @@ public enum DocumentType {
         return description;
     }
 
-    // Méthode pour récupérer un DocumentType par sa description si nécessaire
+    // Méthode pour récupérer un DocumentType par son code (par exemple "CNI", "PERMIS_DE_CONDUITE")
+    public static DocumentType fromCode(String code) {
+        for (DocumentType type : values()) {
+            if (type.name().equalsIgnoreCase(code)) {
+                return type;
+            }
+        }
+        return null;  // ou gérer un cas par défaut si nécessaire
+    }
+
+    // Méthode pour récupérer un DocumentType par sa description (ancien comportement)
     public static DocumentType fromDescription(String description) {
         for (DocumentType type : values()) {
             if (type.getDescription().equalsIgnoreCase(description)) {
