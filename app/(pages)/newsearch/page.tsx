@@ -115,7 +115,7 @@ export default function Page() {
               }`}
               style={{ zIndex: 0 }} // Ajout du z-index pour la map
             >
-              <Map searchData={searchData} /> {/* Passer les données de recherche au composant Map */}
+              <Map/> {/* Passer les données de recherche au composant Map */}
             </div>
           )}
 

@@ -53,9 +53,9 @@ export default function Sidebar() {
   const localizedContent = content[locale as "fr" | "en"] || content.en;
 
   // Ajout de l'état pour l'élément sélectionné
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const handleItemClick = (id) => {
+  const handleItemClick = (id : number ) => {
     setSelectedId(id); // Met à jour l'ID de l'élément sélectionné
     updateDashboardFilter(id); // Appelle la fonction de mise à jour
   };

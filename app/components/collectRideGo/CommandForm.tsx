@@ -139,10 +139,10 @@ const CommandForm: React.FC = () => {
           {currentContent.place}
         </button> */}
       </div>
-
+{/* 
       {showPopup === "offer" && <OfferCard data={formData} closePopup={closePopup} />}
       {showPopup === "itinerary" && <ItineraryCard data={formData} closePopup={closePopup} />}
-      {showPopup === "place" && <PlaceCard data={formData} closePopup={closePopup} />}
+      {showPopup === "place" && <PlaceCard data={formData} closePopup={closePopup} />} */}
     </div>
   );
 };

@@ -27,8 +27,8 @@ type Place = {
 
 type Itinerary = {
   id: number;
-  startPoint: number;
-  endPoint: number;
+  startPoint: Place;
+  endPoint: Place;
   description: string;
 };
 
@@ -198,17 +198,17 @@ const handleDeletePlace = async (id: string) => {
             <div key={itinerary.id} className="p-4 border rounded-lg shadow-md">
               <h2 className="text-lg font-semibold">
                 <span onMouseEnter={() => setHoveredPlace(itinerary.startPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.startPoint}
+                  {itinerary.startPoint.name}
                 </span>
                 →
                 <span onMouseEnter={() => setHoveredPlace(itinerary.endPoint)} onMouseLeave={() => setHoveredPlace(null)}>
-                  {itinerary.endPoint}
+                  {itinerary.endPoint.name}
                 </span>
               </h2>
               <p className="text-gray-600">{itinerary.description}</p>
               <div>
-                {hoveredPlace?.id === itinerary.startPoint && renderPlace(itinerary.startPoint)}
-                {hoveredPlace?.id === itinerary.endPoint && renderPlace(itinerary.endPoint)}
+                {hoveredPlace?.id === itinerary.startPoint.id && renderPlace(itinerary.startPoint)}
+                {hoveredPlace?.id === itinerary.endPoint.id && renderPlace(itinerary.endPoint)}
               </div> 
               <div className="flex space-x-4 mt-4">
                 <button className="px-3 py-1 bg-bleu-nuit hover:bg-blue-800 text-white rounded" title={localizedText.showMap}>

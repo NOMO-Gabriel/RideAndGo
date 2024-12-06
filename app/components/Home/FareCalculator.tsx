@@ -41,7 +41,7 @@ const CompactFareCalculator: React.FC = () => {
     },
   };
 
-  const currentContent = content[locale]; // Sélection du contenu selon la langue
+  const currentContent = locale=="en"? content.en : content.fr; // Sélection du contenu selon la langue
 
   return (
     <div className="flex flex-col md:flex-row bg-gradient-to-r from-bleu-nuit to-bleu-200 p-8 text-white rounded-lg shadow-lg w-full">

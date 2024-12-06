@@ -7,7 +7,7 @@ import L from 'leaflet';
 import Routing from './Routing';
 
 // Fix the default Leaflet icon paths for compatibility with Webpack/Vite
-delete L.Icon.Default.prototype.getIconUrl;
+// delete L.Icon.Default.prototype.getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',

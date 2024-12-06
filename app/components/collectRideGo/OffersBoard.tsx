@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AcceptedCard from "@/app/components/cards/AcceptedCard";
+// import AcceptedCard from "@/app/components/cards/AcceptedCard";
 import RejectConfirmation from "@/app/components/cards/RejectConfirmation"; // Import du composant
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import { FaCheckCircle, FaTimesCircle, FaUser } from "react-icons/fa";
@@ -133,7 +133,7 @@ const OffersBoard: React.FC = () => {
         </tbody>
       </table>
 
-      {showAcceptedCard && acceptedOffer && (
+      {/* {showAcceptedCard && acceptedOffer && (
         <AcceptedCard offer={acceptedOffer} onClose={() => setShowAcceptedCard(false)} locale={locale} />
       )}
 
@@ -144,7 +144,7 @@ const OffersBoard: React.FC = () => {
           onCancel={() => setOfferToReject(null)}
           locale={locale}
         />
-      )}
+      )} */}
     </div>
   );
 };
