@@ -1,10 +1,19 @@
 'use client';
 
+import { useState } from "react";
+import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import Header from "@/app/components/collectRideGo/Header";
 import OffersBoard from "@/app/components/collectRideGo/OffersBoard";
-import Map from "@/app/components/collectRideGo/DynamicMap";
-import { useState } from "react";
-import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
+import dynamic from 'next/dynamic';
+
+const DynamicMap = dynamic(() => import('@/app/components/collectRideGo/DynamicMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] w-full flex items-center justify-center bg-gray-100">
+      Chargement de la carte...
+    </div>
+  ),
+});
 
 export default function Page() {
   const { locale } = useLocale();
@@ -77,7 +86,7 @@ export default function Page() {
             className={`flex-1 transition-all duration-300 rounded-lg m-4 ${showInfoBoard ? 'w-9/12 ml-[100px]' : 'w-full'}`}
             style={{ zIndex: 0 }}
           >
-            <Map />
+            <DynamicMap center={[3.8667, 11.5167]} zoom={13} />
           </div>
         )}
 
@@ -93,4 +102,3 @@ export default function Page() {
     </div>
   );
 }
-
