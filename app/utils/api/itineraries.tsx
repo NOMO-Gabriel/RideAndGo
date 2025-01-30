@@ -17,7 +17,7 @@ export const fetchItineraries = async () => {
 };
 
 // Function to delete an itinerary by id
-export const deleteItinerary = async (id) => {
+export const deleteItinerary = async (id:number) => {
   const response = await fetch(`${API_URL}/delete/${id}`, {
     method: 'DELETE',
     headers: getHeaders(),
@@ -30,7 +30,7 @@ export const deleteItinerary = async (id) => {
 };
 
 // Function to update an itinerary by id
-export const updateItinerary = async (id, itineraryDetails) => {
+export const updateItinerary = async (id:number, itineraryDetails:object) => {
   const response = await fetch(`${API_URL}/edit/${id}`, {
     method: 'PUT',
     headers: getHeaders(),

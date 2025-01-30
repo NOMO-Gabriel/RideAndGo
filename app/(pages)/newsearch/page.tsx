@@ -5,7 +5,7 @@ import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import Link from "next/link";
 import Header from "@/app/components/collectRideGo/Header";
 import InfosBoard from "@/app/components/collectRideGo/InfosBoard";
-import Map from "@/app/components/collectRideGo/Map";
+import Map from "@/app/components/collectRideGo/DynamicMap";
 import HeroSection from "@/app/components/Home/HeroSection";
 
 export default function Page() {

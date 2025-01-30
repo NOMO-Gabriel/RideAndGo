@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FaUser } from 'react-icons/fa'; // Icône pour le personnage pensif
-import Map from '../collectRideGo/Map'; // Remplacer par le bon import si nécessaire
+import Map from '../collectRideGo/DynamicMap'; // Remplacer par le bon import si nécessaire
 
 const CompactFareCalculator: React.FC = () => {
   const [startLocation, setStartLocation] = useState('');

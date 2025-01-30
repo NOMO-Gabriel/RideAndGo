@@ -1,3 +1,5 @@
+'use client';
+
 import PlueValue from "./components/Home/PlusValue";
 import FeaturesSection from "./components/Home/FeaturesSection";
 import HeroSection from "./components/Home/HeroSection";
@@ -21,7 +23,6 @@ export default function page(){
     return(
         <div>
            <HeroSection images={images} messages={messages} />
-          
            <FeaturesSection/>
            <CompactFareCalculator/>
            <PlueValue/>

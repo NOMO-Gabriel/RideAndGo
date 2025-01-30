@@ -2,7 +2,7 @@
 
 import Header from "@/app/components/collectRideGo/Header";
 import CommandForm from "@/app/components/collectRideGo/CommandForm";
-import Map from "@/app/components/collectRideGo/Map";
+import Map from "@/app/components/collectRideGo/DynamicMap";
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
 import HeroSection from "@/app/components/Home/HeroSection";

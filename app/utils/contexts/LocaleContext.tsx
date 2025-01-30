@@ -13,15 +13,20 @@ export const LocaleProvider = ({ children }: { children: ReactNode }) => {
     const [locale, setLocale] = useState<string>('en');
 
     useEffect(() => {
-        const savedLocale = localStorage.getItem('locale');
-        if (savedLocale) {
-            setLocale(savedLocale);
+        // Vérifie si on est bien dans un environnement client avant d'accéder à localStorage
+        if (typeof window !== "undefined") {
+            const savedLocale = localStorage.getItem('locale');
+            if (savedLocale) {
+                setLocale(savedLocale);
+            }
         }
     }, []);
 
     const changeLocale = (newLocale: string) => {
         setLocale(newLocale);
-        localStorage.setItem('locale', newLocale);
+        if (typeof window !== "undefined") {
+            localStorage.setItem('locale', newLocale);
+        }
     };
 
     return (

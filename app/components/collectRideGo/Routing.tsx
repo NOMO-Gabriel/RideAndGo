@@ -31,11 +31,14 @@ const Routing: React.FC<RoutingProps> = ({ start, end }) => {
     }).addTo(map);
 
     return () => {
-      map.removeControl(routingControl);
+      // Nettoyage : Supprimez le routage lorsqu'il n'est plus nécessaire
+      if (map && routingControl) {
+        map.removeControl(routingControl);
+      }
     };
-  }, [isMapReady, map, start, end]);
+  }, [isMapReady, start, end, map]);
 
-  return null;
+  return null; // Le composant n'a pas de contenu visuel direct
 };
 
 export default Routing;
