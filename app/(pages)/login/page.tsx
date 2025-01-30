@@ -3,18 +3,26 @@
 import { useState, FormEvent } from 'react';  
 import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
-
+import NotificationManager from "../../components/flash_message/NotificationManager.tsx";
+import { useRef } from "react";
 interface LoginData {
   identifier: string;
   password: string;
 }
+
 
 const LoginForm = () => {
   const { login } = useUser(); // Récupère la fonction de connexion du contexte
   const { showFlashMessage } = useFlashMessage(); // Récupère la fonction pour afficher les flash messages
   const [loginData, setLoginData] = useState<LoginData>({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const notificationManager = useRef(null);
 
+  const handleEvent = () => {
+    notificationManager.current?.addNotification(
+      "Nouveau client disponible à 500 mètres"
+    );
+  };
   // Détection du type d'identifiant
   const getIdentifierType = (identifier: string): 'email' | 'phoneNumber' | 'pseudo' => {
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -40,11 +48,14 @@ const LoginForm = () => {
     try {
       await login(identifierType, loginData.identifier, loginData.password);
       showFlashMessage('Connexion réussie ! Redirection en cours...', 'success', true);
+      handleEvent();
       setTimeout(() => {
         window.location.href = '/'; // Redirection sécurisée
       }, 2000);
     } catch (error: any) { 
       showFlashMessage(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.', 'error');
+      handleEvent();
+      
     } finally {
       setLoading(false);
     }
@@ -57,6 +68,7 @@ const LoginForm = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-6 text-center">Se Connecter</h2>
             <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulaire de connexion">
+              <NotificationManager ref={notificationManager} /> 
               
               <input
                 type="text"
