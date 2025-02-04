@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 const ThemeToggleButton = () => {
-    const { theme, changeTheme } = useTheme();
+    const { theme, toggleTheme } = useTheme();
 
     const handleThemeChange = () => {
-        changeTheme(theme === 'light' ? 'dark' : 'light');
+        toggleTheme(theme === 'light' ? 'dark' : 'light');
     };
 
     const backgroundClass = theme === 'light' ? 'bg-gray-100' : 'bg-gray-800';

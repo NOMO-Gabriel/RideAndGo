@@ -2,9 +2,14 @@
 
 import { useState } from 'react';
 import { FaExchangeAlt } from 'react-icons/fa';
-import Map from '@/app/components/go/Map';
+import  { Location } from '@/app/components/go/Map';
 import FareCalculator from '@/app/components/go/FareCalculator';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
+import dynamic from 'next/dynamic'
+
+const Map = dynamic(() => import('@/app/components/go/Map'), {
+  ssr: false // This will disable server-side rendering for this component
+});
 
 export default function ClientDashboard() {
   const [mode, setMode] = useState<'calculator' | 'direct'>('calculator');
@@ -103,7 +108,9 @@ export default function ClientDashboard() {
           </div>
 
           <div className="w-2/3 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
-            <Map />
+            <Map pickup={null} destination={null} onLocationSelect={(location: Location): void => {
+              throw new Error('Function not implemented.');
+            }} isSelectingPickup={false} />
           </div>
         </div>
       </div>

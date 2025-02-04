@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useSearchFilter } from '@/app/utils/hooks/useSearchFilter';
@@ -12,21 +14,29 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const Map: React.FC = () => {
+interface MapProps {
+  center: [number, number];
+  zoom: number;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+const Map: React.FC<MapProps> = ({ center, zoom, className, children }) => {
   const { searchData } = useSearchFilter();
   const { startPoint, endPoint, place, isItinerary } = searchData;
 
   return (
     <div className="relative flex justify-center items-center my-8 mx-auto w-full max-w-6xl h-[600px] rounded-2xl shadow-2xl overflow-hidden border border-gray-300">
       <MapContainer
-        center={[3.8480, 11.5021]}
-        zoom={13}
-        className="h-full w-full"
+        center={center}
+        zoom={zoom}
+        className={className || "h-full w-full"}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+        {children}
         {isItinerary ? (
           <>
             {startPoint && (

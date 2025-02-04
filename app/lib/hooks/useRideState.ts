@@ -18,7 +18,7 @@ export function useRideState() {
   const [clients, setClients] = useState<Client[]>([]);
   const [progress, setProgress] = useState<ProgressData>(() => {
     // Récupérer l'objectif sauvegardé dans le localStorage s'il existe
-    const savedGoal = localStorage.getItem('dailyGoal');
+    const savedGoal = typeof window !== 'undefined' ? localStorage.getItem('dailyGoal') : null;
     return {
       ...initialProgress,
       dailyGoal: savedGoal ? parseInt(savedGoal) : initialProgress.dailyGoal,

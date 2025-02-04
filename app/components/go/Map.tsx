@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-interface Location {
+export interface Location {
   lat: number;
   lng: number;
   address?: string;
@@ -63,3 +63,5 @@ export default function Map({ pickup, destination, onLocationSelect, isSelecting
     </MapContainer>
   );
 }
+
+

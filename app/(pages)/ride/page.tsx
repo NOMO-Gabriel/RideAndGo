@@ -8,6 +8,8 @@ import ClientList from '../../components/ride/ClientList';
 import { useRideState } from '../../lib/hooks/useRideState';
 import { Client, Location } from '../../lib/types/ride';
 
+
+
 // Charger la carte de manière dynamique avec une suspension
 const Map = dynamic(
   () => import('../../components/ride/Map'),
@@ -151,7 +153,7 @@ export default function DriverDashboard() {
               <Map
                 driverPosition={driverPosition}
                 clients={clients}
-                activeClient={activeClient}
+                onClientSelect={handleClientSelect}
               />
             </div>
 

@@ -1,11 +1,22 @@
 'use client';
-import { useSearchFilter } from "@/app/utils/hooks/useSearchFilter";
+
 import { useState } from "react";
-import { useLocale } from "@/app/utils/hooks/useLocale.js"; 
-import Link from "next/link";
-import Header from "@/app/components/collectRideGo/Header";
+import { useLocale } from "@/app/utils/hooks/useLocale.js";
+import Header from "@/app/components/Header";
 import InfosBoard from "@/app/components/collectRideGo/InfosBoard";
-import Map from "@/app/components/collectRideGo/DynamicMap";
+import dynamic from 'next/dynamic';
+
+const DynamicMap = dynamic(() => import('@/app/components/collectRideGo/DynamicMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[600px] w-full flex items-center justify-center bg-gray-100">
+      Chargement de la carte...
+    </div>
+  ),
+});
+
+import { useSearchFilter } from "@/app/utils/hooks/useSearchFilter";
+import Link from "next/link";
 import HeroSection from "@/app/components/Home/HeroSection";
 
 export default function Page() {
@@ -115,7 +126,7 @@ export default function Page() {
               }`}
               style={{ zIndex: 0 }} // Ajout du z-index pour la map
             >
-              <Map/> {/* Passer les données de recherche au composant Map */}
+              <DynamicMap center={[0.3, 0.3]} zoom={0} />   {/* Passer les données de recherche au composant Map */}
             </div>
           )}
 

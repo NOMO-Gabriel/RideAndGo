@@ -1,11 +1,10 @@
-// utils/contexts/ThemeContext.tsx
-'use client';
+"use client";
 
-import { createContext, ReactNode, useState, useEffect } from 'react';
+import { createContext, ReactNode, useState, useEffect, useCallback } from 'react';
 
 interface ThemeContextProps {
     theme: string;
-    changeTheme: (newTheme: string) => void;
+    toggleTheme: (newTheme: string) => void;
 }
 
 export const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -15,20 +14,23 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') || 'light' : 'light';
         setTheme(savedTheme);
 
     }, []);
 
-    const changeTheme = (newTheme: string) => {
+    const toggleTheme = useCallback(() => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-
-    };
-
+        
+        // Safely check if localStorage is available before setting
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('theme', newTheme);
+        }
+    }, [theme]);
     return (
 
-        <ThemeContext.Provider value={{ theme, changeTheme }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}
         </ThemeContext.Provider>
     );

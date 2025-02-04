@@ -26,8 +26,8 @@ export default function FareEstimator({ pickup, destination }: FareEstimatorProp
 
     // Vérifier si c'est une heure de pointe
     const currentHour = new Date().getHours();
-    const isPeakHour = (currentHour >= FARE_CONFIG.PEAK_HOURS.morning.start && currentHour <= FARE_CONFIG.PEAK_HOURS.morning.end) ||
-                       (currentHour >= FARE_CONFIG.PEAK_HOURS.evening.start && currentHour <= FARE_CONFIG.PEAK_HOURS.evening.end);
+    const isPeakHour = (currentHour >= FARE_CONFIG.PEAK_HOURS.MORNING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.MORNING.END) ||
+                       (currentHour >= FARE_CONFIG.PEAK_HOURS.EVENING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.EVENING.END);
 
     // Calculer le tarif de base
     let fare = FARE_CONFIG.BASE_FARE + (distanceInKm * FARE_CONFIG.PER_KM_RATE);
@@ -65,11 +65,11 @@ export default function FareEstimator({ pickup, destination }: FareEstimatorProp
         {formatPrice(estimatedFare)}
       </div>
       <p className="text-sm text-gray-500 mt-1">
-        {new Date().getHours() >= FARE_CONFIG.PEAK_HOURS.morning.start && 
-         new Date().getHours() <= FARE_CONFIG.PEAK_HOURS.morning.end ? 
+        {new Date().getHours() >= FARE_CONFIG.PEAK_HOURS.MORNING.START && 
+         new Date().getHours() <= FARE_CONFIG.PEAK_HOURS.MORNING.END ? 
          "Tarif heure de pointe (matin)" : 
-         new Date().getHours() >= FARE_CONFIG.PEAK_HOURS.evening.start && 
-         new Date().getHours() <= FARE_CONFIG.PEAK_HOURS.evening.end ? 
+         new Date().getHours() >= FARE_CONFIG.PEAK_HOURS.EVENING.START && 
+         new Date().getHours() <= FARE_CONFIG.PEAK_HOURS.EVENING.END ? 
          "Tarif heure de pointe (soir)" : 
          "Tarif standard"}
       </p>
