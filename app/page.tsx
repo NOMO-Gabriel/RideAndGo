@@ -7,6 +7,7 @@ import StatisticsSection from "./components/Home/StatisticsSection";
 import TestimonySection from "./components/Home/TestimonySection";
 import SubscribeSection from "./components/Home/SubscribeSection";
 import CompactFareCalculator from "./components/Home/FareCalculator";
+import HeroFareCalculator from "./components/Home/FareCalculator";
 
 const images = [
     '/images/heroimg.jpeg', 
@@ -22,9 +23,10 @@ export default function page(){
 
     return(
         <div>
-           <HeroSection images={images} messages={messages} />
+          
+          
+           <HeroFareCalculator/>
            <FeaturesSection/>
-           <CompactFareCalculator/>
            <PlueValue/>
            <StatisticsSection/>
            <SubscribeSection/>

@@ -26,8 +26,8 @@ export default function FareCalculator({
     const distanceInMeters = pickupLatLng.distanceTo(destLatLng);
     const distanceInKm = distanceInMeters / 1000;
     const currentHour = new Date().getHours();
-    const isPeakHour = (currentHour >= FARE_CONFIG.PEAK_HOURS.morning.start && currentHour <= FARE_CONFIG.PEAK_HOURS.morning.end) ||
-                       (currentHour >= FARE_CONFIG.PEAK_HOURS.evening.start && currentHour <= FARE_CONFIG.PEAK_HOURS.evening.end);
+    const isPeakHour = (currentHour >= FARE_CONFIG.PEAK_HOURS.MORNING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.MORNING.END) ||
+                       (currentHour >= FARE_CONFIG.PEAK_HOURS.EVENING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.EVENING.END);
 
     let fare = FARE_CONFIG.BASE_FARE + (distanceInKm * FARE_CONFIG.PER_KM_RATE);
     if (isPeakHour) fare *= FARE_CONFIG.PEAK_HOUR_MULTIPLIER;

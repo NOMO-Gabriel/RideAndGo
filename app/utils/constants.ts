@@ -33,7 +33,9 @@ export const FARE_CONFIG = {
   PEAK_HOUR_MULTIPLIER: 1.5, // Multiplicateur pour les heures de pointe
   MIN_FARE: 1000, // Prix minimum en FCFA
   PEAK_HOURS: {
-    START: 7, // Heure de début des heures de pointe (7h)
-    END: 19, // Heure de fin des heures de pointe (19h)
+    MORNING: { START: 7,END: 10 },  // Matin : 7h à 10h
+    EVENING: { START: 17,END: 20 }, // Soir : 17h à 20h
   },
+  PER_KM_RATE: 100, // Prix par kilomètre en FCFA
 };
+

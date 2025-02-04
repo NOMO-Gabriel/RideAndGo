@@ -63,8 +63,9 @@ export default function Go() {
     const distance = R * c;
 
     const now = new Date();
-    const hour = now.getHours();
-    const isPeakHour = hour >= FARE_CONFIG.PEAK_HOURS.START && hour <= FARE_CONFIG.PEAK_HOURS.END;
+    const currentHour = new Date().getHours();
+    const isPeakHour = (currentHour >= FARE_CONFIG.PEAK_HOURS.MORNING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.MORNING.END) ||
+                       (currentHour >= FARE_CONFIG.PEAK_HOURS.EVENING.START && currentHour <= FARE_CONFIG.PEAK_HOURS.EVENING.END);
 
     let price = FARE_CONFIG.BASE_FARE + (distance * FARE_CONFIG.DISTANCE_RATE);
     if (isPeakHour) {
