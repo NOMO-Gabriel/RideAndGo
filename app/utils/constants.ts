@@ -28,12 +28,14 @@ export const DRIVER_NAMES = [
 
 // Configuration des tarifs
 export const FARE_CONFIG = {
-  BASE_FARE: 500, // Tarif de base en FCFA
-  PER_KM_RATE: 200, // Tarif par kilomètre en FCFA
-  MIN_FARE: 1000, // Tarif minimum en FCFA
+  BASE_FARE: 500, // Prix de base en FCFA
+  DISTANCE_RATE: 100, // Prix par kilomètre en FCFA
   PEAK_HOUR_MULTIPLIER: 1.5, // Multiplicateur pour les heures de pointe
-  PEAK_HOURS: { // Heures de pointe
-    morning: { start: 7, end: 9 }, // 7h-9h
-    evening: { start: 17, end: 19 } // 17h-19h
-  }
+  MIN_FARE: 1000, // Prix minimum en FCFA
+  PEAK_HOURS: {
+    MORNING: { START: 7,END: 10 },  // Matin : 7h à 10h
+    EVENING: { START: 17,END: 20 }, // Soir : 17h à 20h
+  },
+  PER_KM_RATE: 100, // Prix par kilomètre en FCFA
 };
+

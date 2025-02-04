@@ -252,7 +252,7 @@ const HeroFareCalculator = () => {
 
           <div className="lg:w-1/2">
             <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
-              {Map && <Map />}
+              {Map && <Map center={[0.0, 0.0]} zoom={0} />}
               {tripDetails && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-2 m-3 rounded-lg">
                   <div className="flex flex-col gap-1.5 text-white text-sm">

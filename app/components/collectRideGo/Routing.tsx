@@ -33,7 +33,7 @@ const Routing: React.FC<RoutingProps> = ({ start, end }) => {
     return () => {
       // Nettoyage : Supprimez le routage lorsqu'il n'est plus nécessaire
       if (map && routingControl) {
-        map.removeControl(routingControl);
+        routingControl.remove();
       }
     };
   }, [isMapReady, start, end, map]);
