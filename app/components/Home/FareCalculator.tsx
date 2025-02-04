@@ -251,6 +251,7 @@ const HeroFareCalculator = () => {
           </div>
 
 
+
           <div className="lg:w-1/2">
             <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
               {Map && <Map center={[0.0, 0.0]} zoom={0} />}
