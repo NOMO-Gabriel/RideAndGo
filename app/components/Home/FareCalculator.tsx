@@ -21,6 +21,7 @@ const HeroFareCalculator = () => {
   const [tripDetails, setTripDetails] = useState<TripDetails | null>(null);
   const [proposedPrice, setProposedPrice] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isCalculated, setIsCalculated] = useState(false);
   const { locale } = useLocale();
 
   const backgroundImages = [
@@ -52,6 +53,8 @@ const HeroFareCalculator = () => {
       end: endLocation,
       time: 0
     });
+
+    setIsCalculated(true);
   };
 
   const content = {
@@ -76,7 +79,7 @@ const HeroFareCalculator = () => {
       trustPoint3: "24/7 Support"
     },
     fr: {
-      heroTitle: "Decouvrez une nouvelle maniere de rouler et de partir",
+      heroTitle: "Decouvrez une nouvelle maniere de vous deplacer",
       heroSubtitle: "La liberté de fixer votre propre tarif",
       startLocationPlaceholder: "D'où partez-vous ?",
       endLocationPlaceholder: "Où allez-vous ?",
@@ -143,8 +146,8 @@ const HeroFareCalculator = () => {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="lg:w-1/2 bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-xl">
+        <div className={`flex flex-col lg:flex-row gap-4 transition-all duration-500 ${isCalculated ? 'h-auto' : 'h-full items-center'}`}>
+          <div className={`lg:w-1/2 bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-xl transition-all duration-500 ${isCalculated ? 'mb-4' : 'mb-0'}`}>
             <div className="space-y-3">
               <div className="space-y-2">
                 <div className="relative group">
@@ -179,9 +182,9 @@ const HeroFareCalculator = () => {
               </div>
 
               {tripDetails && (
-                <div className="space-y-3 animate-fade-in">
+                <div className="space-y-3 animate-fade-in flex-grow">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
                       <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
                         <FaRoute className="text-base" />
                         {currentContent.distance}
@@ -191,7 +194,7 @@ const HeroFareCalculator = () => {
                       </p>
                     </div>
 
-                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
                       <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
                         <FaClock className="text-base" />
                         {currentContent.duration}
@@ -203,7 +206,7 @@ const HeroFareCalculator = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
                       <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
                         <FaMoneyBillWave className="text-base" />
                         {currentContent.estimatedFare}
@@ -213,7 +216,7 @@ const HeroFareCalculator = () => {
                       </p>
                     </div>
 
-                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
                       <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
                         <FaBuilding className="text-base" />
                         {currentContent.officialPrice}
@@ -224,7 +227,7 @@ const HeroFareCalculator = () => {
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur">
+                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur flex-grow">
                     <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
                       <FaHandHoldingUsd className="text-lg" />
                       {currentContent.makeProposal}
@@ -248,7 +251,7 @@ const HeroFareCalculator = () => {
           </div>
 
           <div className="lg:w-1/2">
-            <div className="h-[400px] relative rounded-xl overflow-hidden shadow-xl">
+            <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
               {Map && <Map />}
               {tripDetails && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-2 m-3 rounded-lg">
