@@ -57,6 +57,7 @@ const Navbar: React.FC = () => {
       signIn: 'Sign in',
       signUp: 'Sign up',
       dashboard: 'Dashboard',
+      calculate:"Fare Calculator",
     },
     fr: {
       home: 'Accueil',
@@ -71,6 +72,7 @@ const Navbar: React.FC = () => {
       signIn: 'Se Connecter',
       signUp: "S'inscrire",
       dashboard: "Tableau de bord",
+      calculate:'Calculateur de tarif',
     },
   };
 
@@ -93,10 +95,11 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
+          <Link href="/calculate" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.calculate}</Link>
           {
             !isAuthenticated && (
               <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
-          
+             
             )
           }
           {/* Affichage conditionné des liens "Go" et "Ride" */}
