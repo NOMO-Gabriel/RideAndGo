@@ -21,6 +21,7 @@ const Map = dynamic(() => import('@/app/components/collectRideGo/Map'), {
   ssr: false // This will disable server-side rendering for this component
 });
 
+
 interface CostDetails {
   distance: number;
   duration: number;
