@@ -1,193 +1,173 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import type { Icon } from 'leaflet';
-import { YAOUNDE_LOCATIONS } from '@/app/utils/constants';
+import { YAOUNDE_LOCATIONS } from '../../utils/constants';
+import ProgressDashboard from '../../components/ride/ProgressDashboard';
+import ClientList from '../../components/ride/ClientList';
+import { useRideState } from '../../lib/hooks/useRideState';
+import { Client, Location } from '../../lib/types/ride';
 
-const Map = dynamic(() => import('../../components/maps/LeafletMap'), {
-  ssr: false, // Disable server-side rendering
-  loading: () => <p>Chargement de la carte...</p>
-});
 
-interface Location {
-  lat: number;
-  lng: number;
-  name: string;
-}
 
-interface Client {
-  id: string;
-  name: string;
-  position: [number, number];
-  currentLocation: Location;
-  pickupLocation: Location;
-  destination: Location;
-  price: number;
-  status: 'available' | 'selected' | 'in_progress';
-}
+// Charger la carte de manière dynamique avec une suspension
+const Map = dynamic(
+  () => import('../../components/ride/Map'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-gray-100 animate-pulse flex items-center justify-center">
+        <div className="text-gray-500">Chargement de la carte...</div>
+      </div>
+    )
+  }
+);
+
+const calculateDistance = (start: Location, end: Location): number => {
+  const R = 6371; // Rayon de la Terre en km
+  const dLat = (end.lat - start.lat) * Math.PI / 180;
+  const dLon = (end.lng - start.lng) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(start.lat * Math.PI / 180) * Math.cos(end.lat * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+};
+
+const getRandomLocation = () => {
+  const locations = Object.values(YAOUNDE_LOCATIONS);
+  return locations[Math.floor(Math.random() * locations.length)];
+};
 
 export default function DriverDashboard() {
+  const {
+    clients,
+    setClients,
+    progress,
+    activeClient,
+    handleClientSelect,
+    handleRideAccept,
+    handleRideComplete,
+    handleRideCancel,
+    handleUpdateDailyGoal,
+  } = useRideState();
+
   const [driverPosition, setDriverPosition] = useState<[number, number]>([
     YAOUNDE_LOCATIONS.CENTRE.lat,
-    YAOUNDE_LOCATIONS.CENTRE.lng,
+    YAOUNDE_LOCATIONS.CENTRE.lng
   ]);
-
-  const [clients, setClients] = useState<Client[]>([
-    // ... vos données de clients existantes
-  ]);
-
-  const [driverIcon, setDriverIcon] = useState<Icon | undefined>(undefined);
-  const [clientIcon, setClientIcon] = useState<Icon | undefined>(undefined);
 
   useEffect(() => {
-    // Import Leaflet dynamically
-    import('leaflet').then((L) => {
-      setDriverIcon(
-        new L.Icon({
-          iconUrl: '/driver-marker.svg',
-          iconSize: [40, 40],
-          iconAnchor: [20, 40],
-          popupAnchor: [0, -40],
-        })
-      );
-      setClientIcon(
-        new L.Icon({
-          iconUrl: '/client-marker.svg',
-          iconSize: [40, 40],
-          iconAnchor: [20, 40],
-          popupAnchor: [0, -40],
-        })
-      );
-    });
+    const generateRandomClient = () => {
+      const pickupLocation = getRandomLocation();
+      const destinationLocation = getRandomLocation();
+      const distance = calculateDistance(pickupLocation, destinationLocation);
+      const estimatedDuration = Math.ceil(distance * 3); // 3 minutes par km en moyenne
+      const basePrice = 1000 + Math.round(distance * 500); // Prix de base + 500 FCFA par km
+      const price = Math.round(basePrice / 100) * 100; // Arrondir aux 100 FCFA
+
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        name: `Client ${Math.floor(Math.random() * 1000)}`,
+        position: [pickupLocation.lat, pickupLocation.lng] as [number, number],
+        currentLocation: pickupLocation,
+        destination: destinationLocation,
+        pickupLocation,
+        price,
+        status: 'available' as const,
+        speed: 0,
+        direction: [0, 0] as [number, number],
+        requestTime: new Date(),
+        estimatedDuration,
+        distance,
+      };
+    };
+
+    const interval = setInterval(() => {
+      if (clients.length < 5) {
+        setClients(prev => [...prev, generateRandomClient()]);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [clients.length, setClients]);
+
+  useEffect(() => {
+    const moveInterval = setInterval(() => {
+      setDriverPosition(prev => {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = 0.0001; // Vitesse de déplacement
+        const newLat = prev[0] + Math.cos(angle) * speed;
+        const newLng = prev[1] + Math.sin(angle) * speed;
+        return [newLat, newLng];
+      });
+    }, 2000);
+
+    return () => clearInterval(moveInterval);
   }, []);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'XAF',
-    }).format(price);
-  };
-
-  const handleBid = (clientId: string) => {
-    setClients(
-      clients.map((client) =>
-        client.id === clientId
-          ? { ...client, status: 'selected' as const }
-          : client
-      )
-    );
-  };
-
-  const acceptRide = (client: Client) => {
-    // Logique pour accepter une course
-  };
-
-  const markers = [
-    ...(driverIcon ? [{
-      position: driverPosition,
-      icon: driverIcon,
-      popup: (
-        <div className="text-center">
-          <p className="font-bold">Votre position</p>
-          <p>{YAOUNDE_LOCATIONS.CENTRE.name}</p>
-        </div>
-      )
-    }] : []),
-    ...clients.flatMap((client) => 
-      clientIcon ? [{
-        position: client.position,
-        icon: clientIcon,
-        popup: (
-          <div className="p-2">
-            <h3 className="font-bold">{client.name}</h3>
-            <p className="text-sm">Prix: {formatPrice(client.price)}</p>
-            <div className="mt-2">
-              <p className="font-semibold">Détails du trajet:</p>
-              <p>Position actuelle: {client.currentLocation.name}</p>
-              <p>Lieu de départ: {client.pickupLocation.name}</p>
-              <p>Destination: {client.destination.name}</p>
-            </div>
-            {client.status === 'available' && (
-              <button
-                onClick={() => handleBid(client.id)}
-                className="mt-2 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-              >
-                Proposer mes services
-              </button>
-            )}
-            {client.status === 'selected' && (
-              <button
-                onClick={() => acceptRide(client)}
-                className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-              >
-                Commencer la course
-              </button>
-            )}
-          </div>
-        )
-      }] : []
-    )
-  ];
-
-  const polylines = clients.flatMap((client) => 
-    client.status !== 'available' ? [
-      {
-        positions: [
-          [client.currentLocation.lat, client.currentLocation.lng] as [number, number],
-          [client.pickupLocation.lat, client.pickupLocation.lng] as [number, number]
-        ] as [number, number][],
-        color: 'orange',
-        dashArray: '5, 10'
-      },
-      {
-        positions: [
-          [client.pickupLocation.lat, client.pickupLocation.lng] as [number, number],
-          [client.destination.lat, client.destination.lng] as [number, number]
-        ] as [number, number][],
-        color: 'blue'
-      }
-    ] : []
-  );
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6">Tableau de bord du chauffeur</h1>
+    <div className="relative h-screen overflow-hidden bg-[#0A1128]">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1128]/90 to-[#0A1128]/70" />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Section des statistiques */}
-          <div className="col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Statistiques</h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-600">Courses effectuées</p>
-                  <p className="text-2xl font-bold">12</p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Revenus du jour</p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {formatPrice(25000)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Note moyenne</p>
-                  <p className="text-2xl font-bold text-yellow-500">4.8/5</p>
-                </div>
+      <div className="relative z-10 h-full flex flex-col">
+        <div className="p-4">
+          <div className="text-center mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+              Driver Dashboard
+            </h1>
+            <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
+              Find and accept rides in your area
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 flex gap-4 p-4 h-[calc(100vh-140px)]">
+          <div className="w-1/3 flex flex-col gap-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4">
+              <ProgressDashboard 
+                progress={progress}
+                onUpdateDailyGoal={handleUpdateDailyGoal}
+              />
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4 flex-1 overflow-hidden">
+              <div className="h-[calc(100vh-400px)] overflow-y-auto custom-scrollbar pr-2">
+                <ClientList
+                  clients={clients}
+                  activeClient={activeClient}
+                  onClientSelect={handleClientSelect}
+                  onRideAccept={handleRideAccept}
+                  onRideComplete={handleRideComplete}
+                  onRideCancel={handleRideCancel}
+                />
               </div>
             </div>
           </div>
 
-          {/* Map Section */}
-          <div className="col-span-2">
-            <Map
-              center={driverPosition}
-              zoom={13}
-              className="h-[600px] rounded-lg shadow-lg"
-              markers={markers}
-              polylines={polylines}
-            />
+          <div className="w-2/3 flex flex-col gap-4">
+            <div className="flex-1 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
+              <Map
+                driverPosition={driverPosition}
+                clients={clients}
+                onClientSelect={handleClientSelect}
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white/10 backdrop-blur p-4 rounded-xl text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">Real-time Updates</h3>
+              </div>
+              <div className="bg-white/10 backdrop-blur p-4 rounded-xl text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">Smart Routing</h3>
+              </div>
+              <div className="bg-white/10 backdrop-blur p-4 rounded-xl text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">24/7 Support</h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>

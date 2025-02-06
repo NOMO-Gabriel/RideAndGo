@@ -1,142 +1,117 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import type { Icon } from 'leaflet';
-import { YAOUNDE_LOCATIONS, FARE_CONFIG } from '@/app/utils/constants';
+import { useState } from 'react';
+import { FaExchangeAlt } from 'react-icons/fa';
+import  { Location } from '@/app/components/go/Map';
+import FareCalculator from '@/app/components/go/FareCalculator';
+import { useLocale } from '@/app/utils/hooks/useLocale.js';
+import dynamic from 'next/dynamic'
 
-const Map = dynamic(() => import('../../components/maps/LeafletMap'), {
-  ssr: false,
-  loading: () => <p>Chargement de la carte...</p>
+const Map = dynamic(() => import('@/app/components/go/Map'), {
+  ssr: false // This will disable server-side rendering for this component
 });
 
-export default function Go() {
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
-  const [destination, setDestination] = useState<Location | null>(null);
-  const [estimatedFare, setEstimatedFare] = useState<number>(0);
-  const [customIcon, setCustomIcon] = useState<Icon | undefined>(undefined);
+export default function ClientDashboard() {
+  const [mode, setMode] = useState<'calculator' | 'direct'>('calculator');
+  const { locale } = useLocale();
 
-  useEffect(() => {
-    // Import Leaflet dynamically
-    import('leaflet').then((L) => {
-      setCustomIcon(
-        new L.Icon({
-          iconUrl: '/marker-icon.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-        })
-      );
-    });
-  }, []);
+  const handleRideSubmit = (details: {
+    startLocation: string;
+    endLocation: string;
+    proposedPrice: number;
+    estimatedPrice: number;
+  }) => {
+    // TODO: Implement ride request submission
+    console.log('Ride details:', details);
+  };
 
-  interface Location {
-    lat: number;
-    lng: number;
-    name: string;
-  }
-
-  const handleMapClick = (lat: number, lng: number) => {
-    const newLocation = {
-      lat,
-      lng,
-      name: 'Position sélectionnée',
-    };
-    
-    if (!selectedLocation) {
-      setSelectedLocation(newLocation);
-    } else if (!destination) {
-      setDestination(newLocation);
-      calculatePrice(selectedLocation, newLocation);
+  const content = {
+    en: {
+      title: "Request a Ride",
+      subtitle: "Choose your preferred way to request a ride",
+      calculatorMode: "Calculate First",
+      directMode: "Direct Request",
+      calculatorDescription: "Get a fare estimate before making your request",
+      directDescription: "Make a direct request with your own price"
+    },
+    fr: {
+      title: "Commander une Course",
+      subtitle: "Choisissez votre mode de commande préféré",
+      calculatorMode: "Calculer d'abord",
+      directMode: "Commande Directe",
+      calculatorDescription: "Obtenez une estimation avant de commander",
+      directDescription: "Faites une commande directe avec votre prix"
     }
   };
 
-  const calculatePrice = (start: Location, end: Location) => {
-    const R = 6371;
-    const dLat = (end.lat - start.lat) * Math.PI / 180;
-    const dLon = (end.lng - start.lng) * Math.PI / 180;
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(start.lat * Math.PI / 180) * Math.cos(end.lat * Math.PI / 180) * 
-      Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distance = R * c;
-
-    const now = new Date();
-    const hour = now.getHours();
-    const isPeakHour = hour >= FARE_CONFIG.PEAK_HOURS.START && hour <= FARE_CONFIG.PEAK_HOURS.END;
-
-    let price = FARE_CONFIG.BASE_FARE + (distance * FARE_CONFIG.DISTANCE_RATE);
-    if (isPeakHour) {
-      price *= FARE_CONFIG.PEAK_HOUR_MULTIPLIER;
-    }
-    price = Math.max(price, FARE_CONFIG.MIN_FARE);
-
-    setEstimatedFare(Math.round(price));
-  };
-
-  const resetLocations = () => {
-    setSelectedLocation(null);
-    setDestination(null);
-    setEstimatedFare(0);
-  };
-
-  const markers = [
-    ...(selectedLocation ? [{
-      position: [selectedLocation.lat, selectedLocation.lng] as [number, number],
-      icon: customIcon,
-      popup: `Départ: ${selectedLocation.name}`
-    }] : []),
-    ...(destination ? [{
-      position: [destination.lat, destination.lng] as [number, number],
-      icon: customIcon,
-      popup: `Destination: ${destination.name}`
-    }] : [])
-  ];
+  const currentContent = locale === 'fr' ? content.fr : content.en;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Planifier votre trajet</h1>
+    <div className="relative h-screen overflow-hidden bg-[#0A1128]">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1128]/90 to-[#0A1128]/70" />
+      </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-4">Instructions</h2>
-            <p className="text-gray-600">
-              1. Cliquez sur la carte pour sélectionner votre point de départ<br />
-              2. Cliquez à nouveau pour sélectionner votre destination<br />
-              3. Le prix estimé sera calculé automatiquement
+      <div className="relative z-10 h-full flex flex-col">
+        <div className="p-4">
+          <div className="text-center mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+              {currentContent.title}
+            </h1>
+            <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
+              {currentContent.subtitle}
             </p>
           </div>
-
-          {estimatedFare > 0 && (
-            <div className="mb-6 p-4 bg-orange-100 rounded-lg">
-              <h3 className="text-lg font-semibold text-orange-800">Prix estimé</h3>
-              <p className="text-2xl font-bold text-orange-600">
-                {new Intl.NumberFormat('fr-FR', {
-                  style: 'currency',
-                  currency: 'XAF',
-                  minimumFractionDigits: 0,
-                }).format(estimatedFare)}
-              </p>
-              <button
-                onClick={resetLocations}
-                className="mt-4 bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
-              >
-                Réinitialiser
-              </button>
-            </div>
-          )}
         </div>
 
-        <div className="relative">
-          <Map
-            center={[3.8667, 11.5167]}
-            zoom={13}
-            className="h-[600px] rounded-lg shadow-lg"
-            markers={markers}
-            onMapClick={handleMapClick}
-          />
+        <div className="flex-1 flex gap-4 p-4 h-[calc(100vh-140px)]">
+          <div className="w-1/3 flex flex-col gap-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4">
+              <div className="flex justify-between items-center mb-4">
+                <button
+                  onClick={() => setMode('calculator')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                    mode === 'calculator'
+                      ? 'bg-orange-500 text-white'
+                      : 'text-blue-200 hover:bg-white/10'
+                  }`}
+                >
+                  {currentContent.calculatorMode}
+                </button>
+                <div className="px-2">
+                  <FaExchangeAlt className="text-blue-200" />
+                </div>
+                <button
+                  onClick={() => setMode('direct')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                    mode === 'direct'
+                      ? 'bg-orange-500 text-white'
+                      : 'text-blue-200 hover:bg-white/10'
+                  }`}
+                >
+                  {currentContent.directMode}
+                </button>
+              </div>
+              <p className="text-sm text-blue-200 text-center mb-4">
+                {mode === 'calculator'
+                  ? currentContent.calculatorDescription
+                  : currentContent.directDescription}
+              </p>
+            </div>
+
+            <div className="flex-1">
+              <FareCalculator 
+                mode={mode}
+                onSubmitRide={handleRideSubmit}
+              />
+            </div>
+          </div>
+
+          <div className="w-2/3 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
+            <Map pickup={null} destination={null} onLocationSelect={(location: Location): void => {
+              throw new Error('Function not implemented.');
+            }} isSelectingPickup={false} />
+          </div>
         </div>
       </div>
     </div>
