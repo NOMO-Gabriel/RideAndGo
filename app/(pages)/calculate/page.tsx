@@ -15,7 +15,11 @@ import {
   FaStar,
   FaHandHoldingUsd
 } from 'react-icons/fa';
-import Map from '@/app/components/collectRideGo/Map';
+import dynamic from 'next/dynamic';
+
+const Map = dynamic(() => import('@/app/components/collectRideGo/Map'), {
+  ssr: false // This will disable server-side rendering for this component
+});
 
 interface CostDetails {
   distance: number;
