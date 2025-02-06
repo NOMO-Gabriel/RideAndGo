@@ -38,6 +38,7 @@ const CostCalculator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPriceAnimation, setShowPriceAnimation] = useState(false);
   const [proposedPrice, setProposedPrice] = useState('');
+  const [isFormCentered, setIsFormCentered] = useState(true);
   const { locale } = useLocale();
 
   const testimonials = [
@@ -51,19 +52,19 @@ const CostCalculator = () => {
       title: "Besoin d'une course ?",
       icon: FaTaxi,
       description: "Réservez votre taxi en quelques clics",
-      link: "/taxi"
+      link: "#"
     },
     {
       title: "Besoin d'une agence de voyage ?",
       icon: FaPlane,
       description: "Planifiez votre prochain voyage",
-      link: "/travel"
+      link: "#"
     },
     {
       title: "Location de véhicule",
       icon: FaCar,
       description: "Large gamme de véhicules disponibles",
-      link: "/rental"
+      link: "#"
     }
   ];
 
@@ -87,6 +88,7 @@ const CostCalculator = () => {
 
       setIsLoading(false);
       setShowPriceAnimation(true);
+      setIsFormCentered(false); // Remonte le formulaire après le calcul
     }, 1500);
   };
 
@@ -151,7 +153,7 @@ const CostCalculator = () => {
       <div className="min-h-screen bg-bleu-nuit backdrop-blur-md p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-3 bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-orange-600">
+            <h1 className="text-4xl md:text-6xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-orange-600">
               {currentContent.heroTitle}
             </h1>
             <p className="text-blue-200 text-xl font-light">
@@ -161,7 +163,7 @@ const CostCalculator = () => {
 
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Colonne de gauche */}
-            <div className="space-y-8">
+            <div className={`space-y-8 transition-transform duration-500 ${isFormCentered ? 'translate-y-1/4' : 'translate-y-0'}`}>
               <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
                 <div className="p-6">
                   <div className="space-y-6">
@@ -239,7 +241,7 @@ const CostCalculator = () => {
                           <span>{currentContent.estimatedCost}</span>
                           <span className="text-white font-medium">{costDetails.estimatedCost.toLocaleString()} FCFA</span>
                         </div>
-                        <button className="w-full py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition">
+                        <button className="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition">
                           {currentContent.orderButton}
                         </button>
                       </div>
@@ -249,7 +251,7 @@ const CostCalculator = () => {
                           <span>{currentContent.officialCost}</span>
                           <span className="text-white font-medium">{costDetails.officialCost.toLocaleString()} FCFA</span>
                         </div>
-                        <button className="w-full py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition">
+                        <button className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
                           {currentContent.orderButton}
                         </button>
                       </div>
@@ -288,38 +290,39 @@ const CostCalculator = () => {
               </div>
 
               {costDetails && (
-                <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
-                  <div className="p-6">
-                    <h2 className="text-2xl font-semibold text-white mb-6">
-                      {currentContent.tripDetails}
+                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg">
+                    <div className="p-4">
+                    <h2 className="text-xl font-semibold text-white mb-4">
+                        {currentContent.tripDetails}
                     </h2>
-                    <div className="space-y-6">
-                      <div className="flex items-start gap-4">
-                        <div className="bg-green-400/20 p-2 rounded-lg">
-                          <FaMapMarkerAlt className="text-green-400 text-xl" />
+                    <div className="space-y-4">
+                        <div className="flex items-start gap-3">
+                        <div className="bg-green-400/20 p-1.5 rounded-md">
+                            <FaMapMarkerAlt className="text-green-400 text-lg" />
                         </div>
                         <div>
-                          <p className="text-blue-200 text-sm">{currentContent.departure}</p>
-                          <p className="text-white text-lg">{costDetails.startLocation}</p>
+                            <p className="text-blue-200 text-xs">{currentContent.departure}</p>
+                            <p className="text-white text-base">{costDetails.startLocation}</p>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-4">
-                        <div className="bg-orange-400/20 p-2 rounded-lg">
-                          <FaLocationArrow className="text-orange-400 text-xl" />
+                        </div>
+                        <div className="flex items-start gap-3">
+                        <div className="bg-orange-400/20 p-1.5 rounded-md">
+                            <FaLocationArrow className="text-orange-400 text-lg" />
                         </div>
                         <div>
-                          <p className="text-blue-200 text-sm">{currentContent.arrival}</p>
-                          <p className="text-white text-lg">{costDetails.endLocation}</p>
+                            <p className="text-blue-200 text-xs">{currentContent.arrival}</p>
+                            <p className="text-white text-base">{costDetails.endLocation}</p>
                         </div>
-                      </div>
-                      <div className="bg-white/5 p-4 rounded-lg">
-                        <p className="text-blue-200">{currentContent.routeDetails}</p>
-                        <p className="text-white mt-2">{costDetails.mapDetails}</p>
-                      </div>
+                        </div>
+                        <div className="bg-white/5 p-3 rounded-md">
+                        <p className="text-blue-200 text-xs">{currentContent.routeDetails}</p>
+                        <p className="text-white mt-1 text-sm">{costDetails.mapDetails}</p>
+                        </div>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              )}
+            )}
+
             </div>
           </div>
 
