@@ -2,35 +2,40 @@
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCrown, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faCrown, faStar, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '@/app/utils/hooks/useUser';
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
-import { mockSubscriptions, mockUserSubscriptions, Subscription } from '@/app/utils/mocks/mockSubscriptions';
+import type { Subscription } from '@/app/utils/mocks/mockSubscriptions';
+import { mockSubscriptions, mockUserSubscriptions } from '@/app/utils/mocks/mockSubscriptions';
 
 const subscriptionContent = {
   en: {
-    title: "Subscription",
-    current: "CURRENT SUBSCRIPTION",
+    title: "Subscription Plans",
+    current: "CURRENT PLAN",
     moreDetails: "See more details",
-    otherSubscriptions: "Other Subscriptions",
+    otherSubscriptions: "Available Plans",
     subscribe: "Subscribe",
+    monthly: "monthly",
+    features: "Features included",
     popup: {
       close: "Close",
     },
   },
   fr: {
-    title: "Abonnement",
-    current: "ABONNEMENT ACTUEL",
+    title: "Plans d'Abonnement",
+    current: "PLAN ACTUEL",
     moreDetails: "Voir plus de détails",
-    otherSubscriptions: "Autres Abonnements",
+    otherSubscriptions: "Plans Disponibles",
     subscribe: "S'abonner",
+    monthly: "par mois",
+    features: "Fonctionnalités incluses",
     popup: {
       close: "Fermer",
     },
   },
 };
 
-const Subscription = () => {
+const SubscriptionComponent = () => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
   const [otherSubscriptions, setOtherSubscriptions] = useState<Subscription[]>([]);
@@ -39,7 +44,6 @@ const Subscription = () => {
   const { showFlashMessage } = useFlashMessage();
   const localizedContent = subscriptionContent[locale as "fr" | "en"];
 
-  // Charger l'abonnement actuel de l'utilisateur
   useEffect(() => {
     if (user?.id) {
       const userSubLabel = mockUserSubscriptions[user.id];
@@ -50,7 +54,6 @@ const Subscription = () => {
     }
   }, [user?.id]);
 
-  // Charger les autres abonnements
   useEffect(() => {
     const filteredSubscriptions = mockSubscriptions.filter(
       sub => sub.label !== currentSubscription?.label
@@ -58,14 +61,10 @@ const Subscription = () => {
     setOtherSubscriptions(filteredSubscriptions);
   }, [currentSubscription]);
 
-  // Changer l'abonnement de l'utilisateur
   const handleSubscriptionChange = async (subscriptionLabel: string) => {
     if (user?.id) {
       try {
-        // Simuler un délai réseau
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Trouver le nouvel abonnement
         const newSubscription = mockSubscriptions.find(sub => sub.label === subscriptionLabel);
         if (newSubscription) {
           setCurrentSubscription(newSubscription);
@@ -78,57 +77,81 @@ const Subscription = () => {
     }
   };
 
+  const formatPrice = (price: string) => {
+    const [amount, period] = price.split('/');
+    return (
+      <div className="flex flex-col items-center mb-6">
+        <span className="text-3xl font-bold">{amount}</span>
+        {period && <span className="text-gray-500 text-sm">{localizedContent.monthly}</span>}
+      </div>
+    );
+  };
+
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">{localizedContent.title}</h2>
+    <div className="p-4 bg-gray-50 h-full">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">{localizedContent.title}</h2>
 
-      {/* Abonnement actuel */}
-      {currentSubscription && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">{localizedContent.current}</h3>
-            <FontAwesomeIcon icon={faCrown} className="text-yellow-500 text-2xl" />
-          </div>
-          <div className="mb-4">
-            <h4 className="text-xl font-bold mb-2">{currentSubscription.label}</h4>
-            <p className="text-gray-600">{currentSubscription.price}</p>
-          </div>
-          <ul className="list-disc list-inside mb-4">
-            {currentSubscription.features.map((feature, index) => (
-              <li key={index} className="text-gray-700">{feature}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Autres abonnements */}
-      <div>
-        <h3 className="text-lg font-semibold mb-4">{localizedContent.otherSubscriptions}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {otherSubscriptions.map((subscription) => (
-            <div key={subscription.id} className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-xl font-bold">{subscription.label}</h4>
-                <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-xl" />
-              </div>
-              <p className="text-gray-600 mb-4">{subscription.price}</p>
-              <ul className="list-disc list-inside mb-4">
-                {subscription.features.map((feature, index) => (
-                  <li key={index} className="text-gray-700">{feature}</li>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Plan actuel */}
+        {currentSubscription && (
+          <div className="bg-bleu-nuit rounded-lg shadow-md p-4 text-white">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold">{localizedContent.current}</h3>
+              <FontAwesomeIcon icon={faCrown} className="text-yellow-300 text-2xl" />
+            </div>
+            <div className="mb-3">
+              <h4 className="text-xl font-bold">{currentSubscription.label}</h4>
+              {formatPrice(currentSubscription.price)}
+            </div>
+            <div className="bg-white/5 rounded-lg p-3">
+              <h5 className="text-base font-semibold mb-2">{localizedContent.features}</h5>
+              <ul className="space-y-2 text-sm">
+                {currentSubscription.features.map((feature, index) => (
+                  <li key={index} className="flex items-center">
+                    <FontAwesomeIcon icon={faCheck} className="text-yellow-300 mr-2 text-xs" />
+                    <span>{feature}</span>
+                  </li>
                 ))}
               </ul>
-              <button
-                onClick={() => handleSubscriptionChange(subscription.label)}
-                className="w-full bg-bleu-nuit text-white py-2 px-4 rounded hover:bg-orange-btn transition-colors"
-              >
-                {localizedContent.subscribe}
-              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
+        {/* Autres plans */}
+        {otherSubscriptions.map((subscription) => (
+          <div 
+            key={subscription.id} 
+            className="bg-white rounded-lg shadow-md p-4 flex flex-col border border-gray-100"
+          >
+            <div className="flex-grow">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-xl font-bold text-gray-800">{subscription.label}</h4>
+                <FontAwesomeIcon icon={faStar} className="text-yellow-400 text-xl" />
+              </div>
+              {formatPrice(subscription.price)}
+              <div className="bg-gray-50 rounded-lg p-3">
+                <h5 className="text-base font-semibold mb-2 text-gray-700">{localizedContent.features}</h5>
+                <ul className="space-y-2 text-sm">
+                  {subscription.features.map((feature, index) => (
+                    <li key={index} className="flex items-center text-gray-600">
+                      <FontAwesomeIcon icon={faCheck} className="text-green-500 mr-2 text-xs" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <button
+              onClick={() => handleSubscriptionChange(subscription.label)}
+              className="w-full mt-3 bg-bleu-nuit text-white py-2 px-4 rounded hover:bg-orange-btn transition-colors focus:outline-none focus:ring-2 focus:ring-orange-btn focus:ring-opacity-50"
+            >
+              {localizedContent.subscribe}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Subscription;
+export default SubscriptionComponent;
