@@ -10,6 +10,7 @@ const AboutPage: React.FC = () => {
     <div>
     
 
+
       <ContactUs/>
 
      
