@@ -57,6 +57,7 @@ const Navbar: React.FC = () => {
       signIn: 'Sign in',
       signUp: 'Sign up',
       dashboard: 'Dashboard',
+      calculate:"Fare Calculator",
     },
     fr: {
       home: 'Accueil',
@@ -71,6 +72,7 @@ const Navbar: React.FC = () => {
       signIn: 'Se Connecter',
       signUp: "S'inscrire",
       dashboard: "Tableau de bord",
+      calculate:'Calculateur de tarif',
     },
   };
 
@@ -93,9 +95,11 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex space-x-8 items-center">
           <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
+          <Link href="/calculate" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.calculate}</Link>
           {
             !isAuthenticated && (
               <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
+             
             )
           }
           {/* Affichage conditionné des liens "Go" et "Ride" */}
@@ -105,7 +109,9 @@ const Navbar: React.FC = () => {
           {isDriver && (
             <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
           )}
-  
+          
+          {/* <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link> */}
+
           {/* Help Menu Dropdown */}
           <div className="relative group dropdown">
             <button 
@@ -115,7 +121,7 @@ const Navbar: React.FC = () => {
               <span>{currentContent.help}</span>
               <FontAwesomeIcon icon={faChevronDown} className="transition-transform duration-300 group-hover:rotate-180" />
             </button>
-  
+         
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
                 <ul className="py-2">
@@ -127,7 +133,7 @@ const Navbar: React.FC = () => {
               </div>
             )}
           </div>
-  
+
           {/* Language Selector */}
           <div className="relative group">
             <button className="flex items-center space-x-2 group-hover:text-orange-btn transition duration-300">
@@ -143,13 +149,13 @@ const Navbar: React.FC = () => {
               </select>
             </button>
           </div>
-  
+
           {/* Affichage conditionné des boutons de connexion et d'inscription */}
           {!user ? (
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 items-center">
-            <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
-            <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
-          </div>
+            <>
+              <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
+              <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
+            </>
           ) : (
             <div className="relative group dropdown">
               <button 
@@ -165,12 +171,13 @@ const Navbar: React.FC = () => {
                   )
                 }
               </button>
-              <p className="text-sm text-white">{user?.pseudo}</p>
+             <p className=" text-sm text-white">{user?.pseudo}</p>
               {isDropdownAccountOpen && (
                 <div className="absolute right-0 mt-2 w-30 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
+
                   <ul className="p-2">
-                    <li><Link href="/dashboard" onClick={toggleDropdownAccount} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full rounded-md text-center underline">{currentContent.dashboard}</Link></li>
-                    <li><button onClick={handleLogout} className="block px-2 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full rounded-md border">Logout</button></li>
+                    <li><Link href="/dashboard" onClick={toggleDropdownAccount} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300  w-full  rounded-md text-center underline">{currentContent.dashboard}</Link></li>
+                    <li><button onClick={handleLogout} className="block px-2 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full  rounded-md border">Logout</button></li>
                   </ul>
                 </div>
               )}
@@ -180,5 +187,6 @@ const Navbar: React.FC = () => {
       </div>
     </nav>
   );
-}  
+};
+
 export default Navbar;
