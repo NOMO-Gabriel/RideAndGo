@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus } from 'react-icons/fa';
 import Map from '../collectRideGo/DynamicMap';
 
 interface TripDetails {
@@ -20,6 +20,7 @@ const HeroFareCalculator = () => {
   const [endLocation, setEndLocation] = useState('');
   const [tripDetails, setTripDetails] = useState<TripDetails | null>(null);
   const [proposedPrice, setProposedPrice] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isCalculated, setIsCalculated] = useState(false);
   const { locale } = useLocale();
@@ -38,6 +39,7 @@ const HeroFareCalculator = () => {
   }, []);
 
   const calculateFare = () => {
+    setIsLoading(true);
     const baseFare = 1000;
     const distance = Math.random() * 20 + 5;
     const pricePerKm = 500;
@@ -53,7 +55,7 @@ const HeroFareCalculator = () => {
       end: endLocation,
       time: 0
     });
-
+    setIsLoading(false);
     setIsCalculated(true);
   };
 
@@ -68,15 +70,19 @@ const HeroFareCalculator = () => {
       duration: "Duration",
       estimatedFare: "Our Estimate",
       officialPrice: "Official Rate",
-      makeProposal: "Name your price",
+      makeProposal: "propose your price",
       proposalPlaceholder: "Your offer",
-      submitProposal: "Propose",
+      submitProposal: "Order",
       km: "km",
       mins: "mins",
       trustSection: "Why Choose Ride & Go?",
       trustPoint1: "Set Your Own Price",
       trustPoint2: "Safe & Reliable",
-      trustPoint3: "24/7 Support"
+      trustPoint3: "24/7 Support",
+      order: "Order",
+      needRide: "Need a ride?",
+      needTravelAgency: "Need a travel agency?",
+      needCarRental: "Need a car rental?"
     },
     fr: {
       heroTitle: "Decouvrez une nouvelle maniere de vous deplacer",
@@ -90,13 +96,17 @@ const HeroFareCalculator = () => {
       officialPrice: "Tarif Officiel",
       makeProposal: "Proposez votre prix",
       proposalPlaceholder: "Votre offre",
-      submitProposal: "Proposer",
+      submitProposal: "Commander",
       km: "km",
       mins: "min",
       trustSection: "Pourquoi Choisir Ride & Go ?",
       trustPoint1: "Fixez Votre Prix",
       trustPoint2: "Sûr & Fiable",
-      trustPoint3: "Support 24/7"
+      trustPoint3: "Support 24/7",
+      order: "Commander",
+      needRide: "Besoin d'une course?",
+      needTravelAgency: "Besoin d'une agence de voyage?",
+      needCarRental: "Besoin d'une location?"
     }
   };
 
@@ -174,10 +184,18 @@ const HeroFareCalculator = () => {
 
                 <button
                   onClick={calculateFare}
+                  disabled={isLoading}
                   className="w-full py-2 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] hover:shadow-xl text-sm"
                 >
-                  <FaCalculator className="text-base" />
-                  {currentContent.calculateButton}
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <FaCalculator className="text-base" />
+                      <span>{currentContent.calculateButton}</span>
+                    </>
+                  )}
+
                 </button>
               </div>
 
@@ -211,9 +229,12 @@ const HeroFareCalculator = () => {
                         <FaMoneyBillWave className="text-base" />
                         {currentContent.estimatedFare}
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-white mb-2">
                         {tripDetails.fare.toLocaleString()} FCFA
                       </p>
+                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
+                        {currentContent.order}
+                      </button>
                     </div>
 
                     <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
@@ -221,9 +242,12 @@ const HeroFareCalculator = () => {
                         <FaBuilding className="text-base" />
                         {currentContent.officialPrice}
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-white mb-2">
                         {tripDetails.officialPrice.toLocaleString()} FCFA
                       </p>
+                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
+                        {currentContent.order}
+                      </button>
                     </div>
                   </div>
 
@@ -244,9 +268,39 @@ const HeroFareCalculator = () => {
                         {currentContent.submitProposal}
                       </button>
                     </div>
+
                   </div>
                 </div>
               )}
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <a
+                href="#ride"
+                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+              >
+                <FaTaxi className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
+                <span className="text-xs text-white text-center">
+                  {currentContent.needRide}
+                </span>
+              </a>
+              <a
+                href="#travel"
+                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+              >
+                <FaBus className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
+                <span className="text-xs text-white text-center">
+                  {currentContent.needTravelAgency}
+                </span>
+              </a>
+              <a
+                href="#rental"
+                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+              >
+                <FaCar className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
+                <span className="text-xs text-white text-center">
+                  {currentContent.needCarRental}
+                </span>
+              </a>
             </div>
           </div>
 
