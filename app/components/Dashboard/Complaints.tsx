@@ -25,7 +25,7 @@ const fakeComplaints: Complaint[] = [
     content: 'The service was delayed by 30 minutes. Please investigate this issue.',
     time: '10:00 AM',
     status: 'pending',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const fakeComplaints: Complaint[] = [
     content: 'The billing process had an error. Please check the details.',
     time: '11:00 AM',
     status: 'pending',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const fakeComplaints: Complaint[] = [
     content: 'Please provide assistance with the support request.',
     time: '12:00 PM',
     status: 'resolved',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const fakeComplaints: Complaint[] = [
     content: 'The service was delayed by 30 minutes. Please investigate this issue.',
     time: '1:00 PM',
     status: 'pending',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const fakeComplaints: Complaint[] = [
     content: 'The billing process had an error. Please check the details.',
     time: '2:00 PM',
     status: 'pending',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
   {
     id: 6,
@@ -70,7 +70,7 @@ const fakeComplaints: Complaint[] = [
     content: 'Please provide assistance with the support request.',
     time: '3:00 PM',
     status: 'resolved',
-    imageUrl: '/images/profileImageGirl.jpeg',
+    imageUrl: '/images/bonhomme.png',
   },
 ];
 

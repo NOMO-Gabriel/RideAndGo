@@ -32,22 +32,44 @@ const FareCalculator: React.FC<FareCalculatorProps> = ({ onSubmitRide, mode = 'c
   const [proposedPrice, setProposedPrice] = useState('');
   const { locale } = useLocale();
 
-  const calculateFare = () => {
-    const baseFare = 1000;
-    const distance = Math.random() * 20 + 5;
-    const pricePerKm = 500;
-    const totalFare = baseFare + distance * pricePerKm;
-    const officialPrice = totalFare * 1.2;
+  const calculateFare = async () => {
+    if (!startLocation || !endLocation) {
+      alert('Veuillez entrer les adresses de départ et d\'arrivée');
+      return;
+    }
 
-    setTripDetails({
-      fare: Number(totalFare.toFixed(2)),
-      officialPrice: Number(officialPrice.toFixed(2)),
-      distance: Number(distance.toFixed(1)),
-      duration: Math.floor(distance * 3),
-      start: startLocation,
-      end: endLocation,
-      time: 0
-    });
+    try {
+      const response = await fetch('https://ride-and-go-cost-calculation.onrender.com/cost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          start: startLocation,
+          end: endLocation
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data); // Pour le debug
+
+      setTripDetails({
+        fare: data,
+        officialPrice: data * 1.2,
+        distance: 0,
+        duration: 0,
+        start: startLocation,
+        end: endLocation,
+        time: 0
+      });
+    } catch (error) {
+      console.error('Error calculating fare:', error);
+      alert('Erreur lors du calcul du tarif. Veuillez réessayer.');
+    }
   };
 
   const handleSubmit = () => {
@@ -122,7 +144,7 @@ const FareCalculator: React.FC<FareCalculatorProps> = ({ onSubmitRide, mode = 'c
 
           {mode === 'calculator' && (
             <button
-              onClick={calculateFare}
+              onClick={() => calculateFare()}
               className="w-full py-2 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] hover:shadow-xl text-sm"
             >
               <FaCalculator className="text-base" />

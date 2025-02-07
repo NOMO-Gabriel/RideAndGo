@@ -1,10 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { getUser, updateUserPreferences } from '@/app/utils/api/users';
-import { useUser } from '@/app/utils/hooks/useUser';
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 // Définir le contenu des préférences avec des types
@@ -17,6 +15,20 @@ type PreferencesContent = {
   save: string;
   updateSuccess: string;
   updateError: string;
+};
+
+interface UserPreferences {
+  language: 'fr' | 'en';
+  theme: 'light' | 'dark' | 'system';
+  timeZone: string;
+  isLocationEnabled: boolean;
+}
+
+const mockPreferences: UserPreferences = {
+  language: 'fr',
+  theme: 'system',
+  timeZone: 'UTC+1',
+  isLocationEnabled: true
 };
 
 const content: Record<string, PreferencesContent> = {
@@ -44,54 +56,72 @@ const content: Record<string, PreferencesContent> = {
 
 export default function Preferences() {
   const { locale } = useLocale();
-  const { user } = useUser();
   const currentContent = locale === 'en' ? content.en : content.fr;
-  const { showFlashMessage } = useFlashMessage(); 
-  const [preferences, setPreferences] = useState<any>(null);
+  const { showFlashMessage } = useFlashMessage();
+  const [preferences, setPreferences] = useState<UserPreferences>(mockPreferences);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const fetchPreferences = async () => {
-      try {
-        if (!user) return;
-        const data = await getUser(user.id);
-        setPreferences({
-          language: data.language,
-          theme: data.theme,
-          timeZone: data.timeZone,
-          isLocationEnabled: data.isLocationEnabled,
-        });
-      } catch (error) {
-        console.error('Erreur lors de la récupération des préférences:', error);
-      }
-    };
-    fetchPreferences();
-  }, [user?.id]);
+
+
+  // useEffect(() => {
+  //   const fetchPreferences = async () => {
+  //       try {
+  //           if (!user) return;
+  //           // Forcer l'utilisation des données mockées en développement
+  //           if (true) { 
+  //               setPreferences(mockPreferences);
+  //               return;
+  //           }
+  //           // En production, utiliser l'API réelle
+  //           const data = await getUser(user.id);
+  //           setPreferences({
+  //               language: data.language,
+  //               theme: data.theme,
+  //               timeZone: data.timeZone,
+  //               isLocationEnabled: data.isLocationEnabled,
+  //           });
+  //       } catch (error) {
+  //           console.error('Erreur lors de la récupération des préférences:', error);
+  //           showFlashMessage('Erreur lors de la récupération des préférences', "error", true);
+  //       }
+  //   };
+  //   fetchPreferences();
+  // }, [user?.id]);
+
+
+
+
+
 
   const handleSave = async () => {
     try {
-      await updateUserPreferences({
-        id: user?.id,
-        preferences,
-      });
-      showFlashMessage(currentContent.updateSuccess,"success", true);
+      // await updateUserPreferences({
+      //   id: user?.id,
+      //   preferences,
+      // });
+      // showFlashMessage(currentContent.updateSuccess,"success", true);
+      
+      
+      // Simulation de la sauvegarde
+      showFlashMessage(currentContent.updateSuccess, "success", true);
       setIsEditing(false);
     } catch (error) {
       console.error('Erreur lors de la mise à jour des préférences:', error);
-      showFlashMessage(currentContent.updateError,"error", true);
+      showFlashMessage(currentContent.updateError, "error", true);
     }
   };
 
   const toggleLocation = () => {
-    if (!isEditing) return; // Empêche le changement si on n'est pas en mode édition
-    setPreferences((prev: any) => ({
+    // if (!isEditing) return; // Empêche le changement si on n'est pas en mode édition
+    // setPreferences((prev: UserPreferences) => ({
+    
+    if (!isEditing) return;
+    setPreferences(prev => ({
       ...prev,
       isLocationEnabled: !prev.isLocationEnabled,
     }));
   };
-
-  if (!preferences) return <p>Chargement...</p>;
-
+  //if (!preferences) return <p>Chargement...</p>;
   return (
     <div className="p-4 bg-white rounded-lg shadow flex flex-col space-y-8">
       <div className="border border-gray-200 shadow-xl rounded-lg p-6">
@@ -106,7 +136,7 @@ export default function Preferences() {
             <label className="block mb-1 font-bold">{currentContent.language}</label>
             <select
               value={preferences.language}
-              onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
+              onChange={(e) => setPreferences({ ...preferences, language: e.target.value as 'fr' | 'en' })}
               className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
               disabled={!isEditing}
             >
@@ -116,27 +146,32 @@ export default function Preferences() {
           </div>
 
           <div>
-            <label className="block mb-1 font-bold  ">{currentContent.theme}</label>
+            <label className="block mb-1 font-bold">{currentContent.theme}</label>
             <select
               value={preferences.theme}
-              onChange={(e) => setPreferences({ ...preferences, theme: e.target.value })}
-              className={`border w-max ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
+              onChange={(e) => setPreferences({ ...preferences, theme: e.target.value as 'light' | 'dark' | 'system' })}
+              className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
               disabled={!isEditing}
             >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
+              <option value="system">System</option>
             </select>
           </div>
 
           <div>
             <label className="block mb-1 font-bold">{currentContent.timeZone}</label>
-            <input
-              type="number"
+            <select
               value={preferences.timeZone}
-              onChange={(e) => setPreferences({ ...preferences, timeZone: +e.target.value })}
+              onChange={(e) => setPreferences({ ...preferences, timeZone: e.target.value })}
               className={`border ${isEditing ? 'border-gray-300' : 'border-transparent'} rounded px-2 py-1 w-full`}
               disabled={!isEditing}
-            />
+            >
+              <option value="UTC+1">Yaounde (UTC+1)</option>
+              <option value="UTC+0">Douala (UTC+0)</option>
+              <option value="UTC+2">Kribi (UTC+2)</option>
+              <option value="UTC-5">Nord (UTC-5)</option>
+            </select>
           </div>
 
           <div className="flex items-center">

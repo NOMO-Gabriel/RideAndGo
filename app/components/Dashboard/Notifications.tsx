@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faTrash, faArchive } from '@fortawesome/free-solid-svg-icons';
 import { getAllNotifications } from '@/app/utils/api/notifications';
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
-// Type pour les notifications
+//Type pour les notifications
 // interface Notification {
 //   id: number;
 //   title: string;
@@ -27,63 +27,65 @@ interface Notification {
 
 
 
-// Données fictives pour les notifications
-// const fakeNotifications: Notification[] = [
-//   {
-//     id: 1,
-//     title: 'Server Down Alert',
-//     miniDescription: 'The server is down for maintenance.',
-//     content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
-//     time: '10:00 AM',
-//     type: 'alert',
-//     imageUrl: '/images/profileImage.png',
-//   },
-//   {
-//     id: 2,
-//     title: 'New Feature Available',
-//     miniDescription: 'Check out the new feature we just released.',
-//     content: 'We have released a new feature that allows you to do more with our platform.',
-//     time: '11:00 AM',
-//     type: 'new',
-//     imageUrl: '/images/profileImageBoy.jpeg',
-//   },
-//   {
-//     id: 3,
-//     title: 'Archived Notification',
-//     miniDescription: 'This notification has been archived.',
-//     content: 'This notification has been archived for future reference.',
-//     time: '12:00 AM',
-//     type: 'archived',
-//     imageUrl: '/images/profileImageGirl.jpeg',
-//   },
-//   {
-//     id: 4,
-//     title: 'Server Down Alert',
-//     miniDescription: 'The server is down for maintenance.',
-//     content: 'The server will be down for maintenance from 10:00 AM to 12:00 PM. Please plan accordingly.',
-//     time: '1:00 PM',
-//     type: 'alert',
-//     imageUrl: '/images/profileImage.png',
-//   },
-//   {
-//     id: 5,
-//     title: 'New Feature Available',
-//     miniDescription: 'Check out the new feature we just released.',
-//     content: 'We have released a new feature that allows you to do more with our platform.',
-//     time: '2:00 PM',
-//     type: 'new',
-//     imageUrl: '/images/profileImageBoy.jpeg',
-//   },
-//   {
-//     id: 6,
-//     title: 'Archived Notification',
-//     miniDescription: 'This notification has been archived.',
-//     content: 'This notification has been archived for future reference.',
-//     time: '3:00 PM',
-//     type: 'archived',
-//     imageUrl: '/images/profileImageGirl.jpeg',
-//   },
-// ];
+//Données fictives pour les notifications
+const fakeNotifications: Notification[] = [
+  {
+      id: 1,
+      title: "Nouveau trajet disponible",
+      message: "Un conducteur propose un trajet Paris-Lyon pour le 15 février",
+      date: new Date("2024-02-07T10:30:00"),
+      state: "unread"
+  },
+  {
+      id: 2,
+      title: "Réservation confirmée",
+      message: "Votre réservation pour le trajet Marseille-Nice a été confirmée",
+      date: new Date("2024-02-07T09:15:00"),
+      state: "read"
+  },
+  {
+      id: 3,
+      title: "Modification d'itinéraire",
+      message: "Le conducteur a légèrement modifié l'heure de départ (+15 min)",
+      date: new Date("2024-02-06T18:45:00"),
+      state: "unread"
+  },
+  {
+      id: 4,
+      title: "Nouveau message",
+      message: "Vous avez reçu un message de votre conducteur concernant le trajet",
+      date: new Date("2024-02-06T15:20:00"),
+      state: "read"
+  },
+  {
+      id: 5,
+      title: "Rappel de trajet",
+      message: "Votre trajet pour Bordeaux est prévu dans 2 heures",
+      date: new Date("2024-02-06T14:00:00"),
+      state: "read"
+  },
+  {
+      id: 6,
+      title: "Évaluation en attente",
+      message: "N'oubliez pas d'évaluer votre dernier trajet avec Jean D.",
+      date: new Date("2024-02-06T10:30:00"),
+      state: "unread"
+  },
+  {
+      id: 7,
+      title: "Promotion spéciale",
+      message: "Profitez de -20% sur votre prochain trajet ce weekend!",
+      date: new Date("2024-02-05T16:45:00"),
+      state: "read"
+  },
+  {
+      id: 8,
+      title: "Mise à jour de l'application",
+      message: "Une nouvelle version de RideAndGo est disponible",
+      date: new Date("2024-02-05T11:20:00"),
+      state: "read"
+  }
+];
 
 const content = {
   en: {
@@ -122,13 +124,19 @@ const Notifications = () => {
   const { showFlashMessage } = useFlashMessage(); 
   const fetchNotifications = async () => {
     try {
-      const data = await getAllNotifications();
-      setNotifications(data);
+        // Utiliser les données mockées en développement
+        if (process.env.NODE_ENV === 'development') {
+            setNotifications(fakeNotifications);
+            return;
+        }
+        // En production, utiliser l'API réelle
+        const data = await getAllNotifications();
+        setNotifications(data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des notifications:', error);
-      showFlashMessage('Erreur lors de la récupération des notifications.', "error", true);
+        console.error('Erreur lors de la récupération des notifications:', error);
+        showFlashMessage('Erreur lors de la récupération des notifications.', "error", true);
     }
-  };
+};
 
   useEffect(() => {
     fetchNotifications();

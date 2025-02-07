@@ -14,7 +14,7 @@ export const YAOUNDE_LOCATIONS = {
 
 // Noms camerounais pour les chauffeurs
 export const DRIVER_NAMES = [
-  'Kamdem Jean',
+  'manga Jean',
   'Nganou Pierre',
   'Mbarga Paul',
   'Atangana Thomas',

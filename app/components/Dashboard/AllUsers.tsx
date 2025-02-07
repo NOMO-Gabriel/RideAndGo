@@ -13,6 +13,7 @@ import Link from 'next/link';
 import CreateAdminForm from '@/app/components/Forms/CreateAdminForm';
 import { getUsers, deleteUser, suspendUser,reactivateUser,setRoles, alertUser} from '@/app/utils/api/admin';
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
+import { mockUsers } from '@/app/utils/mocks/mockUsers';
 type User = {
   id: string | undefined;
   name: string;
@@ -76,11 +77,17 @@ const Users: React.FC = () => {
   
   const fetchUsers = async () => {
     try {
+      // En développement, utilisez les données mockées
+      if (process.env.NODE_ENV === 'development') {
+        setUsers(mockUsers);
+        return;
+      }
+      // En production, utilisez l'API réelle
       const data = await getUsers();
       setUsers(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs:', error);
-      showFlashMessage(locale === "en"?'Error to fetch all users':'Erreur lors de la récupération des utilisateurs.', "error", true);
+      showFlashMessage(locale === "en" ? 'Error to fetch all users' : 'Erreur lors de la récupération des utilisateurs.', "error", true);
     }
   };
   

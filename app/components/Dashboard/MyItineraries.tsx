@@ -8,10 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from 'react';
 
-import { fetchItineraries, deleteItinerary, updateItinerary } from "@/app/utils/api/itineraries";
-import { fetchUserPlaces, deleteUserPlace } from "@/app/utils/api/userPlaces";
-
-
 // Types
 type Place = {
   id: string;
@@ -43,11 +39,84 @@ const categoryIcons: Record<Category, any> = {
   hospital: faHospital,
 };
 
-// Données factices
+// Données factices pour le Cameroun
 const places: Place[] = [
+  {
+    id: "1",
+    userId: 1,
+    osmId: 1001,
+    name: "Université de Yaoundé I",
+    latitude: 3.8667,
+    longitude: 11.5167,
+    way: "Ngoa-Ekelle",
+    description: "Principal campus universitaire de Yaoundé",
+    category: "school"
+  },
+  {
+    id: "2",
+    userId: 1,
+    osmId: 1002,
+    name: "Hôpital Central de Yaoundé",
+    latitude: 3.8608,
+    longitude: 11.5175,
+    way: "Rue de l'Hôpital",
+    description: "Hôpital de référence de la capitale",
+    category: "hospital"
+  },
+  {
+    id: "3",
+    userId: 1,
+    osmId: 1003,
+    name: "Marché Central de Douala",
+    latitude: 4.0511,
+    longitude: 9.7679,
+    way: "Avenue du Marché",
+    description: "Plus grand marché de Douala",
+    category: "market"
+  },
+  {
+    id: "4",
+    userId: 1,
+    osmId: 1004,
+    name: "Hilton Yaoundé",
+    latitude: 3.8667,
+    longitude: 11.5167,
+    way: "Boulevard du 20 Mai",
+    description: "Hôtel de luxe au centre-ville",
+    category: "hotel"
+  },
+  {
+    id: "5",
+    userId: 1,
+    osmId: 1005,
+    name: "Restaurant La Terrasse",
+    latitude: 3.8680,
+    longitude: 11.5190,
+    way: "Avenue Kennedy",
+    description: "Restaurant traditionnel camerounais",
+    category: "restaurant"
+  }
 ];
 
 const dummyItineraries: Itinerary[] = [
+  {
+    id: 1,
+    startPoint: places[0], // Université de Yaoundé I
+    endPoint: places[1], // Hôpital Central
+    description: "Trajet quotidien pour stage à l'hôpital"
+  },
+  {
+    id: 2,
+    startPoint: places[3], // Hilton Yaoundé
+    endPoint: places[2], // Marché Central de Douala
+    description: "Voyage d'affaires Yaoundé-Douala"
+  },
+  {
+    id: 3,
+    startPoint: places[4], // Restaurant La Terrasse
+    endPoint: places[0], // Université de Yaoundé I
+    description: "Retour à l'université après le déjeuner"
+  }
 ];
 
 export default function Itineraries() {
@@ -59,76 +128,66 @@ export default function Itineraries() {
   const [userPlaces, setUserPlaces] = useState<Place[]>(places);
 
   const content = {
-    en: { places: 'My Places', itineraries: 'My Itineraries', info: 'Infos', showMap: 'Show on Map', delete: 'Delete', order: 'Order' },
-    fr: { places: 'Mes Lieux', itineraries: 'Mes Itinéraires', info: 'Infos', showMap: 'Voir sur la Carte', delete: 'Supprimer', order: 'Commander' },
+    en: { 
+      places: 'My Places', 
+      itineraries: 'My Itineraries', 
+      info: 'Infos', 
+      showMap: 'Show on Map', 
+      delete: 'Delete', 
+      order: 'Order',
+      noData: 'No data available'
+    },
+    fr: { 
+      places: 'Mes Lieux', 
+      itineraries: 'Mes Itinéraires', 
+      info: 'Infos', 
+      showMap: 'Voir sur la Carte', 
+      delete: 'Supprimer', 
+      order: 'Commander',
+      noData: 'Aucune donnée disponible'
+    },
   };
+  
   const localizedText = content[locale as 'fr' | 'en'] || content.en;
-  const { showFlashMessage } = useFlashMessage(); // Récupère la fonction pour afficher les flash messages
+  const { showFlashMessage } = useFlashMessage();
 
-   // Fetch itineraries when component mounts
-   useEffect(() => {
-    const loadItineraries = async () => {
-      try {
-        const itineraries = await fetchItineraries();
-        setItineraries(itineraries);
-        console.log("Itineraries fetched:", itineraries);
-        console.log("Itineraries :", itineraries);
-
-      } catch (error) {
-        console.error("Failed to fetch itineraries:", error);
-      }
-    };
-    loadItineraries();
-  }, []);
-
-
-
-  // Function to handle itinerary deletion
+  // Simulation de la suppression
   const handleDelete = async (id: number) => {
     try {
-      await deleteItinerary(id);
       setItineraries(itineraries.filter(itinerary => itinerary.id !== id));
+      showFlashMessage('Itinéraire supprimé avec succès', 'success', true);
     } catch (error) {
       console.error("Failed to delete itinerary:", error);
+      showFlashMessage('Erreur lors de la suppression', 'error', true);
     }
   };
 
-  // Function to handle itinerary editing
+  // Simulation de la modification
   const handleEdit = async (id: number, updatedDescription: string) => {
-    const updatedItinerary = { id, description: updatedDescription };
     try {
-      const data = await updateItinerary(id, updatedItinerary);
-      setItineraries(itineraries.map(itinerary => (itinerary.id === id ? data : itinerary)));
+      setItineraries(itineraries.map(itinerary => 
+        itinerary.id === id 
+          ? { ...itinerary, description: updatedDescription }
+          : itinerary
+      ));
+      showFlashMessage('Itinéraire modifié avec succès', 'success', true);
     } catch (error) {
       console.error("Failed to update itinerary:", error);
+      showFlashMessage('Erreur lors de la modification', 'error', true);
     }
   };
-//Fetch places when component mounts
-  useEffect(() => {
-    const loadUserPlaces = async () => {
-      try {
-        const places = await fetchUserPlaces();
-        setUserPlaces(places);
-        console.log("User Places fetched:", places);
-      } catch (error) {
-        console.error("Failed to fetch user places:", error);
-      }
-    };
-    loadUserPlaces();
-  }, []);
 
-  // Function to handle place deletion
+  // Simulation de la suppression d'un lieu
+  const handleDeletePlace = async (placeId: string) => {
+    try {
+      setUserPlaces(userPlaces.filter(place => place.id !== placeId));
+      showFlashMessage('Lieu supprimé avec succès', 'success', true);
+    } catch (error) {
+      console.error("Failed to delete place:", error);
+      showFlashMessage('Erreur lors de la suppression du lieu', 'error', true);
+    }
+  };
 
-const handleDeletePlace = async (id: string) => {
-  try {
-    await deleteUserPlace(id); // Call the delete function from the API
-    setUserPlaces(userPlaces.filter(place => place.id !== id)); // Update the state to remove the deleted place
-  } catch (error) {
-    console.error("Failed to delete user place:", error);
-  }
-};
-
-  
   const renderPlace = (place: Place) => (
     <div className=" w-max h-max bg-gray-200 bg-opacity-90 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-extrabold text-orange-btn">{place.name}</h2>

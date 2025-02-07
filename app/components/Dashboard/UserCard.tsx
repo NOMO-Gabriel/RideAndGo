@@ -19,7 +19,7 @@ export default function Component() {
             </div>
             <div className="flex flex-col space-y-1">
                 <div className="text-xl font-bold">
-                  John Doe
+                  ngono jean
                 </div>
                 <div className="text-sm">mail@example.com</div>
             </div>

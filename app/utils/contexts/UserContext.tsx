@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useState, useEffect } from 'react';
-import { API_URL } from '@/app/utils/api/api_infos';
 import Cookies from 'js-cookie';
+import { mockUsers } from '../mocks/mockUsers';
 
 interface User {
   id: string;
@@ -25,11 +25,10 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // Charger les informations utilisateur depuis le cookie au montage du composant
   useEffect(() => {
     const savedUser = Cookies.get('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser)); // Charger l'utilisateur si le cookie est présent
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
@@ -38,41 +37,53 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     identifierValue: string,
     password: string
   ): Promise<void> => {
-    try {
-      const endpoint = `${API_URL}/loginBy${capitalize(identifierType)}`;
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [identifierType]: identifierValue, password }),
-      });
+    // Simuler un délai réseau
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur de connexion.');
+    // Rechercher l'utilisateur dans les données mockées
+    const mockUser = mockUsers.find(user => {
+      switch (identifierType) {
+        case 'email':
+          return user.email === identifierValue;
+        case 'phoneNumber':
+          return user.phoneNumber === identifierValue;
+        case 'pseudo':
+          return user.pseudo === identifierValue;
+        default:
+          return false;
       }
+    });
 
-      const data = await response.json();
-      const userData = {
-        id: data.user.id,
-        pseudo: data.user.pseudo,
-        email: data.user.email,
-        roles: data.user.roles || ['ROLE_GUEST'],
-      };
-
-      Cookies.set('user', JSON.stringify(userData), { expires: 7 }); // Stocker l'utilisateur dans un cookie
-      setUser(userData); // Mettre à jour l'état
-    } catch (error: any) {
-      throw error;
+    if (!mockUser) {
+      throw new Error('Utilisateur non trouvé');
     }
+
+    if (mockUser.password !== password) {
+      throw new Error('Mot de passe incorrect');
+    }
+
+    if (mockUser.isSuspend) {
+      throw new Error('Votre compte est suspendu');
+    }
+
+    const userData = {
+      id: mockUser.id,
+      pseudo: mockUser.pseudo,
+      email: mockUser.email,
+      roles: mockUser.roles,
+      name: mockUser.name,
+      surname: mockUser.surname,
+      phoneNumber: mockUser.phoneNumber
+    };
+
+    Cookies.set('user', JSON.stringify(userData), { expires: 7 });
+    setUser(userData);
   };
 
   const logout = () => {
-    setUser(null); // Réinitialiser l'utilisateur dans l'état local
-    Cookies.remove('user'); // Supprimer le cookie utilisateur
+    setUser(null);
+    Cookies.remove('user');
   };
-
-  // Fonction pour capitaliser le premier caractère (utilisée pour les endpoints)
-  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
     <UserContext.Provider value={{ user, login, logout }}>
