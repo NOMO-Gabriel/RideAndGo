@@ -124,23 +124,23 @@ const PrivacyPolicy: React.FC = () => {
   return (
     <div className="bg-gradient-to-r from-blanc-casse to-blue-100 text-gray-800 p-6 md:p-10 lg:p-12 transition-all duration-300">
       <h1 className="text-4xl font-bold mb-6 text-center text-blue-800 flex items-center justify-center">
-        <FaShieldAlt className="inline-block mr-2 text-orange-500" /> {/* Ajout de l'orange ici */}
+        <FaShieldAlt className="inline-block mr-2 text-orange-500" />
         {currentContent.companyName}
       </h1>
       <p className="text-center text-gray-600 italic">{currentContent.effectiveDate}</p>
-
-      <div className="border-b border-gray-300 mb-6"></div> {/* Ligne de séparation */}
-      
-      <h2 className="text-2xl font-semibold mb-4 text-orange-600 text-center"> {/* Texte en orange ici */}
+  
+      <div className="border-b border-gray-300 mb-6"></div>
+  
+      <h2 className="text-2xl font-semibold mb-4 text-orange-600 text-center">
         {currentContent.introduction}
       </h2>
-
+  
       {/* Section User Responsibilities */}
-      <div className="space-y-4 ">
+      <div className="space-y-4">
         <h2 className="text-xl font-bold text-blue-600">
           {currentContent.userResponsibilities.title}
         </h2>
-        <h3 className="text-lg font-semibold text-orange-500">{currentContent.userResponsibilities.accountability.title}</h3> {/* Sous-titre en orange */}
+        <h3 className="text-lg font-semibold text-orange-500">{currentContent.userResponsibilities.accountability.title}</h3>
         <ul className="list-disc pl-6">
           {currentContent.userResponsibilities.accountability.points.map((point, index) => (
             <li key={index} className="mb-2 text-gray-700">{point}</li>
@@ -149,40 +149,40 @@ const PrivacyPolicy: React.FC = () => {
         <p className="text-gray-700">{currentContent.userResponsibilities.respectfulConduct}</p>
         <p className="text-gray-700">{currentContent.userResponsibilities.compliance}</p>
       </div>
-
+  
       <div className="border-b border-gray-300 my-6"></div>
-
+  
       {/* Section Data Privacy */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-blue-600">{currentContent.handlingUserPrivacy.title}</h2>
-        
-        <h3 className="text-lg font-semibold text-orange-500">{currentContent.handlingUserPrivacy.collection.title}</h3> {/* Titre de section en orange */}
+  
+        <h3 className="text-lg font-semibold text-orange-500">{currentContent.handlingUserPrivacy.collection.title}</h3>
         <p className="text-gray-700">{currentContent.handlingUserPrivacy.collection.text}</p>
-
+  
         <h3 className="text-lg font-semibold">{currentContent.handlingUserPrivacy.use.title}</h3>
         <ul className="list-disc pl-6">
           {currentContent.handlingUserPrivacy.use.points.map((point, index) => (
             <li key={index} className="mb-2 text-gray-700">{point}</li>
           ))}
         </ul>
-
-        <h3 className="text-lg font-semibold text-orange-500">{currentContent.handlingUserPrivacy.sharing.title}</h3> {/* Sous-titre en orange */}
+  
+        <h3 className="text-lg font-semibold text-orange-500">{currentContent.handlingUserPrivacy.sharing.title}</h3>
         <p className="text-gray-700">{currentContent.handlingUserPrivacy.sharing.text}</p>
-
+  
         <h3 className="text-lg font-semibold">{currentContent.handlingUserPrivacy.security.title}</h3>
         <p className="text-gray-700">{currentContent.handlingUserPrivacy.security.text}</p>
       </div>
-
+  
       <div className="border-b border-gray-300 my-6"></div>
-
+  
       {/* Section User Rights */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-blue-600">{currentContent.userRights.title}</h2>
         <p className="text-gray-700">{currentContent.userRights.text}</p>
       </div>
-
+  
       <div className="border-b border-gray-300 my-6"></div>
-
+  
       {/* Section Contact */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-blue-600">{currentContent.contactInfo.title}</h2>
@@ -191,10 +191,11 @@ const PrivacyPolicy: React.FC = () => {
         <p className="text-gray-700">{currentContent.contactInfo.email}</p>
         <p className="text-gray-700">{currentContent.contactInfo.website}</p>
       </div>
-
+  
       <p className="mt-8 text-center text-lg text-gray-800 font-semibold">{currentContent.conclusion}</p>
     </div>
   );
+  
 };
 
 export default PrivacyPolicy;

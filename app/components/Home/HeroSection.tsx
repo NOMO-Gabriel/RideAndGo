@@ -26,33 +26,29 @@ const HeroSection: React.FC<HeroSectionProps> = ({ images, messages }) => {
 
   return (
     <section
-  className="relative bg-cover bg-center text-center py-20 mt-2 parallax"
-  style={{ backgroundImage: `url(${images[currentImage]})`, backgroundAttachment: 'fixed' }}
->
-
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div> {/* Couche semi-transparente */}
-      <div className="relative z-10 container mx-auto">
-        <h1 className="text-5xl font-bold text-white drop-shadow-lg">
-          {locale === 'en' ? messages.en : messages.fr} {/* Utilise les messages des props */}
+      className="relative min-h-[60vh] bg-cover bg-center text-center py-12 sm:py-16 md:py-20 mt-2 parallax"
+      style={{ backgroundImage: `url(${images[currentImage]})`, backgroundAttachment: 'fixed' }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg max-w-4xl mx-auto">
+          {locale === 'en' ? messages.en : messages.fr}
         </h1>
-        <p className="mt-4 text-lg text-gray-300 drop-shadow-lg">
+        <p className="mt-4 text-base sm:text-lg text-gray-300 drop-shadow-lg max-w-2xl mx-auto">
           {locale === 'en'
             ? 'Find the best solutions for your daily transport by exploring new options of mobility'
             : 'Trouvez les meilleures solutions pour vos trajets quotidiens et explorez les nouvelles options de mobilité.'}
         </p>
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <button
-            className="bg-orange-btn text-white px-6 py-3 rounded-full shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105"
+            className="bg-orange-btn text-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-full shadow-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105"
             onClick={handleLanguageChange}
           >
             {locale === 'en' ? 'Get a ride' : 'Se déplacer'}
           </button>
-
         </div>
-        
       </div>
     </section>
   );
 };
-
 export default HeroSection;

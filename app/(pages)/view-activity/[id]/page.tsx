@@ -59,54 +59,59 @@ const HelpPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-white to-blue-100 min-h-screen p-6 flex flex-col items-center">
-      <h1 className="text-4xl font-bold text-center text-blue-700 mb-4">{content[locale].title}</h1>
-      <p className="text-lg text-center mb-8 text-orange-500 font-bold">{content[locale].subtitle}</p>
-
-      <div className="w-full max-w-xl mb-8">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder={content[locale].searchPlaceholder}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <FaSearch className="absolute top-3 right-3 text-gray-500" />
-        </div>
-      </div>
-
-      <div className="w-full max-w-2xl">
-        {filteredQuestions.length === 0 ? (
-          <p className="text-gray-600 text-center">No results found. Please try a different search term.</p>
-        ) : (
-          filteredQuestions.map((item, index) => (
-            <div
-              key={index}
-              className={`mb-4 rounded-lg transition-all duration-300 ${openIndex === index ? 'bg-blue-50 shadow-lg' : 'bg-blue-100'}`}
-            >
-              <div
-                className="flex justify-between items-center p-4 cursor-pointer hover:bg-blue-200 rounded-lg"
-                onClick={() => toggleQuestion(index)}
-              >
-                <h3 className="text-lg font-bold text-blue-700 flex items-center">
-                  <FaQuestionCircle className="mr-2 text-blue-500" /> {item.question}
-                </h3>
-                {openIndex === index ? <FaMinus className="text-blue-700" /> : <FaPlus className="text-blue-700" />}
+    <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/images/bg_register.jpeg)" }}>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 sm:w-[32rem] md:w-[40rem]">
+            <h2 className="text-2xl font-bold mb-6 text-center sm:text-3xl md:text-4xl">{currentContent.register}</h2>
+            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+              {error && <p className="text-red-500 text-center col-span-2 sm:col-span-1 md:col-span-2">{error}</p>}
+              {success && <p className="text-green-500 text-center col-span-2 sm:col-span-1 md:col-span-2">{currentContent.success}</p>}
+  
+              {/* Inputs classiques */}
+              <input type="text" name="pseudo" value={formData.pseudo} onChange={handleChange} placeholder={currentContent.username} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+  
+              <div className="relative col-span-2 sm:col-span-1 md:col-span-2">
+                <input type={passwordVisible ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} placeholder={currentContent.password} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+                <button type="button" onClick={togglePasswordVisibility} className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                  {passwordVisible ? '👁️' : '👁️‍🗨️'}
+                </button>
               </div>
-              {openIndex === index && (
-                <div className="p-4 text-gray-700 bg-blue-200 rounded-lg">
-                  <p className="flex items-center">
-                    <FaReply className="mr-2 text-green-500" /> {item.answer}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))
-        )}
+  
+              <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder={currentContent.phoneNumber} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+              <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder={currentContent.firstname} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+              <input type="text" name="surname" value={formData.surname} onChange={handleChange} placeholder={currentContent.lastname} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+              <input placeholder={currentContent.birthday} type="date" name="birthday" value={formData.birthday} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded sm:text-lg md:text-xl" required />
+  
+              <select title={currentContent.gender} name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded col-span-2 sm:col-span-1 md:col-span-2">
+                <option value="MALE">M</option>
+                <option value="FEMALE">F</option>
+              </select>
+  
+              {/* Toggle Chauffeur */}
+              <div className="flex items-center justify-between col-span-2 sm:col-span-1 md:col-span-2">
+                <span>{currentContent.role}</span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input placeholder={currentContent.role} type="checkbox" className="sr-only peer" checked={isDriver} onChange={handleDriverToggle} />
+                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:bg-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-400 after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                </label>
+              </div>
+  
+              <button type="submit" className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-btn col-span-2 sm:col-span-1 md:col-span-2" disabled={loading}>
+                {loading ? 'Loading...' : currentContent.register}
+              </button>
+  
+              <p className="mt-4 text-center col-span-2 space-x-4 flex flex-row justify-center items-center sm:col-span-1 md:col-span-2">
+                <span>{currentContent.extra}</span>
+                <Link href="/login" className="text-bleu-nuit font-bold hover:text-orange-btn underline">{currentContent.link}</Link>
+              </p>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
+}  
 
 export default HelpPage;

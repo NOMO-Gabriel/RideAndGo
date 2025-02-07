@@ -102,47 +102,125 @@ export default function RegisterAdmin({ onFormSubmit }: RegisterAdminProps) {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-cover bg-center relative">
-      <div className=" absolute inset-0 "></div>
-      <div className="bg-white p-6 rounded-lg shadow-lg z-10 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">{currentContent.register}</h2>
-        <button onClick={onFormSubmit} className=" relative translate-x-[380px] -translate-y-16 text-2xl" title={locale == "fr" ? "annuller":"abort"}>
-            <FontAwesomeIcon icon={faTimes} className={"text-red-500"}/>
-        </button>
-      <form onSubmit={handleSubmit} className="grid gap-4">
-       
-        <div className="flex gap-4">
-          <input type="text" name="pseudo" value={formData.pseudo} onChange={handleChange} placeholder={currentContent.username} className="w-full p-2 border border-gray-300 rounded" required />
-          <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border border-gray-300 rounded" required />
+    <div className="min-h-screen flex justify-center items-center bg-cover bg-center relative p-4">
+      <div className="absolute inset-0"></div>
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg z-10 w-full max-w-md mx-auto relative">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-center flex-1">
+            {currentContent.register}
+          </h2>
+          <button 
+            onClick={onFormSubmit} 
+            className="text-xl sm:text-2xl p-1" 
+            title={locale == "fr" ? "annuller" : "abort"}
+          >
+            <FontAwesomeIcon icon={faTimes} className="text-red-500"/>
+          </button>
         </div>
-
-        <div className="flex gap-4">
-          <div className="relative w-full">
-            <input type={passwordVisible ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} placeholder={currentContent.password} className="w-full p-2 border border-gray-300 rounded" required />
-            <button type="button" onClick={togglePasswordVisibility} className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              {passwordVisible ? '👁️' : '👁️‍🗨️'}
-            </button>
+        
+        <form onSubmit={handleSubmit} className="grid gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <input 
+              type="text" 
+              name="pseudo" 
+              value={formData.pseudo} 
+              onChange={handleChange} 
+              placeholder={currentContent.username} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              placeholder="Email" 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
           </div>
-          <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder={currentContent.phoneNumber} className="w-full p-2 border border-gray-300 rounded" required />
-        </div>
-
-        <div className="flex gap-4">
-          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder={currentContent.firstname} className="w-full p-2 border border-gray-300 rounded" required />
-          <input type="text" name="surname" value={formData.surname} onChange={handleChange} placeholder={currentContent.lastname} className="w-full p-2 border border-gray-300 rounded" required />
-        </div>
-
-        <div className="flex gap-4">
-          <input type="date" name="birthday" value={formData.birthday} onChange={handleChange} placeholder={currentContent.birthday} className="w-full p-2 border border-gray-300 rounded" required />
-          <select name="gender" value={formData.gender} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded" required>
-            <option value="MALE">M</option>
-            <option value="FEMALE">F</option>
-          </select>
-        </div>
-
-        <button type="submit" className="bg-bleu-nuit text-white py-2 rounded mt-4 hover:bg-orange-btn">{currentContent.register}</button>
-      </form>
-
+  
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="relative w-full">
+              <input 
+                type={passwordVisible ? 'text' : 'password'} 
+                name="password" 
+                value={formData.password} 
+                onChange={handleChange} 
+                placeholder={currentContent.password} 
+                className="w-full p-2 border border-gray-300 rounded pr-10" 
+                required 
+              />
+              <button 
+                type="button" 
+                onClick={togglePasswordVisibility} 
+                className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              >
+                {passwordVisible ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
+            <input 
+              type="text" 
+              name="phoneNumber" 
+              value={formData.phoneNumber} 
+              onChange={handleChange} 
+              placeholder={currentContent.phoneNumber} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
+          </div>
+  
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <input 
+              type="text" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange} 
+              placeholder={currentContent.firstname} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
+            <input 
+              type="text" 
+              name="surname" 
+              value={formData.surname} 
+              onChange={handleChange} 
+              placeholder={currentContent.lastname} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
+          </div>
+  
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <input 
+              type="date" 
+              name="birthday" 
+              value={formData.birthday} 
+              onChange={handleChange} 
+              placeholder={currentContent.birthday} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required 
+            />
+            <select 
+              name="gender" 
+              value={formData.gender} 
+              onChange={handleChange} 
+              className="w-full p-2 border border-gray-300 rounded" 
+              required
+            >
+              <option value="MALE">M</option>
+              <option value="FEMALE">F</option>
+            </select>
+          </div>
+  
+          <button 
+            type="submit" 
+            className="w-full bg-bleu-nuit text-white py-2 rounded mt-2 sm:mt-4 hover:bg-orange-btn transition-colors"
+          >
+            {currentContent.register}
+          </button>
+        </form>
       </div>
     </div>
   );
-}
+}  

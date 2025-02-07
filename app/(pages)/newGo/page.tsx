@@ -56,46 +56,48 @@ export default function Page() {
 
   return (
     <div className="bg-gray-50">
-        <HeroSection images={images} messages={messages} />
-        <div className="flex flex-col items-center  space-y-2">
+      <HeroSection images={images} messages={messages} />
+      <div className="flex flex-col items-center space-y-2">
         <Header />
-            <div className="flex space-x-4 -translate-y-[120px] translate-x-[750px] ">
-               
-                <Link href="#"
-                className="px-4 py-2 text-bleu-nuit text-lg hover:underline hover:text-orange-btn"
-                onClick={handleToggleMap}
-                >
-                {showMap ? currentContent.hideMap : currentContent.showMap}
-                </Link>
-
-                <Link href="#"
-                className="px-4 py-2 text-bleu-nuit text-lg hover:underline hover:text-orange-btn"
-                onClick={handleToggleInfoBoard}
-                >
-                {showInfoBoard ? currentContent.hideInfos : currentContent.showInfos}
-                </Link>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-center sm:justify-end px-4 sm:px-6 -mt-16 sm:-mt-20 mb-4">
+          <Link
+            href="#"
+            className="px-3 sm:px-2 py-2 text-bleu-nuit text-sm sm:text-base hover:underline hover:text-orange-btn text-center"
+            onClick={handleToggleMap}
+          >
+            {showMap ? currentContent.hideMap : currentContent.showMap}
+          </Link>
+          <Link
+            href="#"
+            className="px-3 sm:px-4 py-2 text-bleu-nuit text-sm sm:text-base hover:underline hover:text-orange-btn text-center"
+            onClick={handleToggleInfoBoard}
+          >
+            {showInfoBoard ? currentContent.hideInfos : currentContent.showInfos}
+          </Link>
+        </div>
+        <div className="flex flex-col lg:flex-row w-full gap-4 px-4 sm:px-6">
+          {showMap && (
+            <div
+              className={`transition-all duration-300 border-4 border-gray-500 rounded-lg ${
+                showInfoBoard ? 'w-full lg:w-2/3' : 'w-full'
+              }`}
+              style={{ zIndex: 0 }}
+            >
+              <DynamicMap center={[3.8667, 11.5167]} zoom={13} />
             </div>
-
-            <div className="flex flex-row w-full space-x-16 ">
-                {showMap && (
-                <div className={`flex-1 transition-all duration-300 border-4 border-gray-500 rounded-lg m-4 ${showInfoBoard ? 'w-9/12 ml-[100px]' : 'w-full'}`}
-                    style={{ zIndex: 0 }} 
-                >
-                    <DynamicMap center={[3.8667, 11.5167]} zoom={13} />
-                </div>
-                )}
-
-                {showInfoBoard && (
-                <div className={`transition-all duration-300  flex justify-center mt-16  
-                    ${showMap ? 'flex-1 w-3/12 ml-[400px]' : 'w-full items-center  mb-20'}`}
-                    style={{ zIndex: 1 }} 
-                >
-                   <CommandForm/>
-                </div>
-                )}
+          )}
+          {showInfoBoard && (
+            <div
+              className={`transition-all duration-300 flex justify-center ${
+                showMap ? 'w-full lg:w-1/3' : 'w-full'
+              }`}
+              style={{ zIndex: 1 }}
+            >
+              <CommandForm />
             </div>
-            </div>
+          )}
+        </div>
+      </div>
     </div>
-   
   );
 }

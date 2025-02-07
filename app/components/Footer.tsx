@@ -65,8 +65,8 @@ const Footer: React.FC = () => {
 
 
   return (
-    <footer className="bg-bleu-nuit  text-white py-16">
-      <div className="container mx-auto px-6 lg:px-16 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+    <footer className="bg-bleu-nuit  text-white py-16 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+      <div className="container mx-auto px-6 lg:px-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {/* Colonne 1 - Our Company */}
         <div>
           <h4 className="font-semibold text-xl mb-4">{locale==='en'?'Our Company':'Notre companie'}</h4>

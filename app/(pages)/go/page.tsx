@@ -47,30 +47,28 @@ export default function ClientDashboard() {
   const currentContent = locale === 'fr' ? content.fr : content.en;
 
   return (
-    <div className="relative h-screen overflow-hidden bg-[#0A1128]">
+    <div className="relative min-h-screen overflow-hidden bg-[#0A1128]">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A1128]/90 to-[#0A1128]/70" />
       </div>
-
       <div className="relative z-10 h-full flex flex-col">
-        <div className="p-4">
-          <div className="text-center mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+        <div className="p-4 sm:p-6">
+          <div className="text-center mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3 tracking-tight animate-fade-in">
               {currentContent.title}
             </h1>
-            <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
+            <p className="text-sm sm:text-base md:text-lg text-blue-200 animate-fade-in-delay max-w-2xl mx-auto">
               {currentContent.subtitle}
             </p>
           </div>
         </div>
-
-        <div className="flex-1 flex gap-4 p-4 h-[calc(100vh-140px)]">
-          <div className="w-1/3 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 h-[calc(100vh-140px)]">
+          <div className="w-full lg:w-1/3 flex flex-col gap-4">
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4">
               <div className="flex justify-between items-center mb-4">
                 <button
                   onClick={() => setMode('calculator')}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                  className={`flex-1 py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-medium transition-all ${
                     mode === 'calculator'
                       ? 'bg-orange-500 text-white'
                       : 'text-blue-200 hover:bg-white/10'
@@ -83,7 +81,7 @@ export default function ClientDashboard() {
                 </div>
                 <button
                   onClick={() => setMode('direct')}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                  className={`flex-1 py-2 px-3 sm:px-4 rounded-lg text-sm sm:text-base font-medium transition-all ${
                     mode === 'direct'
                       ? 'bg-orange-500 text-white'
                       : 'text-blue-200 hover:bg-white/10'
@@ -92,25 +90,25 @@ export default function ClientDashboard() {
                   {currentContent.directMode}
                 </button>
               </div>
-              <p className="text-sm text-blue-200 text-center mb-4">
+              <p className="text-xs sm:text-sm text-blue-200 text-center mb-4">
                 {mode === 'calculator'
                   ? currentContent.calculatorDescription
                   : currentContent.directDescription}
               </p>
             </div>
-
             <div className="flex-1">
-              <FareCalculator 
-                mode={mode}
-                onSubmitRide={handleRideSubmit}
-              />
+              <FareCalculator mode={mode} onSubmitRide={handleRideSubmit} />
             </div>
           </div>
-
-          <div className="w-2/3 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
-            <Map pickup={null} destination={null} onLocationSelect={(location: Location): void => {
-              throw new Error('Function not implemented.');
-            }} isSelectingPickup={false} />
+          <div className="w-full lg:w-2/3 h-[400px] lg:h-auto bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
+            <Map
+              pickup={null}
+              destination={null}
+              onLocationSelect={(location: Location): void => {
+                throw new Error('Function not implemented.');
+              }}
+              isSelectingPickup={false}
+            />
           </div>
         </div>
       </div>

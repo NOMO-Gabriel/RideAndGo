@@ -108,34 +108,32 @@ export default function DriverDashboard() {
   }, []);
 
   return (
-    <div className="relative h-screen overflow-hidden bg-[#0A1128]">
+    <div className="relative min-h-screen overflow-hidden bg-[#0A1128]">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A1128]/90 to-[#0A1128]/70" />
       </div>
-
       <div className="relative z-10 h-full flex flex-col">
         <div className="p-4">
           <div className="text-center mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight animate-fade-in">
               Driver Dashboard
             </h1>
-            <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
+            <p className="text-sm sm:text-base md:text-lg text-blue-200 animate-fade-in-delay">
               Find and accept rides in your area
             </p>
           </div>
         </div>
-
-        <div className="flex-1 flex gap-4 p-4 h-[calc(100vh-140px)]">
-          <div className="w-1/3 flex flex-col gap-4">
+        
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 h-[calc(100vh-140px)]">
+          <div className="w-full lg:w-1/3 flex flex-col gap-4">
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4">
-              <ProgressDashboard 
+              <ProgressDashboard
                 progress={progress}
                 onUpdateDailyGoal={handleUpdateDailyGoal}
               />
             </div>
-            
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4 flex-1 overflow-hidden">
-              <div className="h-[calc(100vh-400px)] overflow-y-auto custom-scrollbar pr-2">
+              <div className="h-[50vh] lg:h-[calc(100vh-400px)] overflow-y-auto custom-scrollbar pr-2">
                 <ClientList
                   clients={clients}
                   activeClient={activeClient}
@@ -147,8 +145,8 @@ export default function DriverDashboard() {
               </div>
             </div>
           </div>
-
-          <div className="w-2/3 flex flex-col gap-4">
+          
+          <div className="w-full lg:w-2/3 flex flex-col gap-4">
             <div className="flex-1 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
               <Map
                 driverPosition={driverPosition}
@@ -156,8 +154,7 @@ export default function DriverDashboard() {
                 onClientSelect={handleClientSelect}
               />
             </div>
-
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="bg-white/10 backdrop-blur p-4 rounded-xl text-center hover:bg-white/20 transition-colors">
                 <h3 className="text-sm font-semibold text-white">Real-time Updates</h3>
               </div>
