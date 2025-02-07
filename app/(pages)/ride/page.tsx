@@ -76,7 +76,9 @@ export default function DriverDashboard() {
   const [clients, setClients] = useState<typeof PREDEFINED_CLIENTS>([]);
   const [activeClient, setActiveClient] = useState(null);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const notificationManager = useRef(null);
+  //const notificationManager = useRef(null);
+  const notificationManager = useRef<{ addNotification: (message: string) => void } | null>(null);
+
   const currentClientIndex = useRef(0);
   const [progress, setProgress] = useState({
     dailyGoal: 10,

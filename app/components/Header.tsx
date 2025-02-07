@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
         </button>
 
         {/* Navigation Links */}
-        <div className={`fixed top-16 right-0 bg-bleu-nuit p-4 w-48 flex flex-col space-y-4 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-all duration-300 ease-in-out lg:relative lg:top-0 lg:flex lg:flex-col lg:items-end lg:space-y-4 lg:w-auto lg:transform-none`}>
+        <div className={`fixed top-16 right-0 bg-bleu-nuit p-4 w-48 flex flex-col space-y-4 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-all duration-300 ease-in-out lg:relative lg:top-0 lg:flex lg:flex-col lg:items-end lg:space-y-6 lg:w-auto lg:transform-none`}>
           <Link href="/" className="hover:text-orange-btn transition duration-300">Home</Link>
           <Link href="/calculate" className="hover:text-orange-btn transition duration-300">Fare Calculator</Link>
           {!isAuthenticated && <Link href="/search" className="hover:text-orange-btn transition duration-300">Search</Link>}
