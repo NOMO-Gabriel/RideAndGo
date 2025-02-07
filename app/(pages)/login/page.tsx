@@ -3,7 +3,7 @@
 import { useState, FormEvent } from 'react';  
 import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
-import NotificationManager from "../../components/flash_message/NotificationManager.tsx";
+import NotificationManager from "../../components/flash_message/NotificationManager";
 import { useRef } from "react";
 interface LoginData {
   identifier: string;

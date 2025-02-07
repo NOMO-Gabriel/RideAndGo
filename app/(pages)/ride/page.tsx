@@ -1,16 +1,11 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { YAOUNDE_LOCATIONS } from '../../utils/constants';
 import ProgressDashboard from '../../components/ride/ProgressDashboard';
 import ClientList from '../../components/ride/ClientList';
-import { useRideState } from '../../lib/hooks/useRideState';
-import { Client, Location } from '../../lib/types/ride';
+import NotificationManager from "../../components/flash_message/NotificationManager";
 
-
-
-// Charger la carte de manière dynamique avec une suspension
 const Map = dynamic(
   () => import('../../components/ride/Map'),
   { 
@@ -23,81 +18,113 @@ const Map = dynamic(
   }
 );
 
-const calculateDistance = (start: Location, end: Location): number => {
-  const R = 6371; // Rayon de la Terre en km
-  const dLat = (end.lat - start.lat) * Math.PI / 180;
-  const dLon = (end.lng - start.lng) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(start.lat * Math.PI / 180) * Math.cos(end.lat * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
+const YAOUNDE_LOCATIONS = {
+  CENTRE: { lat: 3.848032, lng: 11.502075 },
+  MOKOLO: { lat: 3.863032, lng: 11.499075 },
+  MVAN: { lat: 3.833032, lng: 11.497075 }
 };
 
-const getRandomLocation = () => {
-  const locations = Object.values(YAOUNDE_LOCATIONS);
-  return locations[Math.floor(Math.random() * locations.length)];
-};
+const PREDEFINED_CLIENTS = [
+  {
+    id: '1',
+    name: 'Thomas Manga',
+    position: [YAOUNDE_LOCATIONS.CENTRE.lat, YAOUNDE_LOCATIONS.CENTRE.lng] as [number, number],
+    currentLocation: YAOUNDE_LOCATIONS.CENTRE,
+    destination: YAOUNDE_LOCATIONS.MOKOLO,
+    pickupLocation: YAOUNDE_LOCATIONS.CENTRE,
+    price: 1500,
+    status: 'available' as const,
+    speed: 0,
+    direction: [0, 0] as [number, number],
+    requestTime: new Date(),
+    estimatedDuration: 15,
+    distance: 2.5,
+  },
+  {
+    id: '2',
+    name: 'Marie Fouda',
+    position: [YAOUNDE_LOCATIONS.MOKOLO.lat, YAOUNDE_LOCATIONS.MOKOLO.lng] as [number, number],
+    currentLocation: YAOUNDE_LOCATIONS.MOKOLO,
+    destination: YAOUNDE_LOCATIONS.MVAN,
+    pickupLocation: YAOUNDE_LOCATIONS.MOKOLO,
+    price: 2000,
+    status: 'available' as const,
+    speed: 0,
+    direction: [0, 0] as [number, number],
+    requestTime: new Date(),
+    estimatedDuration: 20,
+    distance: 3.2,
+  },
+  {
+    id: '3',
+    name: 'Jean Ebogo',
+    position: [YAOUNDE_LOCATIONS.MVAN.lat, YAOUNDE_LOCATIONS.MVAN.lng] as [number, number],
+    currentLocation: YAOUNDE_LOCATIONS.MVAN,
+    destination: YAOUNDE_LOCATIONS.CENTRE,
+    pickupLocation: YAOUNDE_LOCATIONS.MVAN,
+    price: 1800,
+    status: 'available' as const,
+    speed: 0,
+    direction: [0, 0] as [number, number],
+    requestTime: new Date(),
+    estimatedDuration: 18,
+    distance: 2.8,
+  }
+];
 
 export default function DriverDashboard() {
-  const {
-    clients,
-    setClients,
-    progress,
-    activeClient,
-    handleClientSelect,
-    handleRideAccept,
-    handleRideComplete,
-    handleRideCancel,
-    handleUpdateDailyGoal,
-  } = useRideState();
+  const [clients, setClients] = useState<typeof PREDEFINED_CLIENTS>([]);
+  const [activeClient, setActiveClient] = useState(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const notificationManager = useRef(null);
+  const currentClientIndex = useRef(0);
+  const [progress, setProgress] = useState({
+    dailyGoal: 10,
+    completedRides: 0,
+    totalEarnings: 0,
+  });
 
   const [driverPosition, setDriverPosition] = useState<[number, number]>([
     YAOUNDE_LOCATIONS.CENTRE.lat,
     YAOUNDE_LOCATIONS.CENTRE.lng
   ]);
 
+  const formatDistance = (distance: number): string => {
+    if (distance < 1) {
+      return `${Math.round(distance * 1000)} mètres`;
+    }
+    return `${distance.toFixed(1)} kilomètres`;
+  };
+
+  const handleEvent = (clientName: string, distance: number) => {
+    if (voiceEnabled) {
+      const formattedDistance = formatDistance(distance);
+      notificationManager.current?.addNotification(
+        `Nouveau client ${clientName} disponible à ${formattedDistance} de votre position`
+      );
+    }
+  };
+
   useEffect(() => {
-    const generateRandomClient = () => {
-      const pickupLocation = getRandomLocation();
-      const destinationLocation = getRandomLocation();
-      const distance = calculateDistance(pickupLocation, destinationLocation);
-      const estimatedDuration = Math.ceil(distance * 3); // 3 minutes par km en moyenne
-      const basePrice = 1000 + Math.round(distance * 500); // Prix de base + 500 FCFA par km
-      const price = Math.round(basePrice / 100) * 100; // Arrondir aux 100 FCFA
-
-      return {
-        id: Math.random().toString(36).substr(2, 9),
-        name: `Client ${Math.floor(Math.random() * 1000)}`,
-        position: [pickupLocation.lat, pickupLocation.lng] as [number, number],
-        currentLocation: pickupLocation,
-        destination: destinationLocation,
-        pickupLocation,
-        price,
-        status: 'available' as const,
-        speed: 0,
-        direction: [0, 0] as [number, number],
-        requestTime: new Date(),
-        estimatedDuration,
-        distance,
-      };
-    };
-
     const interval = setInterval(() => {
-      if (clients.length < 5) {
-        setClients(prev => [...prev, generateRandomClient()]);
+      if (currentClientIndex.current < PREDEFINED_CLIENTS.length) {
+        const newClient = PREDEFINED_CLIENTS[currentClientIndex.current];
+        setClients(prev => [...prev, newClient]);
+        handleEvent(newClient.name, newClient.distance);
+        currentClientIndex.current += 1;
+      } else {
+        clearInterval(interval);
       }
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [clients.length, setClients]);
+  }, []);
 
   useEffect(() => {
     const moveInterval = setInterval(() => {
       setDriverPosition(prev => {
         const angle = Math.random() * 2 * Math.PI;
-        const speed = 0.0001; // Vitesse de déplacement
+        const speed = 0.0001;
         const newLat = prev[0] + Math.cos(angle) * speed;
         const newLng = prev[1] + Math.sin(angle) * speed;
         return [newLat, newLng];
@@ -106,6 +133,39 @@ export default function DriverDashboard() {
 
     return () => clearInterval(moveInterval);
   }, []);
+
+  const handleClientSelect = (client) => {
+    setActiveClient(client);
+  };
+
+  const handleRideAccept = (client) => {
+    setClients(prev => 
+      prev.map(c => 
+        c.id === client.id 
+          ? { ...c, status: 'accepted' } 
+          : c
+      )
+    );
+  };
+
+  const handleRideComplete = (client) => {
+    setClients(prev => prev.filter(c => c.id !== client.id));
+    setActiveClient(null);
+    setProgress(prev => ({
+      ...prev,
+      completedRides: prev.completedRides + 1,
+      totalEarnings: prev.totalEarnings + client.price,
+    }));
+  };
+
+  const handleRideCancel = (client) => {
+    setClients(prev => prev.filter(c => c.id !== client.id));
+    setActiveClient(null);
+  };
+
+  const handleUpdateDailyGoal = (goal: number) => {
+    setProgress(prev => ({ ...prev, dailyGoal: goal }));
+  };
 
   return (
     <div className="relative h-screen overflow-hidden bg-[#0A1128]">
@@ -132,10 +192,23 @@ export default function DriverDashboard() {
                 progress={progress}
                 onUpdateDailyGoal={handleUpdateDailyGoal}
               />
+              <div className="mt-4 flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="voiceToggle"
+                  checked={voiceEnabled}
+                  onChange={(e) => setVoiceEnabled(e.target.checked)}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <label htmlFor="voiceToggle" className="text-white text-sm">
+                  Activer les notifications vocales
+                </label>
+              </div>
             </div>
             
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4 flex-1 overflow-hidden">
               <div className="h-[calc(100vh-400px)] overflow-y-auto custom-scrollbar pr-2">
+                <NotificationManager ref={notificationManager} />
                 <ClientList
                   clients={clients}
                   activeClient={activeClient}
