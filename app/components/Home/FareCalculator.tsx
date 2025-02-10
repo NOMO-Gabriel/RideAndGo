@@ -57,7 +57,7 @@ const HeroFareCalculator = () => {
     const requestData: calculateCostRequest = {
       start: startLocation,
       end: endLocation,
-      hour: formattedTime,
+      // hour: formattedTime,
     };
   
     try {
