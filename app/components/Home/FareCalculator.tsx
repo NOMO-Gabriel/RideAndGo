@@ -5,13 +5,13 @@ import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus } from 'react-icons/fa';
 import Map from '../collectRideGo/DynamicMap';
 import { calculateCost } from '@/app/utils/api/cost';
-import { calculateCostRequest } from '@/app/utils/api/cost';
+import { calculateCostRequest,formatDuration } from '@/app/utils/api/cost';
 
 interface TripDetails {
   fare: number;
   distance: number;
   officialPrice: number;
-  duration: number;
+  duration: string;
   start: string;
   end: string
 }
@@ -66,7 +66,7 @@ const HeroFareCalculator = () => {
         fare: response.cost,
         officialPrice: response.min_cost,
         distance: response.distance,
-        duration: response.distance*1000/60,
+        duration: formatDuration(response.distance*1000/60),
         start: startLocation,
         end: endLocation,
         
@@ -240,7 +240,7 @@ const HeroFareCalculator = () => {
                         {currentContent.duration}
                       </div>
                       <p className="text-lg font-bold text-white">
-                        {tripDetails.duration} {currentContent.mins}
+                        {tripDetails.duration} 
                       </p>
                     </div>
                   </div>
