@@ -65,7 +65,7 @@ const HeroFareCalculator = () => {
       setTripDetails({
         fare: response.cost,
         officialPrice: response.min_cost,
-        distance: response.distance,
+        distance: response.distance.toFixed(3),
         duration: formatDuration(response.distance*1000/60),
         start: startLocation,
         end: endLocation,
