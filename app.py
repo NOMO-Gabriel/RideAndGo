@@ -730,21 +730,21 @@ def top_customers(driver_username, n):
         return jsonify({"message": "Chauffeur introuvable."}), 404
 
 
-# function to convert hour
-def map_hour_to_integer(hour):
-    if isinstance(hour, int):
-        # Si c'est déjà un entier entre 0 et 23, le retourner directement
-        if 0 <= hour <= 23:
-            return hour
-        else:
-            raise ValueError("L'heure doit être entre 0 et 23")
-    elif isinstance(hour, str):
-        # Si c'est une chaîne au format HH:MM, la convertir
-        try:
-            time_obj = datetime.strptime(hour, "%H:%M").time()
-            return time_obj.hour
-        except ValueError:
-            raise ValueError("Le format de l'heure doit être HH:MM")
+# # function to convert hour
+# def map_hour_to_integer(hour):
+#     if isinstance(hour, int):
+#         # Si c'est déjà un entier entre 0 et 23, le retourner directement
+#         if 0 <= hour <= 23:
+#             return hour
+#         else:
+#             raise ValueError("L'heure doit être entre 0 et 23")
+#     elif isinstance(hour, str):
+#         # Si c'est une chaîne au format HH:MM, la convertir
+#         try:
+#             time_obj = datetime.strptime(hour, "%H:%M").time()
+#             return time_obj.hour
+#         except ValueError:
+#             raise ValueError("Le format de l'heure doit être HH:MM")
         
 
 @app.route('/cost', methods=['POST'])
@@ -812,8 +812,6 @@ def cost():
     start = data.get('start')
     end = data.get('end')
     hour = data.get('hour')
-    hour= map_hour_to_integer(hour)
-    
     data = get_data(start, end, hour)
 
     start_lon, start_lat = get_coordinates(start)
