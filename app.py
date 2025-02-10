@@ -729,6 +729,24 @@ def top_customers(driver_username, n):
     except IndexError:
         return jsonify({"message": "Chauffeur introuvable."}), 404
 
+
+# function to convert hour
+def map_hour_to_integer(hour):
+    if isinstance(hour, int):
+        # Si c'est déjà un entier entre 0 et 23, le retourner directement
+        if 0 <= hour <= 23:
+            return hour
+        else:
+            raise ValueError("L'heure doit être entre 0 et 23")
+    elif isinstance(hour, str):
+        # Si c'est une chaîne au format HH:MM, la convertir
+        try:
+            time_obj = datetime.strptime(hour, "%H:%M").time()
+            return time_obj.hour
+        except ValueError:
+            raise ValueError("Le format de l'heure doit être HH:MM")
+        
+
 @app.route('/cost', methods=['POST'])
 @cross_origin()
 def cost():
@@ -757,9 +775,9 @@ def cost():
               description: Point d'arrivée (nom du lieu ou adresse)
               example: "Yaoundé, Poste Centrale"
             hour:
-              type: integer
-              description: Heure de départ (0-23)
-              example: 14
+              type: string
+              description: Heure de départ au format HH:MM
+              example: "14:01"
     responses:
       200:
         description: Détails de la tarification
@@ -794,6 +812,7 @@ def cost():
     start = data.get('start')
     end = data.get('end')
     hour = data.get('hour')
+    hour= map_hour_to_integer(hour)
     
     data = get_data(start, end, hour)
 
