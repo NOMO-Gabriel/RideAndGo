@@ -72,50 +72,55 @@ const HelpPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-white to-blue-100 min-h-screen p-6 flex flex-col items-center">
-      <h1 className="text-4xl font-bold text-center text-blue-700 mb-4">
+    <div className="bg-gradient-to-r from-white to-blue-100 min-h-screen p-4 sm:p-6 flex flex-col items-center">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-blue-700 mb-3 sm:mb-4">
         {content[locale].title}
       </h1>
-      <p className="text-lg text-center mb-8 text-orange-500 font-bold">
+      <p className="text-base sm:text-lg text-center mb-6 sm:mb-8 text-orange-500 font-bold">
         {content[locale].subtitle}
       </p>
-
-      <div className="w-full max-w-xl mb-8">
+      <div className="w-full max-w-xl mb-6 sm:mb-8 px-4 sm:px-0">
         <div className="relative">
           <input
             type="text"
             placeholder={content[locale].searchPlaceholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <FaSearch className="absolute top-3 right-3 text-gray-500" />
+          <FaSearch className="absolute top-1/2 -translate-y-1/2 right-3 text-gray-500" />
         </div>
       </div>
-
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl px-4 sm:px-0">
         {filteredQuestions.length === 0 ? (
           <p className="text-gray-600 text-center">No results found. Please try a different search term.</p>
         ) : (
           filteredQuestions.map((item, index) => (
             <div
               key={index}
-              className={`mb-4 rounded-lg transition-all duration-300 ${openIndex === index ? 'bg-blue-50 shadow-lg' : 'bg-blue-100'}`}
+              className={`mb-4 rounded-lg transition-all duration-300 ${
+                openIndex === index ? 'bg-blue-50 shadow-lg' : 'bg-blue-100'
+              }`}
             >
               <div
-                className="flex justify-between items-center p-4 cursor-pointer hover:bg-blue-200 rounded-lg"
+                className="flex justify-between items-center p-3 sm:p-4 cursor-pointer hover:bg-blue-200 rounded-lg"
                 onClick={() => toggleQuestion(index)}
               >
-                <h3 className="text-lg font-bold text-blue-700 flex items-center">
-                  <FaQuestionCircle className="mr-2 text-blue-500" /> {item.question}
+                <h3 className="text-base sm:text-lg font-bold text-blue-700 flex items-center">
+                  <FaQuestionCircle className="mr-2 text-blue-500 flex-shrink-0" />
+                  <span className="break-words">{item.question}</span>
                 </h3>
-                {openIndex === index ? <FaMinus className="text-blue-700" /> : <FaPlus className="text-blue-700" />}
+                {openIndex === index ? (
+                  <FaMinus className="text-blue-700 flex-shrink-0 ml-2" />
+                ) : (
+                  <FaPlus className="text-blue-700 flex-shrink-0 ml-2" />
+                )}
               </div>
               {openIndex === index && (
-                <div className="p-4 text-gray-700 bg-blue-200 rounded-lg">
-                  <p className="flex items-center">
-                    <FaReply className="mr-2 text-green-500" />
-                    {item.answer}
+                <div className="p-3 sm:p-4 text-gray-700 bg-blue-200 rounded-lg">
+                  <p className="flex items-start">
+                    <FaReply className="mr-2 text-green-500 mt-1 flex-shrink-0" />
+                    <span className="break-words">{item.answer}</span>
                   </p>
                 </div>
               )}

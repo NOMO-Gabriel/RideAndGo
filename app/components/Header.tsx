@@ -6,16 +6,17 @@ import { FaGlobe, FaRoad, FaUser } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { useUser} from '@/app/utils/hooks/useUser'; 
+import { useUser } from '@/app/utils/hooks/useUser';
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons/faChevronUp';
+import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const { locale, changeLocale } = useLocale();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDropdownAccountOpen, setIsDropdownAccountOpen] = useState(false);
-  const { user,logout,isAuthenticated } = useUser(); // Récupérer l'utilisateur
-  const roles = user?.roles || ['ROLE_GUEST']; // Assurer que roles est un tableau
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useUser();
+  const roles = user?.roles || ['ROLE_GUEST'];
 
   const handleLanguageChange = (lang: string) => {
     changeLocale(lang);
@@ -24,14 +25,20 @@ const Navbar: React.FC = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
+
   const toggleDropdownAccount = () => {
     setIsDropdownAccountOpen((prev) => !prev);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen((prev) => !prev);
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
-    if (target.closest('.dropdown') === null) {
+    if (!target.closest('.dropdown') && !target.closest('.mobile-menu')) {
       setIsDropdownOpen(false);
+      setIsDropdownAccountOpen(false);
     }
   };
 
@@ -42,7 +49,6 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
-  // Contenu multilingue
   const content = {
     en: {
       home: 'Home',
@@ -57,7 +63,7 @@ const Navbar: React.FC = () => {
       signIn: 'Sign in',
       signUp: 'Sign up',
       dashboard: 'Dashboard',
-      calculate:"Fare Calculator",
+      calculate: "Fare Calculator",
     },
     fr: {
       home: 'Accueil',
@@ -72,119 +78,272 @@ const Navbar: React.FC = () => {
       signIn: 'Se Connecter',
       signUp: "S'inscrire",
       dashboard: "Tableau de bord",
-      calculate:'Calculateur de tarif',
+      calculate: 'Calculateur de tarif',
     },
   };
 
   const currentContent = locale === 'en' ? content.en : content.fr;
-
-  // Affichage conditionné des liens "Go" et "Ride"
   const isTraveller = roles.includes('ROLE_TRAVELLER');
   const isDriver = roles.includes('ROLE_DRIVER');
-  const handleLogout = () =>{ 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+  const handleLogout = () => {
     logout();
     window.location.href = '/login';
-  }
+  };
 
   return (
-    <nav className="bg-bleu-nuit text-white p-4 shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="text-4xl font-bold tracking-wider flex items-center hover:text-orange-btn transition duration-300 cursor-pointer">
-          <FaRoad className="mr-2" />
-          Ride&Go
-        </div>
-        <div className="flex space-x-8 items-center">
-          <Link href="/" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.home}</Link>
-          <Link href="/calculate" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.calculate}</Link>
-          {
-            !isAuthenticated && (
-              <Link href="/search" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.search}</Link>
-             
-            )
-          }
-          {/* Affichage conditionné des liens "Go" et "Ride" */}
-          {isTraveller && (
-            <Link href="/go" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.go}</Link>
-          )}
-          {isDriver && (
-            <Link href="/ride" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.ride}</Link>
-          )}
-          
-          {/* <Link href="/dashboard" className="hover:text-orange-btn hover:underline underline-offset-8 transition duration-300">{currentContent.dashboard}</Link> */}
+    <nav className="bg-bleu-nuit text-white py-2 md:py-4 px-3 md:px-6 shadow-md sticky top-0 z-50 size-auto">
+      <div className="container mx-auto max-w-7xl">
+        {/* Desktop and Tablet Navigation */}
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link href="/" className="text-xl sm:text-2xl lg:text-3xl  tracking-wider flex items-center  hover:text-orange-btn transition-all duration-300">
+            <FaRoad className="mr-2" />
+            <span className="hidden sm:inline">Ride&Go</span>
+          </Link>
 
-          {/* Help Menu Dropdown */}
-          <div className="relative group dropdown">
-            <button 
-              onClick={toggleDropdown} 
-              className="flex items-center space-x-1 group-hover:text-orange-btn transition duration-300"
-            >
-              <span>{currentContent.help}</span>
-              <FontAwesomeIcon icon={faChevronDown} className="transition-transform duration-300 group-hover:rotate-180" />
-            </button>
-         
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
-                <ul className="py-2">
-                  <li><Link href="/about" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.aboutUs}</Link></li>
-                  <li><Link href="/privacy" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.policy}</Link></li>
-                  <li><Link href="/contact" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.contactUs}</Link></li>
-                  <li><Link href="/help" className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300">{currentContent.assistance}</Link></li>
-                </ul>
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center space-x-6">
+            <Link href="/" className="nav-link hover:text-orange-btn ">
+              {currentContent.home}
+            </Link>
+            <Link href="/calculate" className="nav-link hover:text-orange-btn ">
+              {currentContent.calculate}
+            </Link>
+            {!isAuthenticated && (
+              <Link href="/search" className="nav-link hover:text-orange-btn ">
+                {currentContent.search}
+              </Link>
+            )}
+            {isTraveller && (
+              <Link href="/go" className="nav-link hover:text-orange-btn ">
+                {currentContent.go}
+              </Link>
+            )}
+            {isDriver && (
+              <Link href="/ride" className="nav-link hover:text-orange-btn ">
+                {currentContent.ride}
+              </Link>
+            )}
+
+            {/* Help Dropdown - Desktop */}
+            <div className="relative dropdown ">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center space-x-1 hover:text-orange-btn transition-all duration-300"
+              >
+                <span>{currentContent.help}</span>
+                <FontAwesomeIcon
+                  icon={isDropdownOpen ? faChevronUp : faChevronDown}
+                  className="ml-1 text-sm"
+                />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 ">
+                  <div className="flex flex-col">
+                    <Link href="/about" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
+                      {currentContent.aboutUs}
+                    </Link>
+                    <Link href="/privacy" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
+                      {currentContent.policy}
+                    </Link>
+                    <Link href="/contact" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
+                      {currentContent.contactUs}
+                    </Link>
+                    <Link href="/help" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
+                      {currentContent.assistance}
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Language Selector - Desktop */}
+            <div className="relative">
+              <div className="flex items-center space-x-2">
+                <FaGlobe className="text-sm" />
+                <select
+                  value={locale}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
+                  className="bg-transparent  hover:text-orange-btn transition-all duration-300 cursor-pointer focus:outline-none"
+                >
+                  <option value="en" className="text-bleu-nuit">
+                    {locale === 'en' ? 'English' : 'Anglais'}
+                  </option>
+                  <option value="fr" className="text-bleu-nuit">
+                    {locale === 'en' ? 'French' : 'Français'}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            {/* Auth Section - Desktop */}
+            {!user ? (
+              <div className="flex items-center space-x-3">
+                <Link href="/login" className="auth-button bg-orange-btn rounded-md  py-3 ">
+                  {currentContent.signIn}
+                </Link>
+                <Link href="/register" className="auth-button  bg-orange-btn rounded-md py-3 ">
+                  {currentContent.signUp}
+                </Link>
+              </div>
+            ) : (
+              <div className="relative dropdown">
+                <button
+                  onClick={toggleDropdownAccount}
+                  className="flex items-center space-x-2 hover:text-orange-btn transition-all duration-300"
+                >
+                  <FaUser className="text-sm" />
+                  <span>{user?.pseudo}</span>
+                  <FontAwesomeIcon
+                    icon={isDropdownAccountOpen ? faChevronUp : faChevronDown}
+                    className="ml-1 text-sm"
+                  />
+                </button>
+                {isDropdownAccountOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                    <Link href="/dashboard" className="dropdown-item text-bleu-nuit">
+                      {currentContent.dashboard}
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left dropdown-item"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          {/* Language Selector */}
-          <div className="relative group">
-            <button className="flex items-center space-x-2 group-hover:text-orange-btn transition duration-300">
-              <FaGlobe />
-              <select  
-                title={locale === 'en' ? "Language" : "Langue"} 
-                value={locale}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className='p-2 text-white bg-bleu-nuit rounded-lg shadow-lg z-10'
-              >
-                <option value="en">{locale === 'en' ? 'English' : 'Anglais'}</option>
-                <option value="fr">{locale === 'en' ? 'French' : 'Français'}</option>
-              </select>
-            </button>
-          </div>
-
-          {/* Affichage conditionné des boutons de connexion et d'inscription */}
-          {!user ? (
-            <>
-              <Link href={"/login"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signIn}</Link>
-              <Link href={"/register"} className="bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300">{currentContent.signUp}</Link>
-            </>
-          ) : (
-            <div className="relative group dropdown">
-              <button 
-                onClick={toggleDropdownAccount} 
-                className="flex items-center space-x-2"
-              >
-                <FaUser />
-                {
-                  !isDropdownAccountOpen ? (
-                    <FontAwesomeIcon icon={faChevronDown} />
-                  ) : (
-                    <FontAwesomeIcon icon={faChevronUp} />
-                  )
-                }
-              </button>
-             <p className=" text-sm text-white">{user?.pseudo}</p>
-              {isDropdownAccountOpen && (
-                <div className="absolute right-0 mt-2 w-30 bg-white text-bleu-nuit rounded-lg shadow-lg z-20">
-
-                  <ul className="p-2">
-                    <li><Link href="/dashboard" onClick={toggleDropdownAccount} className="block px-4 py-2 hover:bg-orange-btn hover:text-white transition duration-300  w-full  rounded-md text-center underline">{currentContent.dashboard}</Link></li>
-                    <li><button onClick={handleLogout} className="block px-2 py-2 hover:bg-orange-btn hover:text-white transition duration-300 w-full  rounded-md border">Logout</button></li>
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Mobile Menu Button */}
+          <button
+            onClick={toggleMobileMenu}
+            className="lg:hidden text-white hover:text-orange-btn transition-all duration-300"
+          >
+            <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} className="text-2xl" />
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 top-16 bg-bleu-nuit z-40">
+            <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+              <Link href="/" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                {currentContent.home}
+              </Link>
+              <Link href="/calculate" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                {currentContent.calculate}
+              </Link>
+              {!isAuthenticated && (
+                <Link href="/search" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                  {currentContent.search}
+                </Link>
+              )}
+              {isTraveller && (
+                <Link href="/go" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                  {currentContent.go}
+                </Link>
+              )}
+              {isDriver && (
+                <Link href="/ride" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                  {currentContent.ride}
+                </Link>
+              )}
+
+              {/* Help Section - Mobile */}
+              <div className="border-t border-white/20 pt-4">
+                <div className="text-lg font-semibold mb-2 hover:text-orange-btn">{currentContent.help}</div>
+                <div className="flex flex-col space-y-2">
+                  <Link href="/about" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                    {currentContent.aboutUs}
+                  </Link>
+                  <Link href="/privacy" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                    {currentContent.policy}
+                  </Link>
+                  <Link href="/contact" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                    {currentContent.contactUs}
+                  </Link>
+                  <Link href="/help" className="mobile-nav-link hover:text-orange-btn" onClick={closeMobileMenu}>
+                    {currentContent.assistance}
+                  </Link>
+                </div>
+              </div>
+
+              {/* Language Selector - Mobile */}
+              <div className="border-t border-white/20 pt-4">
+                <div className="flex items-center space-x-3">
+                  <FaGlobe className="text-lg" />
+                  <select
+                    value={locale}
+                    onChange={(e) => handleLanguageChange(e.target.value)}
+                    className="bg-transparent text-white py-2 focus:outline-none"
+                  >
+                    <option value="en" className="text-bleu-nuit" onClick={closeMobileMenu}>
+                      {locale === 'en' ? 'English' : 'Anglais'}
+                    </option>
+                    <option value="fr" className="text-bleu-nuit" onClick={closeMobileMenu}>
+                      {locale === 'en' ? 'French' : 'Français'}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Auth Section - Mobile */}
+              <div className="border-t border-white/20 pt-4">
+                {!user ? (
+                  <div className="flex flex-col space-y-3">
+                    <Link href="/login" className="mobile-auth-button  bg-orange-btn rounded-md w-20 hover:text-blue-btn " onClick={closeMobileMenu}>
+                      {currentContent.signIn}
+                    </Link>
+                    <Link href="/register" className="mobile-auth-button  bg-orange-btn rounded-md w-20" onClick={closeMobileMenu}>
+                      {currentContent.signUp}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <FaUser className="text-lg" />
+                      <span className="text-lg">{user?.pseudo}</span>
+                    </div>
+                    <Link href="/dashboard" className="mobile-nav-link">
+                      {currentContent.dashboard}
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-left mobile-nav-link"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Styles */}
+      <style jsx>{`
+        .nav-link {
+          @apply hover:text-orange-btn hover:underline underline-offset-8 transition-all duration-300 text-sm;
+        }
+        .dropdown-item {
+          @apply block px-4 py-2 text-bleu-nuit hover:bg-orange-btn hover:text-white transition-all duration-300 text-sm;
+        }
+        .auth-button {
+          @apply bg-orange-btn text-white px-4 py-2 rounded-lg shadow hover:bg-white hover:text-orange-btn transition-all duration-300 text-sm whitespace-nowrap;
+        }
+        .mobile-nav-link {
+          @apply text-white hover:text-orange-btn transition-all duration-300 py-2 text-lg;
+        }
+        .mobile-auth-button {
+          @apply w-full bg-orange-btn text-white px-4 py-3 rounded-lg text-center hover:bg-white hover:text-orange-btn transition-all duration-300 text-lg;
+        }
+      `}</style>
     </nav>
   );
 };
