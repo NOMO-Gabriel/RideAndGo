@@ -313,7 +313,7 @@ const CostCalculator = () => {
               </div>
 
               {costDetails && (
-                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg">
+                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg h-max mb-12">
                     <div className="p-4">
                     <h2 className="text-xl font-semibold text-white mb-4">
                         {currentContent.tripDetails}
@@ -350,7 +350,7 @@ const CostCalculator = () => {
           </div>
 
           {/* Services annexes */}
-          <div className="mt-24">
+          <div className="mt-[250px]">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
               {currentContent.servicesTitle}
             </h2>
