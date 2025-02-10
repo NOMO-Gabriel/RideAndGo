@@ -10,6 +10,7 @@ import { calculateCostRequest } from '@/app/utils/api/cost';
 interface TripDetails {
   fare: number;
   distance: number;
+  time: number;
   officialPrice: number;
   duration: number;
   start: string;
@@ -41,45 +42,26 @@ const HeroFareCalculator = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const calculateFare = async () => {
-    if (!startLocation || !endLocation) {
-      alert("Veuillez entrer les deux emplacements.");
-      return;
-    }
-  
+  const calculateFare = () => {
     setIsLoading(true);
-    setIsCalculated(false);
-  
-    // Obtenir l'heure actuelle au format HH:MM
-    const now = new Date();
-    const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  
-    const requestData: calculateCostRequest = {
+    const baseFare = 1000;
+    const distance = Math.random() * 20 + 5;
+    const pricePerKm = 500;
+    const totalFare = baseFare + distance * pricePerKm;
+    const officialPrice = totalFare * 1.2;
+
+    setTripDetails({
+      fare: Number(totalFare.toFixed(2)),
+      officialPrice: Number(officialPrice.toFixed(2)),
+      distance: Number(distance.toFixed(1)),
+      duration: Math.floor(distance * 3),
       start: startLocation,
       end: endLocation,
-      hour: formattedTime,
-    };
-  
-    try {
-      const response = await calculateCost(requestData);
-      setTripDetails({
-        fare: response.cost,
-        officialPrice: response.min_cost,
-        distance: response.distance,
-        duration: response.distance*1000/60,
-        start: startLocation,
-        end: endLocation,
-        
-      });
-      setIsCalculated(true);
-    } catch (error) {
-      console.error("Erreur lors du calcul du coût :", error);
-      alert("Une erreur est survenue lors du calcul du tarif.");
-    }
-  
+      time: 0
+    });
     setIsLoading(false);
+    setIsCalculated(true);
   };
-  
 
   const content = {
     en: {

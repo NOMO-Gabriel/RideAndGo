@@ -2,11 +2,11 @@
 
 import PlueValue from "./components/Home/PlusValue";
 import FeaturesSection from "./components/Home/FeaturesSection";
-import HeroSection from "./components/Home/HeroSection";
+// import HeroSection from "./components/Home/HeroSection";
 import StatisticsSection from "./components/Home/StatisticsSection";
 import TestimonySection from "./components/Home/TestimonySection";
 import SubscribeSection from "./components/Home/SubscribeSection";
-import CompactFareCalculator from "./components/Home/FareCalculator";
+// import CompactFareCalculator from "./components/Home/FareCalculator";
 import HeroFareCalculator from "./components/Home/FareCalculator";
 
 const images = [
@@ -23,8 +23,6 @@ export default function page(){
 
     return(
         <div>
-          
-          
            <HeroFareCalculator/>
            <FeaturesSection/>
            <PlueValue/>
