@@ -265,7 +265,11 @@ const HeroFareCalculator = () => {
                         {currentContent.officialPrice}
                       </div>
                       <p className="text-lg font-bold text-white mb-2">
-                        {tripDetails.officialPrice.toLocaleString()} FCFA
+                      {tripDetails?.officialPrice !== undefined ? (
+                            <p>Tarif officiel: {tripDetails.officialPrice} FCFA</p>
+                          ) : (
+                            <p>Tarif officiel: 350 FCFA</p>
+                          )}
                       </p>
                       <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
                         {currentContent.order}

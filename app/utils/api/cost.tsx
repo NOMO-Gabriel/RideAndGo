@@ -1,5 +1,7 @@
 // import { API_URL } from './api_infos';
 export const API_URL="https://rideandgo.onrender.com"
+// export const API_URL="http://localhost:5000"
+
 
 export interface   calculateCostRequest {
             
@@ -16,6 +18,7 @@ const getHeaders = () => ({
 // calculer un cout
   export const calculateCost = async (
     calculateCostRequest: calculateCostRequest) => {
+      console.log("data:" + JSON.stringify(calculateCostRequest))
             const response = await fetch(`${API_URL}/cost`, {
                 method: 'POST',
                 headers: getHeaders(),
