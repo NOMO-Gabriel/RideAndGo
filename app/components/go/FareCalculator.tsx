@@ -117,108 +117,165 @@ const FareCalculator: React.FC<FareCalculatorProps> = ({ onSubmitRide, mode = 'c
   const currentContent = locale === 'fr' ? content.fr : content.en;
 
   return (
-    <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-xl">
-      <div className="space-y-3">
-        <div className="space-y-2">
+    <div className="bg-white/10 backdrop-blur-md p-3 sm:p-4 md:p-6 
+                    rounded-xl shadow-xl 
+                    max-w-xl mx-auto w-full">
+      <div className="space-y-3 sm:space-y-4">
+        {/* Section des champs de saisie */}
+        <div className="space-y-2 sm:space-y-3">
+          {/* Champ de départ */}
           <div className="relative group">
-            <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-base group-hover:text-blue-300 transition-colors" />
+            <FaMapMarkerAlt className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 
+                                     text-blue-400 text-sm sm:text-base 
+                                     group-hover:text-blue-300 transition-colors" />
             <input
               type="text"
               placeholder={currentContent.startLocationPlaceholder}
-              className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm"
+              className="w-full pl-8 sm:pl-10 pr-2 sm:pr-3 
+                       py-1.5 sm:py-2 
+                       rounded-lg bg-white/10 
+                       border border-white/20 
+                       text-white placeholder-blue-200 
+                       focus:ring-2 focus:ring-blue-400 focus:border-transparent 
+                       transition text-xs sm:text-sm"
               value={startLocation}
               onChange={(e) => setStartLocation(e.target.value)}
             />
           </div>
-
+  
+          {/* Champ de destination */}
           <div className="relative group">
-            <FaLocationArrow className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-base group-hover:text-blue-300 transition-colors" />
+            <FaLocationArrow className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 
+                                      text-blue-400 text-sm sm:text-base 
+                                      group-hover:text-blue-300 transition-colors" />
             <input
               type="text"
               placeholder={currentContent.endLocationPlaceholder}
-              className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm"
+              className="w-full pl-8 sm:pl-10 pr-2 sm:pr-3 
+                       py-1.5 sm:py-2 
+                       rounded-lg bg-white/10 
+                       border border-white/20 
+                       text-white placeholder-blue-200 
+                       focus:ring-2 focus:ring-blue-400 focus:border-transparent 
+                       transition text-xs sm:text-sm"
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
             />
           </div>
-
+  
+          {/* Bouton de calcul */}
           {mode === 'calculator' && (
             <button
               onClick={() => calculateFare()}
-              className="w-full py-2 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] hover:shadow-xl text-sm"
+              className="w-full py-1.5 sm:py-2 
+                       bg-gradient-to-r from-orange-200 to-orange-600 
+                       hover:from-orange-600 hover:to-orange-700 
+                       text-white rounded-lg font-medium shadow-lg 
+                       flex items-center justify-center gap-1 sm:gap-2 
+                       transition transform hover:scale-[1.02] hover:shadow-xl 
+                       text-xs sm:text-sm"
             >
-              <FaCalculator className="text-base" />
+              <FaCalculator className="text-sm sm:text-base" />
               {currentContent.calculateButton}
             </button>
           )}
         </div>
-
+  
+        {/* Section des détails du trajet */}
         {(tripDetails || mode === 'direct') && (
           <div className="space-y-3 animate-fade-in">
             {mode === 'calculator' && (
               <>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                    <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                      <FaRoute className="text-base" />
+                {/* Première grille d'informations */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <div className="bg-white/10 p-2 sm:p-3 
+                                rounded-lg backdrop-blur 
+                                hover:bg-white/20 transition-colors">
+                    <div className="flex items-center gap-1 
+                                  text-blue-200 mb-1 
+                                  text-xs sm:text-sm">
+                      <FaRoute className="text-sm sm:text-base" />
                       {currentContent.distance}
                     </div>
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-base sm:text-lg font-bold text-white">
                       {tripDetails?.distance} {currentContent.km}
                     </p>
                   </div>
-
-                  <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                    <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                      <FaClock className="text-base" />
+  
+                  <div className="bg-white/10 p-2 sm:p-3 
+                                rounded-lg backdrop-blur 
+                                hover:bg-white/20 transition-colors">
+                    <div className="flex items-center gap-1 
+                                  text-blue-200 mb-1 
+                                  text-xs sm:text-sm">
+                      <FaClock className="text-sm sm:text-base" />
                       {currentContent.duration}
                     </div>
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-base sm:text-lg font-bold text-white">
                       {tripDetails?.duration} {currentContent.mins}
                     </p>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                    <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                      <FaMoneyBillWave className="text-base" />
+  
+                {/* Deuxième grille d'informations */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <div className="bg-white/10 p-2 sm:p-3 
+                                rounded-lg backdrop-blur 
+                                hover:bg-white/20 transition-colors">
+                    <div className="flex items-center gap-1 
+                                  text-blue-200 mb-1 
+                                  text-xs sm:text-sm">
+                      <FaMoneyBillWave className="text-sm sm:text-base" />
                       {currentContent.estimatedFare}
                     </div>
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-base sm:text-lg font-bold text-white">
                       {tripDetails?.fare.toLocaleString()} FCFA
                     </p>
                   </div>
-
-                  <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                    <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                      <FaBuilding className="text-base" />
+  
+                  <div className="bg-white/10 p-2 sm:p-3 
+                                rounded-lg backdrop-blur 
+                                hover:bg-white/20 transition-colors">
+                    <div className="flex items-center gap-1 
+                                  text-blue-200 mb-1 
+                                  text-xs sm:text-sm">
+                      <FaBuilding className="text-sm sm:text-base" />
                       {currentContent.officialPrice}
                     </div>
-                    <p className="text-lg font-bold text-white">
+                    <p className="text-base sm:text-lg font-bold text-white">
                       {tripDetails?.officialPrice.toLocaleString()} FCFA
                     </p>
                   </div>
                 </div>
               </>
             )}
-
-            <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur">
-              <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
-                <FaHandHoldingUsd className="text-lg" />
+  
+            {/* Section de proposition */}
+            <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 
+                          p-2 sm:p-3 md:p-4 
+                          rounded-lg backdrop-blur">
+              <h3 className="text-sm sm:text-base font-semibold text-white 
+                           mb-2 flex items-center gap-1 sm:gap-2">
+                <FaHandHoldingUsd className="text-base sm:text-lg" />
                 {currentContent.makeProposal}
               </h3>
               <div className="flex gap-2">
                 <input
                   type="number"
                   placeholder={currentContent.proposalPlaceholder}
-                  className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
+                  className="flex-1 px-2 sm:px-3 
+                           py-1 sm:py-1.5 
+                           rounded-md bg-white/10 
+                           border border-white/20 
+                           text-white placeholder-blue-200 
+                           focus:ring-2 focus:ring-orange-400 focus:border-transparent 
+                           text-xs sm:text-sm"
                   value={proposedPrice}
                   onChange={(e) => setProposedPrice(e.target.value)}
                 />
                 <button 
                   onClick={handleSubmit}
-                  className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm"
+                  className=""
                 >
                   {currentContent.submitProposal}
                 </button>
@@ -229,6 +286,5 @@ const FareCalculator: React.FC<FareCalculatorProps> = ({ onSubmitRide, mode = 'c
       </div>
     </div>
   );
-};
-
+}
 export default FareCalculator;

@@ -81,29 +81,53 @@ const StatisticsSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-16 bg-blanc-casse relative overflow-hidden">
-      <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-bleu-nuit mb-10">
+    <section className="relative py-6 sm:py-10 md:py-16 bg-blanc-casse overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-bleu-nuit 
+                       mb-6 sm:mb-8 md:mb-10 
+                       tracking-tight">
           {locale === 'en' ? 'Key Statistics' : 'Statistiques Clés'}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
+                        gap-4 sm:gap-6 lg:gap-8 
+                        mx-auto max-w-6xl">
           {statistics.map((stat, idx) => (
             <div
               key={idx}
-              className="relative p-8 bg-white shadow-lg rounded-lg transform transition-transform duration-500"
+              className="relative p-4 sm:p-6 md:p-8 
+                         bg-white shadow-lg rounded-lg 
+                         transform transition-all duration-500 ease-out
+                         hover:scale-105 hover:shadow-xl
+                         flex flex-col items-center justify-center
+                         min-h-[200px] sm:min-h-[220px] md:min-h-[240px]"
             >
-              {/* Effet lumineux */}
+              {/* Effet lumineux amélioré */}
               <div
-                className={`absolute inset-0 rounded-lg z-0 transition-opacity duration-700 ease-out ${
-                  explosionVisible[idx] ? 'opacity-100 bg-gradient-to-r from-orange-400 to-yellow-300 blur-md' : 'opacity-0'
-                }`}
+                className={`absolute inset-0 rounded-lg z-0 
+                           transition-all duration-700 ease-out
+                           ${
+                             explosionVisible[idx] 
+                             ? 'opacity-100 scale-105 bg-gradient-to-r from-orange-400/60 to-yellow-300/60 blur-lg' 
+                             : 'opacity-0 scale-100'
+                           }`}
               ></div>
-
-              <div className="relative z-10">
-                <div className="text-bleu-nuit text-6xl font-extrabold mb-2">
-                  {displayedStats[idx]}+
+  
+              {/* Contenu */}
+              <div className="relative z-10 w-full">
+                <div className="text-center text-6xl sm:text-7xl md:text-7xl 
+                              font-extrabold text-bleu-nuit 
+                              mb-2 sm:mb-3 md:mb-4
+                              transition-all duration-300
+                              hover:text-bleu-nuit/90">
+                  {displayedStats[idx]}
+                  <span className="text-orange-500">+</span>
                 </div>
-                <p className="mt-2 text-gray-600 text-lg font-medium">
+  
+                <p className="text-center text-base sm:text-xl md:text-2xl 
+                            font-medium text-gray-600
+                            max-w-[250px] mx-auto
+                            line-height-relaxed">
                   {locale === 'en' ? stat.label.en : stat.label.fr}
                 </p>
               </div>
@@ -111,11 +135,21 @@ const StatisticsSection: React.FC = () => {
           ))}
         </div>
       </div>
-
-      {/* Effet d'éclat lumineux global */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
+  
+      {/* Effets d'arrière-plan améliorés */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Effet de pulse principal */}
+        <div className="absolute inset-0 
+                      bg-gradient-radial from-transparent via-white to-transparent 
+                      opacity-20 animate-pulse"></div>
+        
+        {/* Effet supplémentaire pour plus de profondeur */}
+        <div className="absolute inset-0 
+                      bg-gradient-to-b from-transparent via-white/5 to-transparent 
+                      animate-floating"></div>
+      </div>
     </section>
   );
-};
+}
 
 export default StatisticsSection;

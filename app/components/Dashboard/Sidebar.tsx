@@ -62,9 +62,9 @@ export default function Sidebar() {
 
   return (
     <div>
-      <div className="w-[250px] flex flex-col p-2 space-y-4 border-x-2 border-gray-200">
+      <div className="flex flex-col p-2 space-y-10 border-x-2 border-gray-200 w-[150px] sm:w-[200px] md:w-[250px]">
         <UpgradeBtn />
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-5">
           {localizedContent.map((item, index) => (
             <button
               key={index}
@@ -72,8 +72,8 @@ export default function Sidebar() {
                 ${selectedId === item.id ? 'bg-blue-200' : 'hover:bg-bleu-nuit'}`} // Applique bg-blue-200 si sélectionné
               onClick={() => handleItemClick(item.id)} // Utilise handleItemClick
             >
-              <FontAwesomeIcon icon={item.icon} className="text-lg" />
-              <span className="text-sm">{item.name}</span>
+              <FontAwesomeIcon icon={item.icon} className="text-lg sm:text-sm md:text-lg" />
+              <span className="text-sm sm:text-xs md:text-sm">{item.name}</span>
             </button>
           ))}
         </div>

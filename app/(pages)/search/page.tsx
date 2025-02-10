@@ -67,7 +67,7 @@ export default function ClientDashboard() {
         <div className="flex-1 flex gap-4 p-4 h-[calc(100vh-140px)]">
           <div className="w-1/3 flex flex-col gap-4">
             <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-xl p-4">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex-col  justify-between items-center mb-4 ">
                 <button
                   onClick={() => setMode('calculator')}
                   className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
@@ -78,8 +78,8 @@ export default function ClientDashboard() {
                 >
                   {currentContent.calculatorMode}
                 </button>
-                <div className="px-2">
-                  <FaExchangeAlt className="text-blue-200" />
+                <div className="px-8">
+                  <FaExchangeAlt className="text-blue-200 align-baseline mt-4" />
                 </div>
                 <button
                   onClick={() => setMode('direct')}

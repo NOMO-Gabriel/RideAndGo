@@ -91,8 +91,8 @@ const FeaturesSection: React.FC = () => {
   
 
   return (
-    <div className="py-16 bg-blanc-casse mb-16 mt-16">
-      <div className="container mx-auto text-center ">
+    <div className="py-16 bg-blanc-casse mb-16 mt-16 ">
+      <div className="container mx-auto text-center sm:w-4/3">
         <h2 className="text-4xl font-bold text-bleu-nuit mb-8">{locale==='en'?'Our features': 'Nos Fonctionnalités'}</h2>
         <div className="flex items-center justify-center">
           <button
