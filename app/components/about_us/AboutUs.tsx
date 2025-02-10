@@ -94,116 +94,74 @@ const AboutUs: React.FC = () => {
   return (
     <div className="bg-blanc-casse text-bleu-nuit">
       {/* Section Hero */}
-      <section className="relative bg-bleu-nuit text-white py-16">
-        <div className="container mx-auto px-6 text-center">
-          <div className="flex justify-center items-center mb-4">
-            <FaRoad className="text-6xl text-orange-btn" />
-            <h1 className="text-5xl font-bold ml-4">{currentContent.heroTitle}</h1>
+      <section className="relative bg-bleu-nuit text-white py-8 md:py-16">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <div className="flex flex-col md:flex-row justify-center items-center mb-4">
+            <FaRoad className="text-4xl md:text-6xl text-orange-btn" />
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold md:ml-4 mt-2 md:mt-0">{currentContent.heroTitle}</h1>
           </div>
-          <p className="text-lg font-bold  mt-2">{currentContent.heroText}</p>
+          <p className="text-base md:text-lg font-bold mt-2">{currentContent.heroText}</p>
         </div>
       </section>
-
+  
       {/* Section Mission */}
-      <section className="py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-6 text-center">{currentContent.missionTitle}</h2>
-          <p className="text-lg text-center max-w-3xl mx-auto">{currentContent.missionText}</p>
+      <section className="py-8 md:py-16">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-center">{currentContent.missionTitle}</h2>
+          <p className="text-base md:text-lg text-center max-w-3xl mx-auto">{currentContent.missionText}</p>
         </div>
       </section>
-
-        {/* Section Values */}
-        <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-10">{currentContent.valuesTitle}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+  
+      {/* Section Values */}
+      <section className="py-8 md:py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 md:mb-10">{currentContent.valuesTitle}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
             {currentContent.values.map((value, index) => (
-              <div key={index} className="text-center">
-                <h3 className="text-2xl font-bold text-orange-btn mb-4">{value.title}</h3>
-                <p>{value.text}</p>
+              <div key={index} className="text-center p-4">
+                <h3 className="text-xl md:text-2xl font-bold text-orange-btn mb-3 md:mb-4">{value.title}</h3>
+                <p className="text-sm md:text-base">{value.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-         {/* Section History */}
-         <section className="py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-6 text-center">{currentContent.historyTitle}</h2>
-          <p className="text-lg text-center max-w-3xl mx-auto">{currentContent.historyText}</p>
-        </div>
-      </section>
-
-
-      {/* Section Vision */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-6 text-center">{currentContent.visionTitle}</h2>
-          <p className="text-lg text-center max-w-3xl mx-auto">{currentContent.visionText}</p>
-        </div>
-      </section>
-
-   
-    
-
-      {/* Section Our Team */}
-      <section className="py-16 bg-blanc-casse">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-10">{currentContent.teamTitle}</h2>
-          <p className="text-lg mb-8">{currentContent.teamText}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Team Member 1 */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+  
+      {/* Team Section */}
+      <section className="py-8 md:py-16 bg-blanc-casse">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-10">{currentContent.teamTitle}</h2>
+          <p className="text-base md:text-lg mb-6 md:mb-8">{currentContent.teamText}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+            {/* Team Member Card */}
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
               <Image
-                src="" // Placeholder image, replace with actual image path
-                alt="Team Member 1"
+                src=""
+                alt="Team Member"
                 width={200}
                 height={200}
-                className="mx-auto rounded-full"
+                className="mx-auto rounded-full w-32 md:w-48"
               />
-              <h3 className="text-2xl font-bold mt-4">Thomas Djotio Ndié</h3>
-              <p className="text-lg text-orange-btn">CEO & Founder</p>
+              <h3 className="text-xl md:text-2xl font-bold mt-4">{/* nom */}</h3>
+              <p className="text-base md:text-lg text-orange-btn">{/* poste */}</p>
             </div>
-            {/* Team Member 2 */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <Image
-                src="" // Placeholder image, replace with actual image path
-                alt="Team Member 2"
-                width={200}
-                height={200}
-                className="mx-auto rounded-full"
-              />
-              <h3 className="text-2xl font-bold mt-4">Bernabé Batchkui</h3>
-              <p className="text-lg text-orange-btn">Head of Training</p>
-            </div>
-            {/* Team Member 3 */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <Image
-                src="" // Placeholder image, replace with actual image path
-                alt="Team Member 3"
-                width={200}
-                height={200}
-                className="mx-auto rounded-full"
-              />
-              <h3 className="text-2xl font-bold mt-4">Jean Yves Etougue</h3>
-              <p className="text-lg text-orange-btn">Lead Developer</p>
-            </div>
+            {/* Répéter pour autres membres */}
           </div>
         </div>
       </section>
-
-      {/* Section Call to Action */}
-      <section className="relative bg-bleu-nuit text-white py-16 text-center">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold">{currentContent.callToActionTitle}</h2>
-          <p className="text-lg mt-4">{currentContent.callToActionText}</p>
-          <Link href="/sign-up" className="inline-block bg-orange-btn text-white px-6 py-3 mt-6 rounded-lg shadow-lg hover:bg-white hover:text-orange-btn transition-all duration-300">
+  
+      {/* Call to Action */}
+      <section className="relative bg-bleu-nuit text-white py-8 md:py-16 text-center">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl font-bold">{currentContent.callToActionTitle}</h2>
+          <p className="text-base md:text-lg mt-4">{currentContent.callToActionText}</p>
+          <Link href="/sign-up" className="inline-block bg-orange-btn text-white px-4 md:px-6 py-2 md:py-3 mt-4 md:mt-6 rounded-lg shadow-lg hover:bg-white hover:text-orange-btn transition-all duration-300">
             {currentContent.callToActionButton}
           </Link>
         </div>
       </section>
     </div>
   );
-};
+}
 
 export default AboutUs;
