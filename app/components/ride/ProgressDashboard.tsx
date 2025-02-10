@@ -35,17 +35,16 @@ export default function ProgressDashboard({ progress, onUpdateDailyGoal }: Progr
   };
 
   const progressPercentage = (progress.earnedToday / progress.dailyGoal) * 100;
-
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4 bg-bleu-nuit rounded-lg shadow-md">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-white">Today's Progress</h2>
         <div className="text-sm text-blue-200">
           {progress.completedRides} rides completed
         </div>
       </div>
-
-      <div className="grid grid-cols-2 gap-4">
+  
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-blue-200">Daily Goal</p>
@@ -87,13 +86,13 @@ export default function ProgressDashboard({ progress, onUpdateDailyGoal }: Progr
             <p className="text-2xl font-bold text-white">{formatPrice(progress.dailyGoal)}</p>
           )}
         </div>
-
+  
         <div className="space-y-2">
           <p className="text-blue-200">Earned Today</p>
           <p className="text-2xl font-bold text-white">{formatPrice(progress.earnedToday)}</p>
         </div>
       </div>
-
+  
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-blue-200">Progress</span>
@@ -108,4 +107,4 @@ export default function ProgressDashboard({ progress, onUpdateDailyGoal }: Progr
       </div>
     </div>
   );
-}
+}  

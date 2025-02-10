@@ -11,7 +11,7 @@ import ScrollToTopButton from "./components/buttons/ScrollToTopButton";
 import { UserProvider } from "./utils/contexts/UserContext";
 import { FlashMessageProvider } from "./utils/contexts/FlashMessageContext";
 import FlashMessage from "./components/flash_message/FlashMessage";
-
+import Head from 'next/head';
 
 
 export default function RootLayout({
@@ -22,8 +22,13 @@ export default function RootLayout({
 
 
   return (
+    
       <html lang="en">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
       <body  className={`antialiased `}>
+      
+      
         <UserProvider>
           <LocaleProvider>
             <ThemeProvider>
@@ -39,8 +44,9 @@ export default function RootLayout({
           </LocaleProvider>
           <ScrollToTopButton/>
         </UserProvider>
-      
+       
       </body>
+     
       </html>
   );
 }

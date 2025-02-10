@@ -52,14 +52,19 @@ const FlashMessage: FC = () => {
 
   return (
     <div
-      className={`fixed top-4 right-4 p-4 rounded shadow-lg flex items-center transition-opacity duration-500 
-      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} ${getMessageStyle(message.type)} z-50`}
+      className={`fixed sm:top-4 sm:right-4 top-2 right-2 p-3 sm:p-4 rounded shadow-lg 
+      flex items-center transition-all duration-500 max-w-[calc(100%-1rem)] sm:max-w-md
+      ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'} 
+      ${getMessageStyle(message.type)} z-50`}
     >
-      {getMessageIcon(message.type)}
-      <div className="border-l-2 border-gray-300 mx-3 h-6"></div>
-      <span className="flex-1">{message.msg}</span>
+      <div className="flex-shrink-0">
+        {getMessageIcon(message.type)}
+      </div>
+      <div className="border-l-2 border-gray-300 mx-2 sm:mx-3 h-6"></div>
+      <span className="flex-1 text-sm sm:text-base break-words">
+        {message.msg}
+      </span>
     </div>
   );
-};
-
+}  
 export default FlashMessage;

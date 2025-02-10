@@ -98,17 +98,19 @@ function RideMap({ driverPosition, clients, onClientSelect }: MapProps) {
   }
 
   return (
-    <MapContainer
-      center={[3.8667, 11.5167]}
-      zoom={13}
-      style={{ height: '100%', width: '100%' }}
-      attributionControl={false}
-      key="map"
-    >
-      {tileLayer}
-      {driverMarker}
-      {clientMarkers}
-    </MapContainer>
+    <div className="relative w-full h-full">
+      <MapContainer
+        center={[3.8667, 11.5167]}
+        zoom={13}
+        style={{ height: '100%', width: '100%' }}
+        attributionControl={false}
+        key="map"
+      >
+        {tileLayer}
+        {driverMarker}
+        {clientMarkers}
+      </MapContainer>
+    </div>
   );
 }
 

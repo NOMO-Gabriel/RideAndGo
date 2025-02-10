@@ -65,8 +65,13 @@ const Footer: React.FC = () => {
 
 
   return (
+<<<<<<< HEAD
     <footer className="bg-bleu-nuit  text-white py-16">
       <div className="container mx-auto px-6 grid gap-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+=======
+    <footer className="bg-bleu-nuit  text-white py-16 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+      <div className="container mx-auto px-6 lg:px-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+>>>>>>> origin/folongtz
         {/* Colonne 1 - Our Company */}
         <div>
           <h4 className="font-semibold text-xl mb-4">{locale==='en'?'Our Company':'Notre companie'}</h4>

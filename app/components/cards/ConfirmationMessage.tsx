@@ -21,16 +21,17 @@ const ConfirmationMessage: React.FC<ConfirmationMessagePropos> = ({ icon, messag
 
   return (
     <div
-      className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white p-5 rounded-md shadow-lg transition-opacity duration-500 ease-in-out ${
+      className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+      bg-blue-500 text-white p-4 md:p-5 rounded-md shadow-lg transition-all duration-500 
+      ease-in-out max-w-[90%] md:max-w-md ${
         isVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
-      <div className="flex items-center space-x-3">
-        <span>{icon}</span>
-        <p className="text-lg font-medium">{message}</p>
+      <div className="flex items-center space-x-2 md:space-x-3">
+        <span className="text-base md:text-lg">{icon}</span>
+        <p className="text-sm md:text-lg font-medium">{message}</p>
       </div>
     </div>
   );
 };
-
 export default ConfirmationMessage;

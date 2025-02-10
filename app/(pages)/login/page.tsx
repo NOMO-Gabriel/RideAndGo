@@ -53,46 +53,42 @@ const LoginForm = () => {
   return (
     <div className="relative min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/images/bg_register.jpeg)" }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm">
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-bold mb-6 text-center">Se Connecter</h2>
+        <div className="flex justify-center items-center min-h-screen p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Se Connecter</h2>
             <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulaire de connexion">
-              
               <input
                 type="text"
                 name="identifier"
                 value={loginData.identifier}
                 onChange={handleChange}
                 placeholder="Email, Pseudo ou Téléphone"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded text-sm sm:text-base"
                 aria-label="Identifiant (Email, Pseudo ou Téléphone)"
                 required
               />
-
               <input
                 type="password"
                 name="password"
                 value={loginData.password}
                 onChange={handleChange}
                 placeholder="Mot de passe"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded text-sm sm:text-base"
                 aria-label="Mot de passe"
                 required
               />
-
               <button
                 type="submit"
-                className="w-full p-2 bg-bleu-nuit text-white rounded hover:bg-orange-btn"
+                className="w-full p-2 sm:p-3 bg-bleu-nuit text-white rounded hover:bg-orange-btn transition-colors text-sm sm:text-base"
                 disabled={loading}
               >
                 {loading ? 'Chargement...' : 'Se Connecter'}
               </button>
-
-              <div className="flex justify-between items-center mt-4">
-                <a href="/forgot-password" className="text-bleu-nuit underline hover:text-orange-btn">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 mt-4">
+                <a href="/forgot-password" className="text-sm sm:text-base text-bleu-nuit underline hover:text-orange-btn">
                   Mot de passe oublié ?
                 </a>
-                <a href="/register" className="text-bleu-nuit underline hover:text-orange-btn">
+                <a href="/register" className="text-sm sm:text-base text-bleu-nuit underline hover:text-orange-btn">
                   Créer un compte
                 </a>
               </div>

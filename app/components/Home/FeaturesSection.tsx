@@ -90,7 +90,9 @@ const FeaturesSection: React.FC = () => {
   //}, [currentIndex]);
   
 
+  
   return (
+<<<<<<< HEAD
     <div className="py-16 bg-blanc-casse mb-16 mt-16 ">
       <div className="container mx-auto text-center sm:w-4/3">
         <h2 className="text-4xl font-bold text-bleu-nuit mb-8">{locale==='en'?'Our features': 'Nos Fonctionnalités'}</h2>
@@ -113,27 +115,33 @@ const FeaturesSection: React.FC = () => {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
+=======
+    <section className="py-12 sm:py-16 bg-gray-100">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-bleu-nuit mb-6 sm:mb-8">
+          {locale === 'en' ? 'Our Value Propositions' : 'Nos Valeurs Ajoutées'}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {features.map((feature, idx) => (
+            <div 
+              key={idx} 
+              className="text-center p-6 sm:p-8 bg-white shadow-lg rounded-lg transition-transform duration-300 transform hover:scale-105 hover:shadow-xl"
+>>>>>>> origin/folongtz
             >
-            
-                <div className="text-6xl mb-4">{feature.icon}</div>
-                <h3 className="text-2xl font-semibold mb-2">{feature.titleEn} </h3>
+              <div className="bg-bleu-nuit text-white w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                <span className="text-xl sm:text-2xl">{feature.icon}</span>
+              </div>
+              <h3 className="mt-4 text-lg sm:text-xl font-semibold text-bleu-nuit">{feature.title}</h3>
+              <h3 className="text-2xl font-semibold mb-2">{feature.titleEn} </h3>
                 <button className="bg-orange-btn text-white px-6 py-2 rounded-full hover:bg-orange-600 transition duration-300">
                 {feature.buttonTextEn}
                 </button>
-                
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={nextFeatures}
-            className="bg-bleu-nuit text-white px-4 py-2 rounded-lg ml-4 hover:bg-orange-600 transition duration-300"
-          >
-            &gt;
-          </button>
+              
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

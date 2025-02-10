@@ -45,55 +45,46 @@ export default function Page() {
   const handleToggleInfoBoard = () => setShowInfoBoard(!showInfoBoard);
 
   const linkStyle = `text-2xl text-bleu-nuit underline hover:text-orange-500`;
-
   return (
-    <div className="flex mt-20 flex-col items-center space-y-2">
-      {/* Liens pour afficher/masquer la carte et les infos */}
-      <div className={`flex ${showMap && showInfoBoard ? 'space-x-10' : 'space-x-0'} justify-center mb-4`}>
-        {/* Si la carte est visible, on affiche le lien pour la masquer */}
+    <div className="flex mt-16 sm:mt-20 flex-col items-center space-y-4">
+      <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center mb-4 px-4`}>
         {showMap && showInfoBoard && (
-          <a className={linkStyle} onClick={handleToggleMap}>
+          <a className={`${linkStyle} text-center`} onClick={handleToggleMap}>
             {currentContent.hideMap}
           </a>
         )}
-
-        {/* Si la carte est masquée, afficher le lien pour la montrer */}
         {!showMap && (
-          <a className={linkStyle} onClick={handleToggleMap}>
+          <a className={`${linkStyle} text-center`} onClick={handleToggleMap}>
             {currentContent.showMap}
           </a>
         )}
-
-        {/* Si les infos sont visibles, on affiche le lien pour les masquer */}
         {showMap && showInfoBoard && (
-          <a className={linkStyle} onClick={handleToggleInfoBoard}>
+          <a className={`${linkStyle} text-center`} onClick={handleToggleInfoBoard}>
             {currentContent.hideInfos}
           </a>
         )}
-
-        {/* Si les infos sont masquées, afficher le lien pour les montrer */}
         {!showInfoBoard && (
-          <a className={linkStyle} onClick={handleToggleInfoBoard}>
+          <a className={`${linkStyle} text-center`} onClick={handleToggleInfoBoard}>
             {currentContent.showInfos}
           </a>
         )}
       </div>
-
-      <div className="flex flex-row w-full space-x-16">
-        {/* Carte avec zIndex à 0 et ajustement de largeur */}
+      <div className="flex flex-col lg:flex-row w-full gap-4 px-4 sm:px-6">
         {showMap && (
           <div
-            className={`flex-1 transition-all duration-300 rounded-lg m-4 ${showInfoBoard ? 'w-9/12 ml-[100px]' : 'w-full'}`}
+            className={`transition-all duration-300 rounded-lg ${
+              showInfoBoard ? 'w-full lg:w-2/3' : 'w-full'
+            }`}
             style={{ zIndex: 0 }}
           >
             <DynamicMap center={[3.8667, 11.5167]} zoom={13} />
           </div>
         )}
-
-        {/* Board des offres avec ajustement dynamique */}
         {showInfoBoard && (
           <div
-            className={`transition-all duration-300 mt-20 flex justify-center ${showMap ? 'flex-1 w-3/12 ml-[400px]' : 'w-full items-center'}`}
+            className={`transition-all duration-300 flex justify-center ${
+              showMap ? 'w-full lg:w-1/3' : 'w-full'
+            }`}
           >
             <OffersBoard />
           </div>
@@ -101,4 +92,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
+};
