@@ -85,7 +85,7 @@ const Navbar = () => {
   const currentContent = locale === 'en' ? content.en : content.fr;
   const isTraveller = roles.includes('ROLE_TRAVELLER');
   const isDriver = roles.includes('ROLE_DRIVER');
-  const closeMobileMenu = () =>{
+  const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
   const handleLogout = () => {
@@ -94,42 +94,42 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-bleu-nuit text-white py-2 md:py-4 px-3 md:px-6 shadow-md sticky top-0 z-50 font-verdana size-auto">
+    <nav className="bg-bleu-nuit text-white py-2 md:py-4 px-3 md:px-6 shadow-md sticky top-0 z-50 size-auto">
       <div className="container mx-auto max-w-7xl">
         {/* Desktop and Tablet Navigation */}
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-wider flex items-center  hover:text-orange-btn transition-all duration-300">
+          <Link href="/" className="text-xl sm:text-2xl lg:text-3xl  tracking-wider flex items-center  hover:text-orange-btn transition-all duration-300">
             <FaRoad className="mr-2" />
             <span className="hidden sm:inline">Ride&Go</span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-6">
-            <Link href="/" className="nav-link hover:text-orange-btn font-bold">
+            <Link href="/" className="nav-link hover:text-orange-btn ">
               {currentContent.home}
             </Link>
-            <Link href="/calculate" className="nav-link hover:text-orange-btn font-bold">
+            <Link href="/calculate" className="nav-link hover:text-orange-btn ">
               {currentContent.calculate}
             </Link>
             {!isAuthenticated && (
-              <Link href="/search" className="nav-link hover:text-orange-btn font-bold">
+              <Link href="/search" className="nav-link hover:text-orange-btn ">
                 {currentContent.search}
               </Link>
             )}
             {isTraveller && (
-              <Link href="/go" className="nav-link hover:text-orange-btn font-bold">
+              <Link href="/go" className="nav-link hover:text-orange-btn ">
                 {currentContent.go}
               </Link>
             )}
             {isDriver && (
-              <Link href="/ride" className="nav-link hover:text-orange-btn font-bold">
+              <Link href="/ride" className="nav-link hover:text-orange-btn ">
                 {currentContent.ride}
               </Link>
             )}
 
             {/* Help Dropdown - Desktop */}
-            <div className="relative dropdown font-bold">
+            <div className="relative dropdown ">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center space-x-1 hover:text-orange-btn transition-all duration-300"
@@ -141,18 +141,18 @@ const Navbar = () => {
                 />
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 font-bold">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 ">
                   <div className="flex flex-col">
-                    <Link href="/about" className="dropdown-item text-bleu-nuit hover:text-orange-btn font-bold">
+                    <Link href="/about" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
                       {currentContent.aboutUs}
                     </Link>
-                    <Link href="/privacy" className="dropdown-item text-bleu-nuit hover:text-orange-btn font-bold">
+                    <Link href="/privacy" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
                       {currentContent.policy}
                     </Link>
-                    <Link href="/contact" className="dropdown-item text-bleu-nuit hover:text-orange-btn font-bold">
+                    <Link href="/contact" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
                       {currentContent.contactUs}
                     </Link>
-                    <Link href="/help" className="dropdown-item text-bleu-nuit hover:text-orange-btn font-bold">
+                    <Link href="/help" className="dropdown-item text-bleu-nuit hover:text-orange-btn ">
                       {currentContent.assistance}
                     </Link>
                   </div>
@@ -167,7 +167,7 @@ const Navbar = () => {
                 <select
                   value={locale}
                   onChange={(e) => handleLanguageChange(e.target.value)}
-                  className="bg-transparent font-bold hover:text-orange-btn transition-all duration-300 cursor-pointer focus:outline-none"
+                  className="bg-transparent  hover:text-orange-btn transition-all duration-300 cursor-pointer focus:outline-none"
                 >
                   <option value="en" className="text-bleu-nuit">
                     {locale === 'en' ? 'English' : 'Anglais'}
@@ -182,10 +182,10 @@ const Navbar = () => {
             {/* Auth Section - Desktop */}
             {!user ? (
               <div className="flex items-center space-x-3">
-                <Link href="/login" className="auth-button bg-orange-btn rounded-md  py-3 font-bold">
+                <Link href="/login" className="auth-button bg-orange-btn rounded-md  py-3 ">
                   {currentContent.signIn}
                 </Link>
-                <Link href="/register" className="auth-button  bg-orange-btn rounded-md py-3 font-bold">
+                <Link href="/register" className="auth-button  bg-orange-btn rounded-md py-3 ">
                   {currentContent.signUp}
                 </Link>
               </div>

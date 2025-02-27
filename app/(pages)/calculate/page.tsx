@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
+import {calculateCost ,calculateCostRequest,formatDuration} from '@/app/utils/api/cost';
 import {
   FaCalculator,
   FaMoneyBillWave,
@@ -24,13 +25,14 @@ const Map = dynamic(() => import('@/app/components/collectRideGo/Map'), {
 
 interface CostDetails {
   distance: number;
-  duration: number;
+  duration: string;
   estimatedCost: number;
   officialCost: number;
   startLocation: string;
   endLocation: string;
-  mapDetails: string;
+  // mapDetails: string;
 }
+
 
 const CostCalculator = () => {
   const [startLocation, setStartLocation] = useState('');
@@ -40,6 +42,7 @@ const CostCalculator = () => {
   const [showPriceAnimation, setShowPriceAnimation] = useState(false);
   const [proposedPrice, setProposedPrice] = useState('');
   const [isFormCentered, setIsFormCentered] = useState(true);
+    const [isCalculated, setIsCalculated] = useState(false);
   const { locale } = useLocale();
 
   const testimonials = [
@@ -69,30 +72,45 @@ const CostCalculator = () => {
     }
   ];
 
-  const calculateCost = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      const distance = Math.random() * 20 + 5;
-      const duration = Math.floor(distance * 3);
-      const estimatedCost = Math.floor((distance * 500) + 1000);
-      const officialCost = Math.floor(estimatedCost * 1.2);
+    const handleCalculateCost = async () => {
+      if (!startLocation || !endLocation) {
+        alert("Veuillez entrer les deux emplacements.");
+        return;
+      }
+    
+      setIsLoading(true);
+      setIsCalculated(false);
+    
+      // Obtenir l'heure actuelle au format HH:MM
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    
+      const requestData: calculateCostRequest = {
+        start: startLocation,
+        end: endLocation,
+        hour: formattedTime,
+      };
+    
+      try {
+        const response = await calculateCost(requestData);
+        setCostDetails({
+          estimatedCost: response.cost,
+          officialCost: response.min_cost,
+          distance: response.distance.toFixed(3),
+          duration: formatDuration(response.distance*1000/60),
+          startLocation: startLocation,
+          endLocation: endLocation,
 
-      setCostDetails({
-        distance: Number(distance.toFixed(1)),
-        duration,
-        estimatedCost: Number(estimatedCost.toFixed(0)),
-        officialCost: Number(officialCost.toFixed(0)),
-        startLocation,
-        endLocation,
-        mapDetails: "Route principale via Avenue de la République, trafic modéré"
-      });
-
+        });
+        setIsCalculated(true);
+      } catch (error) {
+        console.error("Erreur lors du calcul du coût :", error);
+        alert("Une erreur est survenue lors du calcul du tarif.");
+      }
+    
       setIsLoading(false);
-      setShowPriceAnimation(true);
-      setIsFormCentered(false); // Remonte le formulaire après le calcul
-    }, 1500);
-  };
-
+    };
+    
   useEffect(() => {
     if (showPriceAnimation) {
       const timer = setTimeout(() => setShowPriceAnimation(false), 1000);
@@ -191,7 +209,7 @@ const CostCalculator = () => {
                     </div>
 
                     <button
-                      onClick={calculateCost}
+                      onClick={handleCalculateCost}
                       disabled={isLoading}
                       className="w-full py-4 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-3 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -231,7 +249,7 @@ const CostCalculator = () => {
                           {currentContent.duration}
                         </div>
                         <p className="text-3xl font-bold text-white">
-                          {costDetails.duration} min
+                          {costDetails.duration} 
                         </p>
                       </div>
                     </div>
@@ -250,7 +268,11 @@ const CostCalculator = () => {
                       <div className="bg-white/5 p-4 rounded-lg">
                         <div className="flex justify-between items-center text-blue-200 mb-2">
                           <span>{currentContent.officialCost}</span>
-                          <span className="text-white font-medium">{costDetails.officialCost.toLocaleString()} FCFA</span>
+                          <span className="text-white font-medium">{costDetails?.officialCost !== undefined ? (
+                            <p>Tarif officiel: {costDetails.officialCost} FCFA</p>
+                          ) : (
+                            <p>Tarif officiel: 350 FCFA</p>
+                          )}</span>
                         </div>
                         <button className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
                           {currentContent.orderButton}
@@ -291,7 +313,7 @@ const CostCalculator = () => {
               </div>
 
               {costDetails && (
-                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg">
+                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg h-max mb-12">
                     <div className="p-4">
                     <h2 className="text-xl font-semibold text-white mb-4">
                         {currentContent.tripDetails}
@@ -316,8 +338,8 @@ const CostCalculator = () => {
                         </div>
                         </div>
                         <div className="bg-white/5 p-3 rounded-md">
-                        <p className="text-blue-200 text-xs">{currentContent.routeDetails}</p>
-                        <p className="text-white mt-1 text-sm">{costDetails.mapDetails}</p>
+                        {/* <p className="text-blue-200 text-xs">{currentContent.routeDetails}</p> */}
+                        {/* <p className="text-white mt-1 text-sm">{costDetails.mapDetails}</p> */}
                         </div>
                     </div>
                     </div>
@@ -328,7 +350,7 @@ const CostCalculator = () => {
           </div>
 
           {/* Services annexes */}
-          <div className="mt-12">
+          <div className="mt-[250px]">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
               {currentContent.servicesTitle}
             </h2>

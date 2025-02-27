@@ -5,13 +5,14 @@ import { useLocale } from '@/app/utils/hooks/useLocale.js';
 import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus } from 'react-icons/fa';
 import Map from '../collectRideGo/DynamicMap';
 import { calculateCost } from '@/app/utils/api/cost';
-import { calculateCostRequest,formatDuration } from '@/app/utils/api/cost';
+import { calculateCostRequest } from '@/app/utils/api/cost';
 
 interface TripDetails {
   fare: number;
   distance: number;
+  time: number;
   officialPrice: number;
-  duration: string;
+  duration: number;
   start: string;
   end: string
 }
@@ -41,45 +42,26 @@ const HeroFareCalculator = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const calculateFare = async () => {
-    if (!startLocation || !endLocation) {
-      alert("Veuillez entrer les deux emplacements.");
-      return;
-    }
-  
+  const calculateFare = () => {
     setIsLoading(true);
-    setIsCalculated(false);
-  
-    // Obtenir l'heure actuelle au format HH:MM
-    const now = new Date();
-    const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  
-    const requestData: calculateCostRequest = {
+    const baseFare = 1000;
+    const distance = Math.random() * 20 + 5;
+    const pricePerKm = 500;
+    const totalFare = baseFare + distance * pricePerKm;
+    const officialPrice = totalFare * 1.2;
+
+    setTripDetails({
+      fare: Number(totalFare.toFixed(2)),
+      officialPrice: Number(officialPrice.toFixed(2)),
+      distance: Number(distance.toFixed(1)),
+      duration: Math.floor(distance * 3),
       start: startLocation,
       end: endLocation,
-      // hour: formattedTime,
-    };
-  
-    try {
-      const response = await calculateCost(requestData);
-      setTripDetails({
-        fare: response.cost,
-        officialPrice: response.min_cost,
-        distance: response.distance.toFixed(3),
-        duration: formatDuration(response.distance*1000/60),
-        start: startLocation,
-        end: endLocation,
-        
-      });
-      setIsCalculated(true);
-    } catch (error) {
-      console.error("Erreur lors du calcul du coût :", error);
-      alert("Une erreur est survenue lors du calcul du tarif.");
-    }
-  
+      time: 0
+    });
     setIsLoading(false);
+    setIsCalculated(true);
   };
-  
 
   const content = {
     en: {
@@ -135,78 +117,75 @@ const HeroFareCalculator = () => {
   const currentContent = locale == 'fr' ? content.fr : content.en;
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative h-screen overflow-hidden">
       <div className="absolute inset-0 z-0">
         {backgroundImages.map((img, index) => (
           <div
             key={index}
-            className={`absolute inset-0 ${currentSlide === index ? 'block' : 'hidden'}`}
+            className={`absolute inset-0 ${currentSlide === index ? 'block' : 'hidden'
+              }`}
           >
             <img
               src={img}
               alt={`Slide ${index + 1}`}
-              className="h-full w-full object-cover"
+              className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0A1128]/90 to-[#0A1128]/70" />
           </div>
         ))}
       </div>
-  
-      <div className="absolute top-1/2 -translate-y-1/2 z-10 flex w-full justify-between px-4 sm:px-6">
+
+      <div className="absolute top-1/2 -translate-y-1/2 w-full z-10 flex justify-between px-4">
         <button
           onClick={() => setCurrentSlide((prev) => (prev - 1 + backgroundImages.length) % backgroundImages.length)}
-          className="rounded-full bg-white/20 p-2 transition-all hover:bg-white/30"
+          className="p-1 bg-white/20 rounded-full hover:bg-white/30 transition-all"
         >
-          <FaAngleLeft className="text-xl text-white sm:text-2xl" />
+          <FaAngleLeft className="text-white text-xl" />
         </button>
         <button
           onClick={() => setCurrentSlide((prev) => (prev + 1) % backgroundImages.length)}
-          className="rounded-full bg-white/20 p-2 transition-all hover:bg-white/30"
+          className="p-1 bg-white/20 rounded-full hover:bg-white/30 transition-all"
         >
-          <FaAngleRight className="text-xl text-white sm:text-2xl" />
+          <FaAngleRight className="text-white text-xl" />
         </button>
       </div>
-  
-      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 pt-4">
+        <div className="text-center mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight animate-fade-in">
             {currentContent.heroTitle}
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-blue-200 animate-fade-in-delay max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
             {currentContent.heroSubtitle}
           </p>
         </div>
-  
-        <div className={`flex flex-col lg:flex-row gap-6 transition-all duration-500 ${
-          isCalculated ? 'h-auto' : 'h-full items-center'
-        }`}>
-          <div className={`w-full lg:w-1/2 bg-white/10 backdrop-blur-md rounded-xl shadow-xl transition-all duration-500 p-4 sm:p-6 ${
-            isCalculated ? 'mb-4 lg:mb-0' : 'mb-0'
-          }`}>
-            <div className="space-y-4">
-              <div className="space-y-3">
+
+        <div className={`flex flex-col lg:flex-row gap-4 transition-all duration-500 ${isCalculated ? 'h-auto' : 'h-full items-center'}`}>
+          <div className={`lg:w-1/2 bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-xl transition-all duration-500 ${isCalculated ? 'mb-4' : 'mb-0'}`}>
+            <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="relative group">
                   <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-base group-hover:text-blue-300 transition-colors" />
                   <input
                     type="text"
                     placeholder={currentContent.startLocationPlaceholder}
-                    className="w-full pl-10 pr-3 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm sm:text-base"
+                    className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm"
                     value={startLocation}
                     onChange={(e) => setStartLocation(e.target.value)}
                   />
                 </div>
-  
+
                 <div className="relative group">
                   <FaLocationArrow className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-base group-hover:text-blue-300 transition-colors" />
                   <input
                     type="text"
                     placeholder={currentContent.endLocationPlaceholder}
-                    className="w-full pl-10 pr-3 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm sm:text-base"
+                    className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition text-sm"
                     value={endLocation}
                     onChange={(e) => setEndLocation(e.target.value)}
                   />
                 </div>
-  
+
                 <button
                   onClick={calculateFare}
                   disabled={isLoading}
@@ -223,33 +202,35 @@ const HeroFareCalculator = () => {
 
                 </button>
               </div>
-  
+
               {tripDetails && (
-                <div className="space-y-4 animate-fade-in">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-white/10 p-3 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                      <div className="flex items-center gap-2 text-blue-200 mb-1.5 text-sm">
-                        <FaRoute className="text-base sm:text-lg" />
+                <div className="space-y-3 animate-fade-in flex-grow">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
+                        <FaRoute className="text-base" />
                         {currentContent.distance}
                       </div>
-                      <p className="text-lg sm:text-xl font-bold text-white">
+                      <p className="text-lg font-bold text-white">
                         {tripDetails.distance} {currentContent.km}
                       </p>
                     </div>
-  
-                    <div className="bg-white/10 p-3 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                      <div className="flex items-center gap-2 text-blue-200 mb-1.5 text-sm">
-                        <FaClock className="text-base sm:text-lg" />
+
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
+                        <FaClock className="text-base" />
                         {currentContent.duration}
                       </div>
                       <p className="text-lg font-bold text-white">
-                        {tripDetails.duration} 
+                        {tripDetails.duration} {currentContent.mins}
                       </p>
                     </div>
-                  
-                    <div className="bg-white/10 p-3 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                      <div className="flex items-center gap-2 text-blue-200 mb-1.5 text-sm">
-                        <FaMoneyBillWave className="text-base sm:text-lg" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
+                        <FaMoneyBillWave className="text-base" />
                         {currentContent.estimatedFare}
                       </div>
                       <p className="text-lg font-bold text-white mb-2">
@@ -259,39 +240,35 @@ const HeroFareCalculator = () => {
                         {currentContent.order}
                       </button>
                     </div>
-  
-                    <div className="bg-white/10 p-3 rounded-lg backdrop-blur hover:bg-white/20 transition-colors">
-                      <div className="flex items-center gap-2 text-blue-200 mb-1.5 text-sm">
-                        <FaBuilding className="text-base sm:text-lg" />
+
+                    <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
+                        <FaBuilding className="text-base" />
                         {currentContent.officialPrice}
                       </div>
                       <p className="text-lg font-bold text-white mb-2">
-                      {tripDetails?.officialPrice !== undefined ? (
-                            <p>Tarif officiel: {tripDetails.officialPrice} FCFA</p>
-                          ) : (
-                            <p>Tarif officiel: 350 FCFA</p>
-                          )}
+                        {tripDetails.officialPrice.toLocaleString()} FCFA
                       </p>
                       <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
                         {currentContent.order}
                       </button>
                     </div>
                   </div>
-  
-                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-4 rounded-lg backdrop-blur">
-                    <h3 className="text-base sm:text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                      <FaHandHoldingUsd className="text-lg sm:text-xl" />
+
+                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur flex-grow">
+                    <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                      <FaHandHoldingUsd className="text-lg" />
                       {currentContent.makeProposal}
                     </h3>
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex gap-2">
                       <input
                         type="number"
                         placeholder={currentContent.proposalPlaceholder}
-                        className="w-full sm:flex-1 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm sm:text-base"
+                        className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
                         value={proposedPrice}
                         onChange={(e) => setProposedPrice(e.target.value)}
                       />
-                      <button className="w-full sm:w-auto px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm sm:text-base">
+                      <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm">
                         {currentContent.submitProposal}
                       </button>
                     </div>
@@ -336,8 +313,8 @@ const HeroFareCalculator = () => {
             <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
               {Map && <Map center={[0.0, 0.0]} zoom={0} />}
               {tripDetails && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-3 m-3 rounded-lg">
-                  <div className="flex flex-col gap-2 text-white text-sm sm:text-base">
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-2 m-3 rounded-lg">
+                  <div className="flex flex-col gap-1.5 text-white text-sm">
                     <div className="flex items-center gap-2">
                       <FaMapMarkerAlt className="text-green-400" />
                       <span>{tripDetails.start}</span>
@@ -350,16 +327,16 @@ const HeroFareCalculator = () => {
                 </div>
               )}
             </div>
-  
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="bg-white/10 backdrop-blur p-3 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm sm:text-base font-semibold text-white">{currentContent.trustPoint1}</h3>
+
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint1}</h3>
               </div>
-              <div className="bg-white/10 backdrop-blur p-3 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm sm:text-base font-semibold text-white">{currentContent.trustPoint2}</h3>
+              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint2}</h3>
               </div>
-              <div className="bg-white/10 backdrop-blur p-3 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm sm:text-base font-semibold text-white">{currentContent.trustPoint3}</h3>
+              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint3}</h3>
               </div>
             </div>
           </div>
@@ -367,6 +344,6 @@ const HeroFareCalculator = () => {
       </div>
     </div>
   );
-}
+};
 
 export default HeroFareCalculator;
