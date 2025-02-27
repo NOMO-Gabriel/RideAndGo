@@ -141,12 +141,12 @@ const HeroFareCalculator = () => {
           onClick={() => setCurrentSlide((prev) => (prev + 1) % backgroundImages.length)}
           className="rounded-full bg-white/20 p-2 transition-all hover:bg-white/30"
         >
-          <FaAngleRight className="text-xl text-white sm:text-2xl" />
+          <FaAngleRight className="text-xl text-white sm:text-2xl " />
         </button>
       </div>
   
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6 sm:mb-8">
+        <div className="text-center mb-6  sm:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight animate-fade-in">
             {currentContent.heroTitle}
           </h1>
@@ -189,6 +189,7 @@ const HeroFareCalculator = () => {
                   onClick={calculateFare}
                   disabled={isLoading}
                   className="w-full py-2 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] hover:shadow-xl text-sm"
+                  className="w-full py-3 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] hover:shadow-xl text-sm sm:text-base"
                 >
                   {isLoading ? (
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
@@ -199,6 +200,8 @@ const HeroFareCalculator = () => {
                     </>
                   )}
 
+                  <FaCalculator className="text-base sm:text-lg" />
+                  {currentContent.calculateButton}
                 </button>
               </div>
   
@@ -231,6 +234,7 @@ const HeroFareCalculator = () => {
                         {currentContent.estimatedFare}
                       </div>
                       <p className="text-lg font-bold text-white mb-2">
+                      <p className="text-lg sm:text-xl font-bold text-white">
                         {tripDetails.fare.toLocaleString()} FCFA
                       </p>
                       <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
@@ -244,6 +248,7 @@ const HeroFareCalculator = () => {
                         {currentContent.officialPrice}
                       </div>
                       <p className="text-lg font-bold text-white mb-2">
+                      <p className="text-lg sm:text-xl font-bold text-white">
                         {tripDetails.officialPrice.toLocaleString()} FCFA
                       </p>
                       <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
@@ -308,6 +313,9 @@ const HeroFareCalculator = () => {
 
           <div className="lg:w-1/2">
             <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
+  
+          <div className="w-full lg:w-1/2 space-y-4">
+            <div className="h-[300px] sm:h-[400px] lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl">
               {Map && <Map center={[0.0, 0.0]} zoom={0} />}
               {tripDetails && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-3 m-3 rounded-lg">
