@@ -83,7 +83,6 @@ const StatisticsSection: React.FC = () => {
   
 
   return (
-<<<<<<< HEAD
     <section className="relative py-6 sm:py-10 md:py-16 bg-blanc-casse overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-bleu-nuit 
@@ -106,19 +105,6 @@ const StatisticsSection: React.FC = () => {
                          min-h-[200px] sm:min-h-[220px] md:min-h-[240px]"
             >
               {/* Effet lumineux amélioré */}
-=======
-    <section className="py-12 sm:py-16 bg-blanc-casse relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-bleu-nuit mb-8 sm:mb-10">
-          {locale === 'en' ? 'Key Statistics' : 'Statistiques Clés'}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {statistics.map((stat, idx) => (
-            <div
-              key={idx}
-              className="relative p-6 sm:p-8 bg-white shadow-lg rounded-lg transform transition-transform duration-500"
-            >
->>>>>>> origin/folongtz
               <div
                 className={`absolute inset-0 rounded-lg z-0 
                            transition-all duration-700 ease-out
@@ -128,7 +114,6 @@ const StatisticsSection: React.FC = () => {
                              : 'opacity-0 scale-100'
                            }`}
               ></div>
-<<<<<<< HEAD
   
               {/* Contenu */}
               <div className="relative z-10 w-full">
@@ -145,13 +130,6 @@ const StatisticsSection: React.FC = () => {
                             font-medium text-gray-600
                             max-w-[250px] mx-auto
                             line-height-relaxed">
-=======
-              <div className="relative z-10">
-                <div className="text-bleu-nuit text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-2">
-                  {displayedStats[idx]}+
-                </div>
-                <p className="mt-2 text-gray-600 text-base sm:text-lg font-medium">
->>>>>>> origin/folongtz
                   {locale === 'en' ? stat.label.en : stat.label.fr}
                 </p>
               </div>
@@ -159,7 +137,6 @@ const StatisticsSection: React.FC = () => {
           ))}
         </div>
       </div>
-<<<<<<< HEAD
   
       {/* Effets d'arrière-plan améliorés */}
       <div className="absolute inset-0 pointer-events-none">
@@ -173,9 +150,6 @@ const StatisticsSection: React.FC = () => {
                       bg-gradient-to-b from-transparent via-white/5 to-transparent 
                       animate-floating"></div>
       </div>
-=======
-      <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
->>>>>>> origin/folongtz
     </section>
   );
 }

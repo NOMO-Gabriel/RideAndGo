@@ -6,6 +6,7 @@ import FeaturesSection from "./components/Home/FeaturesSection";
 import StatisticsSection from "./components/Home/StatisticsSection";
 import TestimonySection from "./components/Home/TestimonySection";
 import SubscribeSection from "./components/Home/SubscribeSection";
+import TeamSection from      "./components/Home/Equipe";
 // import CompactFareCalculator from "./components/Home/FareCalculator";
 import HeroFareCalculator from "./components/Home/FareCalculator";
 
@@ -29,6 +30,7 @@ export default function page(){
            <StatisticsSection/>
            <SubscribeSection/>
            <TestimonySection/>
+           <TeamSection />
         </div>
     );
 }

@@ -32,6 +32,9 @@ interface CostDetails {
   endLocation: string;
   // mapDetails: string;
 }
+interface translate{
+
+}
 
 
 const CostCalculator = () => {
@@ -45,13 +48,13 @@ const CostCalculator = () => {
     const [isCalculated, setIsCalculated] = useState(false);
   const { locale } = useLocale();
 
-  const testimonials = [
+  const testimonial = [
     { text: "Le calculateur le plus précis que j'ai utilisé !", rating: 5 },
     { text: "Super outil pour planifier mes déplacements", rating: 5 },
     { text: "Estimation très proche du prix final", rating: 4 }
   ];
 
-  const services = [
+  const service = [
     {
       title: "Besoin d'une course ?",
       icon: FaTaxi,
@@ -71,7 +74,7 @@ const CostCalculator = () => {
       link: "#"
     }
   ];
-
+  
     const handleCalculateCost = async () => {
       if (!startLocation || !endLocation) {
         alert("Veuillez entrer les deux emplacements.");
@@ -139,7 +142,31 @@ const CostCalculator = () => {
       learnMore: "Learn More",
       makeProposal: "Propose your price",
       proposalPlaceholder: "Your offer",
-      submitProposal: "Order"
+      submitProposal: "Order",
+
+      testimonials: [
+        { text: "The most accurate calculator I've used!", rating: 5 },
+        { text: "Great tool for planning my trips", rating: 5 },
+        { text: "Estimation very close to the final price", rating: 4 }
+      ],
+      // Ajouts pour les services
+      services: [
+        {
+          title: "Need a ride?",
+          description: "Book your taxi in just a few clicks",
+          link: "#"
+        },
+        {
+          title: "Need a travel agency?",
+          description: "Plan your next trip",
+          link: "#"
+        },
+        {
+          title: "Car rental",
+          description: "Wide range of vehicles available",
+          link: "#"
+        }
+      ]
     },
     fr: {
       heroTitle: "Calculez le Coût de Votre Trajet",
@@ -161,12 +188,42 @@ const CostCalculator = () => {
       learnMore: "En Savoir Plus",
       makeProposal: "Proposez votre prix",
       proposalPlaceholder: "Votre offre",
-      submitProposal: "Commander"
+      submitProposal: "Commander",
+      testimonials: [
+        { text: "Le calculateur le plus précis que j'ai utilisé !", rating: 5 },
+        { text: "Super outil pour planifier mes déplacements", rating: 5 },
+        { text: "Estimation très proche du prix final", rating: 4 }
+      ],
+      // Ajouts pour les services
+      services: [
+        {
+          title: "Besoin d'une course ?",
+          description: "Réservez votre taxi en quelques clics",
+          link: "#"
+        },
+        {
+          title: "Besoin d'une agence de voyage ?",
+          description: "Planifiez votre prochain voyage",
+          link: "#"
+        },
+        {
+          title: "Location de véhicule",
+          description: "Large gamme de véhicules disponibles",
+          link: "#"
+        }
+      ]
     }
   };
 
   const currentContent = locale === 'fr' ? content.fr : content.en;
-
+ 
+  const testimonials = currentContent.testimonials;
+  const services = currentContent.services.map((service, index) => ({
+    ...service,
+    icon: [FaTaxi, FaPlane, FaCar][index], // Ajouter les icônes dynamiquement
+  }));
+    
+    
   return (
     <div className="min-h-screen bg-[url('/path-to-your-bg.jpg')] bg-cover bg-center bg-fixed">
       <div className="min-h-screen bg-bleu-nuit backdrop-blur-md p-4 md:p-8">
