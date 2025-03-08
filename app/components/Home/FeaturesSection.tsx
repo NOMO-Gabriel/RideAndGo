@@ -90,7 +90,8 @@ const FeaturesSection: React.FC = () => {
   //}, [currentIndex]);
   
 
-   return (
+  
+  return (
     <div className="py-16 bg-blanc-casse mb-16 mt-16 ">
       <div className="container mx-auto text-center sm:w-4/3">
         <h2 className="text-4xl font-bold text-bleu-nuit mb-8">{locale==='en'?'Our features': 'Nos Fonctionnalités'}</h2>
@@ -112,7 +113,7 @@ const FeaturesSection: React.FC = () => {
                 backgroundImage: `url(${feature.image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                           }}
+              }}
             >
               <div className="bg-bleu-nuit text-white w-12 h-12 sm:w-16 sm:h-16 mx-auto rounded-full flex items-center justify-center mb-4">
                 <span className="text-xl sm:text-2xl">{feature.icon}</span>

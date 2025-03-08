@@ -130,7 +130,7 @@ const StatisticsSection: React.FC = () => {
                             font-medium text-gray-600
                             max-w-[250px] mx-auto
                             line-height-relaxed">
-                  {locale === 'en' ? stat.label.en : stat.label.fr}
+                           {locale === 'en' ? stat.label.en : stat.label.fr}
                 </p>
               </div>
             </div>
@@ -150,7 +150,7 @@ const StatisticsSection: React.FC = () => {
                       bg-gradient-to-b from-transparent via-white/5 to-transparent 
                       animate-floating"></div>
       </div>
-    </section>
+          </section>
   );
 }
 

@@ -275,7 +275,14 @@ const FareCalculator: React.FC<FareCalculatorProps> = ({ onSubmitRide, mode = 'c
                 />
                 <button 
                   onClick={handleSubmit}
-                  className=""
+                  className="px-3 sm:px-4 
+                           py-1 sm:py-1.5 
+                           bg-orange-500 hover:bg-orange-600 
+                           text-white rounded-md font-medium 
+                           transition-all hover:shadow-lg 
+                           transform hover:scale-105 
+                           text-xs sm:text-sm
+                           whitespace-nowrap"
                 >
                   {currentContent.submitProposal}
                 </button>

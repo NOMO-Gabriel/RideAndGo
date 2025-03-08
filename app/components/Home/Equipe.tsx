@@ -61,9 +61,9 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamData: initialTeamData, tr
     {
       id: 1,
       name: "Djotio Thomas",
-      position: locale === 'fr' ? "Directeur Général" : "CEO",
-      bio: locale === 'fr' ? "Expert en leadership" : "Leadership expert",
-      image: "/images/equipe/member1.jpg",
+      position: locale === 'fr' ? "Prof,Dr-Ing, Directeur Général" : "Prof, Dr-Ing, CEO",
+      bio: locale === 'fr' ? "Enseignant chercheur doté de puissantes qualités de pédagogue et de manager" : "Leadership expert",
+      image: "/images/equipe/djotio.jpeg",
       socials: {
         linkedin: "https://linkedin.com",
         twitter: "https://twitter.com"
@@ -74,7 +74,7 @@ const TeamSection: React.FC<TeamSectionProps> = ({ teamData: initialTeamData, tr
       name: "Jane Smith",
       position: locale === 'fr' ? "Directrice Marketing" : "Marketing Director",
       bio: locale === 'fr' ? "Spécialiste en stratégie digitale" : "Digital strategy specialist",
-      image: "/images/equipe/member1.jpg",
+      image: "/images/equipe/yves.jpg",
       socials: {
         linkedin: "https://linkedin.com"
       }
