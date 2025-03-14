@@ -2,6 +2,8 @@
 
 import PlueValue from "./components/Home/PlusValue";
 import FeaturesSection from "./components/Home/FeaturesSection";
+import VideoGuide from './components/Home/VideoGuide';
+
 // import HeroSection from "./components/Home/HeroSection";
 import StatisticsSection from "./components/Home/StatisticsSection";
 import TestimonySection from "./components/Home/TestimonySection";
@@ -25,6 +27,7 @@ export default function page(){
         <div>
            <HeroFareCalculator/>
            <FeaturesSection/>
+           <VideoGuide/>
            <PlueValue/>
            <StatisticsSection/>
            <SubscribeSection/>

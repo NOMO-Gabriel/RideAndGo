@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { YAOUNDE_LOCATIONS } from '../../utils/constants';
 import ProgressDashboard from '../../components/ride/ProgressDashboard';
 import ClientList from '../../components/ride/ClientList';
 import { useRideState } from '../../lib/hooks/useRideState';
 import { Client, Location } from '../../lib/types/ride';
-
-
 
 // Charger la carte de manière dynamique avec une suspension
 const Map = dynamic(
@@ -149,6 +148,17 @@ export default function DriverDashboard() {
           </div>
 
           <div className="w-2/3 flex flex-col gap-4">
+            {/* Bouton Devenir Chauffeur VIP */}
+            <div className="flex justify-end mb-1">
+              <Link href="/vip-driver-registration" className="transform transition-all duration-300 hover:scale-105">
+                <button className="bg-[#FF7D00] hover:bg-[#FF9A40] text-white font-medium py-2 px-4 rounded-lg shadow-lg flex items-center">
+                  <span className="mr-2">⭐</span>
+                  Devenir Chauffeur VIP
+                  <span className="ml-1 text-xs">&rarr;</span>
+                </button>
+              </Link>
+            </div>
+            
             <div className="flex-1 bg-white/10 backdrop-blur-md rounded-xl shadow-xl overflow-hidden">
               <Map
                 driverPosition={driverPosition}
