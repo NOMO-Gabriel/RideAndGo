@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useLocale } from "@/app/utils/hooks/useLocale.js";
 import Link from "next/link";
-import { register } from "@/app/utils/api/auth";
+import { register } from "@/app/utils/api/utils";
 
 export default function Register() {
   const { locale } = useLocale();

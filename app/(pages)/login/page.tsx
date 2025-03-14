@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, FormEvent } from 'react';  
-import { useUser } from '@/app/utils/hooks/useUser'; // Import du hook de connexion
+import { login } from '@/app/utils/api/utils'; // Import direct de la fonction login
 import { useFlashMessage } from '@/app/utils/hooks/useFlashMessage';
 
 interface LoginData {
@@ -10,7 +10,6 @@ interface LoginData {
 }
 
 const LoginForm = () => {
-  const { login } = useUser(); // Récupère la fonction de connexion du contexte
   const { showFlashMessage } = useFlashMessage(); // Récupère la fonction pour afficher les flash messages
   const [loginData, setLoginData] = useState<LoginData>({ identifier: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -38,10 +37,10 @@ const LoginForm = () => {
     const identifierType = getIdentifierType(loginData.identifier);
   
     try {
-      await login(identifierType, loginData.identifier, loginData.password);
+      await login( loginData.identifier, loginData.password);
       showFlashMessage('Connexion réussie ! Redirection en cours...', 'success', true);
       setTimeout(() => {
-        window.location.href = '/'; // Redirection sécurisée
+        window.location.href = '/dashboard'; 
       }, 2000);
     } catch (error: any) { 
       showFlashMessage(error.message || 'Erreur de connexion. Veuillez vérifier vos identifiants.', 'error');

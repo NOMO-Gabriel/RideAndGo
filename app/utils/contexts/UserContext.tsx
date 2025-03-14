@@ -1,6 +1,8 @@
-import React, { createContext, ReactNode, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { mockUsers } from '../mocks/mockUsers';
+"use client";
+
+import React, { createContext, ReactNode, useState, useEffect } from "react";
+import Cookies from "js-cookie"; // Import du module js-cookie
+import { mockUsers } from "../mocks/mockUsers";
 
 interface User {
   id: string;
@@ -13,7 +15,7 @@ interface User {
 interface UserContextType {
   user: User | null;
   login: (
-    identifierType: 'email' | 'phoneNumber' | 'pseudo',
+    identifierType: "email" | "phoneNumber" | "pseudo",
     identifierValue: string,
     password: string
   ) => Promise<void>;
@@ -26,28 +28,26 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const savedUser = Cookies.get('user');
+    const savedUser = Cookies.get("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
   }, []);
 
   const login = async (
-    identifierType: 'email' | 'phoneNumber' | 'pseudo',
+    identifierType: "email" | "phoneNumber" | "pseudo",
     identifierValue: string,
     password: string
   ): Promise<void> => {
-    // Simuler un délai réseau
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Rechercher l'utilisateur dans les données mockées
     const mockUser = mockUsers.find(user => {
       switch (identifierType) {
-        case 'email':
+        case "email":
           return user.email === identifierValue;
-        case 'phoneNumber':
+        case "phoneNumber":
           return user.phoneNumber === identifierValue;
-        case 'pseudo':
+        case "pseudo":
           return user.pseudo === identifierValue;
         default:
           return false;
@@ -55,15 +55,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     if (!mockUser) {
-      throw new Error('Utilisateur non trouvé');
+      throw new Error("Utilisateur non trouvé");
     }
 
     if (mockUser.password !== password) {
-      throw new Error('Mot de passe incorrect');
+      throw new Error("Mot de passe incorrect");
     }
 
     if (mockUser.isSuspend) {
-      throw new Error('Votre compte est suspendu');
+      throw new Error("Votre compte est suspendu");
     }
 
     const userData = {
@@ -73,16 +73,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       roles: mockUser.roles,
       name: mockUser.name,
       surname: mockUser.surname,
-      phoneNumber: mockUser.phoneNumber
+      phoneNumber: mockUser.phoneNumber,
     };
 
-    Cookies.set('user', JSON.stringify(userData), { expires: 7 });
+    Cookies.set("user", JSON.stringify(userData), {
+      expires: 1, // Expire en 1 jour
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+
     setUser(userData);
   };
 
   const logout = () => {
     setUser(null);
-    Cookies.remove('user');
+    Cookies.remove("user");
   };
 
   return (
@@ -95,7 +100,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useUserContext = () => {
   const context = React.useContext(UserContext);
   if (!context) {
-    throw new Error('useUserContext must be used within a UserProvider');
+    throw new Error("useUserContext must be used within a UserProvider");
   }
   return context;
 };
