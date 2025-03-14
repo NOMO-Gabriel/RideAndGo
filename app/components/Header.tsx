@@ -117,12 +117,12 @@ const Navbar = () => {
                 {currentContent.search}
               </Link>
             )}
-            {isTraveller && (
+            { (
               <Link href="/go" className="nav-link hover:text-orange-btn ">
                 {currentContent.go}
               </Link>
             )}
-            {isDriver && (
+            {(
               <Link href="/ride" className="nav-link hover:text-orange-btn ">
                 {currentContent.ride}
               </Link>
