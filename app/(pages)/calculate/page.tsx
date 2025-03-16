@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import {calculateCost ,calculateCostRequest,formatDuration} from '@/app/utils/api/cost';
+import { calculateCost, calculateCostRequest, formatDuration } from '@/app/utils/api/cost';
 import {
   FaCalculator,
   FaMoneyBillWave,
@@ -14,7 +14,9 @@ import {
   FaPlane,
   FaTaxi,
   FaStar,
-  FaHandHoldingUsd
+  FaHandHoldingUsd,
+  FaSmile,
+  FaSadTear
 } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
@@ -42,8 +44,62 @@ const CostCalculator = () => {
   const [showPriceAnimation, setShowPriceAnimation] = useState(false);
   const [proposedPrice, setProposedPrice] = useState('');
   const [isFormCentered, setIsFormCentered] = useState(true);
-    const [isCalculated, setIsCalculated] = useState(false);
+  const [isCalculated, setIsCalculated] = useState(false);
+  // Nouveaux états pour contrôler l'affichage des icônes
+  const [showHappyIcon, setShowHappyIcon] = useState(false);
+  const [showSadIcon, setShowSadIcon] = useState(false);
   const { locale } = useLocale();
+
+  // Fonction pour mettre à jour les icônes selon le prix proposé
+  const updatePriceIcons = (price) => {
+    console.log("========== LOGS ICÔNES ==========");
+    console.log("updatePriceIcons appelé avec prix:", price);
+    console.log("État costDetails:", costDetails);
+
+    // Vérifier si le prix et les détails de coût existent
+    if (!price || !costDetails) {
+      console.log("❌ Prix ou costDetails manquant, réinitialisation des icônes");
+      console.log("  - Prix présent:", !!price);
+      console.log("  - costDetails présent:", !!costDetails);
+      setShowHappyIcon(false);
+      setShowSadIcon(false);
+      return;
+    }
+
+    const numPrice = parseFloat(price);
+    console.log("Prix converti en nombre:", numPrice);
+
+    if (isNaN(numPrice)) {
+      console.log("❌ Prix invalide (NaN), réinitialisation des icônes");
+      setShowHappyIcon(false);
+      setShowSadIcon(false);
+      return;
+    }
+
+    // Vérifier la structure de costDetails
+    console.log("Structure de costDetails:");
+    console.log("  - estimatedCost:", costDetails.estimatedCost, "type:", typeof costDetails.estimatedCost);
+    console.log("  - officialCost:", costDetails.officialCost, "type:", typeof costDetails.officialCost);
+
+    const comparison = numPrice >= costDetails.estimatedCost;
+    console.log(`📊 Comparaison: ${numPrice} >= ${costDetails.estimatedCost} = ${comparison}`);
+
+    // Mettre à jour les icônes en fonction de la comparaison
+    if (comparison) {
+      console.log("✅ Prix suffisant, affichage icône content");
+      setShowHappyIcon(true);
+      setShowSadIcon(false);
+    } else {
+      console.log("❌ Prix insuffisant, affichage icône triste");
+      setShowHappyIcon(false);
+      setShowSadIcon(true);
+    }
+
+    console.log("État après mise à jour:");
+    console.log("  - showHappyIcon sera:", comparison);
+    console.log("  - showSadIcon sera:", !comparison);
+    console.log("================================");
+  };
 
   const testimonials = [
     { text: "Le calculateur le plus précis que j'ai utilisé !", rating: 5 },
@@ -72,51 +128,91 @@ const CostCalculator = () => {
     }
   ];
 
-    const handleCalculateCost = async () => {
-      if (!startLocation || !endLocation) {
-        alert("Veuillez entrer les deux emplacements.");
-        return;
-      }
-    
-      setIsLoading(true);
-      setIsCalculated(false);
-    
-      // Obtenir l'heure actuelle au format HH:MM
-      const now = new Date();
-      const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    
-      const requestData: calculateCostRequest = {
-        start: startLocation,
-        end: endLocation,
-        hour: formattedTime,
-      };
-    
-      try {
-        const response = await calculateCost(requestData);
-        setCostDetails({
-          estimatedCost: response.cost,
-          officialCost: response.min_cost,
-          distance: response.distance.toFixed(3),
-          duration: formatDuration(response.distance*1000/60),
-          startLocation: startLocation,
-          endLocation: endLocation,
+  const handleCalculateCost = async () => {
+    if (!startLocation || !endLocation) {
+      alert("Veuillez entrer les deux emplacements.");
+      return;
+    }
 
-        });
-        setIsCalculated(true);
-      } catch (error) {
-        console.error("Erreur lors du calcul du coût :", error);
-        alert("Une erreur est survenue lors du calcul du tarif.");
-      }
-    
-      setIsLoading(false);
+    setIsLoading(true);
+    setIsCalculated(false);
+
+    // Obtenir l'heure actuelle au format HH:MM
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+    const requestData: calculateCostRequest = {
+      start: startLocation,
+      end: endLocation,
+      hour: formattedTime,
     };
-    
+
+    console.log("========== LOGS API ==========");
+    console.log("Données envoyées à l'API:", requestData);
+
+    try {
+      const response = await calculateCost(requestData);
+      console.log("🟢 RÉPONSE API BRUTE:", response);
+      console.log("Type de response:", typeof response);
+      console.log("Propriétés de response:", Object.keys(response));
+
+      // Analyser en détail chaque propriété de la réponse
+      for (const [key, value] of Object.entries(response)) {
+        console.log(`Propriété ${key}:`, value, `(type: ${typeof value})`);
+      }
+
+      // Vérification de l'existence des propriétés clés
+      console.log("Vérification des propriétés:");
+      console.log("- cost existe:", 'cost' in response, response.cost);
+      console.log("- min_cost existe:", 'min_cost' in response, response.min_cost);
+      console.log("- distance existe:", 'distance' in response, response.distance);
+
+      const details = {
+        estimatedCost: response.cost,
+        officialCost: response.min_cost,
+        distance: response.distance.toFixed(3),
+        duration: formatDuration(response.distance * 1000 / 60),
+        startLocation: startLocation,
+        endLocation: endLocation,
+      };
+
+      console.log("🟢 Objet costDetails créé:", details);
+      setCostDetails(details);
+
+      // Réinitialiser les icônes si un nouveau calcul est effectué
+      setShowHappyIcon(false);
+      setShowSadIcon(false);
+
+      // Si un prix est déjà proposé, mettre à jour les icônes
+      if (proposedPrice) {
+        console.log("Prix déjà proposé:", proposedPrice);
+        updatePriceIcons(proposedPrice);
+      }
+
+      setIsCalculated(true);
+      console.log("================================");
+    } catch (error) {
+      console.error("🔴 Erreur lors du calcul du coût :", error);
+      console.log("Type d'erreur:", typeof error);
+      console.log("Message d'erreur:", error.message);
+      console.log("Stack trace:", error.stack);
+      alert("Une erreur est survenue lors du calcul du tarif.");
+    }
+
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (showPriceAnimation) {
       const timer = setTimeout(() => setShowPriceAnimation(false), 1000);
       return () => clearTimeout(timer);
     }
   }, [showPriceAnimation]);
+
+  // Écouter les changements de prix proposé pour mettre à jour les icônes
+  useEffect(() => {
+    updatePriceIcons(proposedPrice);
+  }, [proposedPrice, costDetails]);
 
   const content = {
     en: {
@@ -249,7 +345,7 @@ const CostCalculator = () => {
                           {currentContent.duration}
                         </div>
                         <p className="text-3xl font-bold text-white">
-                          {costDetails.duration} 
+                          {costDetails.duration}
                         </p>
                       </div>
                     </div>
@@ -268,11 +364,9 @@ const CostCalculator = () => {
                       <div className="bg-white/5 p-4 rounded-lg">
                         <div className="flex justify-between items-center text-blue-200 mb-2">
                           <span>{currentContent.officialCost}</span>
-                          <span className="text-white font-medium">{costDetails?.officialCost !== undefined ? (
-                            <p>Tarif officiel: {costDetails.officialCost} FCFA</p>
-                          ) : (
-                            <p>Tarif officiel: 350 FCFA</p>
-                          )}</span>
+                          <span className="text-white font-medium">
+                            {costDetails.officialCost.toLocaleString()} FCFA
+                          </span>
                         </div>
                         <button className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
                           {currentContent.orderButton}
@@ -280,23 +374,48 @@ const CostCalculator = () => {
                       </div>
                     </div>
 
-                    {/* Section "Proposez votre prix" */}
-                    <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur flex-grow mt-4">
-                      <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                    {/* Section "Proposez votre prix" avec icônes */}
+                    <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-4 rounded-lg backdrop-blur mt-4">
+                      <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                         <FaHandHoldingUsd className="text-lg" />
                         {currentContent.makeProposal}
                       </h3>
-                      <div className="flex gap-2">
+                      <div className="flex items-center gap-2">
                         <input
                           type="number"
                           placeholder={currentContent.proposalPlaceholder}
-                          className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
+                          className="flex-1 px-3 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
                           value={proposedPrice}
-                          onChange={(e) => setProposedPrice(e.target.value)}
+                          onChange={(e) => {
+                            console.log("Valeur saisie:", e.target.value);
+                            setProposedPrice(e.target.value);
+                            // updatePriceIcons est maintenant géré via useEffect
+                          }}
                         />
-                        <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm">
+
+                        {/* Conteneur des icônes avec debug visuel */}
+                        <div className="flex-shrink-0 w-8 flex justify-center items-center" style={{ minHeight: '36px' }}>
+                          {showHappyIcon && (
+                            <FaSmile className="text-green-400" style={{ fontSize: '24px' }} />
+                          )}
+                          {showSadIcon && (
+                            <FaSadTear className="text-red-400" style={{ fontSize: '24px' }} />
+                          )}
+                        </div>
+
+                        <button className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium text-sm">
                           {currentContent.submitProposal}
                         </button>
+                      </div>
+
+                      {/* Affichage de debug (temporaire) */}
+                      <div className="mt-2 p-2 text-xs border border-blue-400/30 rounded bg-blue-900/30">
+                        <p className="font-bold text-blue-100 mb-1">Informations de débogage:</p>
+                        <p>Prix proposé: <span className="text-orange-300">{proposedPrice || "non défini"}</span></p>
+                        <p>Prix estimé: <span className="text-orange-300">{costDetails?.estimatedCost?.toLocaleString() || "non défini"} FCFA</span></p>
+                        <p>Prix officiel: <span className="text-orange-300">{costDetails?.officialCost?.toLocaleString() || "non défini"} FCFA</span></p>
+                        <p>Comparaison: <span className="text-orange-300">{proposedPrice && costDetails ? (parseFloat(proposedPrice) >= costDetails.estimatedCost ? "Prix suffisant ✓" : "Prix insuffisant ✗") : "N/A"}</span></p>
+                        <p>Icône affichée: <span className="text-orange-300">{showHappyIcon ? "😊" : (showSadIcon ? "😢" : "Aucune")}</span></p>
                       </div>
                     </div>
                   </div>
@@ -314,37 +433,36 @@ const CostCalculator = () => {
 
               {costDetails && (
                 <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg h-max mb-12">
-                    <div className="p-4">
+                  <div className="p-4">
                     <h2 className="text-xl font-semibold text-white mb-4">
-                        {currentContent.tripDetails}
+                      {currentContent.tripDetails}
                     </h2>
                     <div className="space-y-4">
-                        <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-3">
                         <div className="bg-green-400/20 p-1.5 rounded-md">
-                            <FaMapMarkerAlt className="text-green-400 text-lg" />
+                          <FaMapMarkerAlt className="text-green-400 text-lg" />
                         </div>
                         <div>
-                            <p className="text-blue-200 text-xs">{currentContent.departure}</p>
-                            <p className="text-white text-base">{costDetails.startLocation}</p>
+                          <p className="text-blue-200 text-xs">{currentContent.departure}</p>
+                          <p className="text-white text-base">{costDetails.startLocation}</p>
                         </div>
-                        </div>
-                        <div className="flex items-start gap-3">
+                      </div>
+                      <div className="flex items-start gap-3">
                         <div className="bg-orange-400/20 p-1.5 rounded-md">
-                            <FaLocationArrow className="text-orange-400 text-lg" />
+                          <FaLocationArrow className="text-orange-400 text-lg" />
                         </div>
                         <div>
-                            <p className="text-blue-200 text-xs">{currentContent.arrival}</p>
-                            <p className="text-white text-base">{costDetails.endLocation}</p>
+                          <p className="text-blue-200 text-xs">{currentContent.arrival}</p>
+                          <p className="text-white text-base">{costDetails.endLocation}</p>
                         </div>
-                        </div>
-                        <div className="bg-white/5 p-3 rounded-md">
-                        {/* <p className="text-blue-200 text-xs">{currentContent.routeDetails}</p> */}
-                        {/* <p className="text-white mt-1 text-sm">{costDetails.mapDetails}</p> */}
-                        </div>
+                      </div>
+                      <div className="bg-white/5 p-3 rounded-md">
+                        {/* Contenu supplémentaire si nécessaire */}
+                      </div>
                     </div>
-                    </div>
+                  </div>
                 </div>
-            )}
+              )}
 
             </div>
           </div>

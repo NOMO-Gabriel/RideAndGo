@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus, FaSmile, FaSadTear, FaUserAlt, FaUserTie } from 'react-icons/fa';
 import Map from '../collectRideGo/DynamicMap';
 import { calculateCost } from '@/app/utils/api/cost';
-import { calculateCostRequest,formatDuration } from '@/app/utils/api/cost';
+import { calculateCostRequest, formatDuration } from '@/app/utils/api/cost';
+import Link from 'next/link';
 
 interface TripDetails {
   fare: number;
@@ -16,8 +17,6 @@ interface TripDetails {
   end: string
 }
 
-
-
 const HeroFareCalculator = () => {
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
@@ -26,6 +25,7 @@ const HeroFareCalculator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isCalculated, setIsCalculated] = useState(false);
+  const [showSadIcon, setShowSadIcon] = useState(false);
   const { locale } = useLocale();
 
   const backgroundImages = [
@@ -62,6 +62,8 @@ const HeroFareCalculator = () => {
   
     try {
       const response = await calculateCost(requestData);
+      console.log("RÉPONSE API:", response);
+      
       setTripDetails({
         fare: response.cost,
         officialPrice: response.min_cost,
@@ -69,8 +71,15 @@ const HeroFareCalculator = () => {
         duration: formatDuration(response.distance*1000/60),
         start: startLocation,
         end: endLocation,
-        
       });
+      
+      console.log("tripDetails après mise à jour:", {
+        fare: response.cost,
+        officialPrice: response.min_cost,
+        distance: response.distance.toFixed(3),
+        duration: formatDuration(response.distance*1000/60),
+      });
+      
       setIsCalculated(true);
     } catch (error) {
       console.error("Erreur lors du calcul du coût :", error);
@@ -80,7 +89,6 @@ const HeroFareCalculator = () => {
     setIsLoading(false);
   };
   
-
   const content = {
     en: {
       heroTitle: "Discover a new way to ride and go",
@@ -104,7 +112,11 @@ const HeroFareCalculator = () => {
       order: "Order",
       needRide: "Need a ride?",
       needTravelAgency: "Need a travel agency?",
-      needCarRental: "Need a car rental?"
+      needCarRental: "Need a car rental?",
+      areYouDriver: "Are you a driver?",
+      areYouCustomer: "Are you a customer?",
+      joinAsDriver: "Join as driver",
+      continueAsCustomer: "Continue as customer"
     },
     fr: {
       heroTitle: "Decouvrez une nouvelle maniere de vous deplacer",
@@ -128,7 +140,11 @@ const HeroFareCalculator = () => {
       order: "Commander",
       needRide: "Besoin d'une course?",
       needTravelAgency: "Besoin d'une agence de voyage?",
-      needCarRental: "Besoin d'une location?"
+      needCarRental: "Besoin d'une location?",
+      areYouDriver: "Êtes-vous chauffeur ?",
+      areYouCustomer: "Êtes-vous client ?",
+      joinAsDriver: "Devenir chauffeur",
+      continueAsCustomer: "Continuer comme client"
     }
   };
 
@@ -176,6 +192,35 @@ const HeroFareCalculator = () => {
           <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
             {currentContent.heroSubtitle}
           </p>
+        </div>
+
+        {/* Section choix du type d'utilisateur */}
+        <div className="mb-8 flex flex-col md:flex-row gap-4 justify-center items-center">
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white/5 hover:bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/10">
+            <h3 className="text-xl text-center text-white font-semibold mb-4 flex justify-center items-center gap-2">
+              <FaUserTie className="text-orange-300" />
+              {currentContent.areYouDriver}
+            </h3>
+            <p className="text-blue-200 text-sm text-center mb-6">
+              Rejoignez notre communauté de chauffeurs et proposez vos services à nos clients.
+            </p>
+            <Link href="/ride" className="block w-full py-2.5 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition">
+              {currentContent.joinAsDriver}
+            </Link>
+          </div>
+          
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white/5 hover:bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/10">
+            <h3 className="text-xl text-center text-white font-semibold mb-4 flex justify-center items-center gap-2">
+              <FaUserAlt className="text-orange-300" />
+              {currentContent.areYouCustomer}
+            </h3>
+            <p className="text-blue-200 text-sm text-center mb-6">
+              Trouvez un chauffeur, fixez votre prix et déplacez-vous en toute simplicité.
+            </p>
+            <Link href="/go" className="block w-full py-2.5 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition">
+              {currentContent.continueAsCustomer}
+            </Link>
+          </div>
         </div>
 
         <div className={`flex flex-col lg:flex-row gap-4 transition-all duration-500 ${isCalculated ? 'h-auto' : 'h-full items-center'}`}>
@@ -282,19 +327,41 @@ const HeroFareCalculator = () => {
                       <FaHandHoldingUsd className="text-lg" />
                       {currentContent.makeProposal}
                     </h3>
-                    <div className="flex gap-2">
+                    <div className="flex items-center space-x-4">
                       <input
                         type="number"
                         placeholder={currentContent.proposalPlaceholder}
-                        className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
+                        className="w-3/5 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
                         value={proposedPrice}
-                        onChange={(e) => setProposedPrice(e.target.value)}
+                        onChange={(e) => {
+                          const newPrice = e.target.value;
+                          setProposedPrice(newPrice);
+                          
+                          // Mettre à jour l'icône en fonction du prix proposé
+                          if (newPrice && tripDetails && tripDetails.fare) {
+                            const price = Number(newPrice);
+                            if (!isNaN(price)) {
+                              setShowSadIcon(price < tripDetails.fare);
+                            }
+                          } else {
+                            setShowSadIcon(false);
+                          }
+                        }}
                       />
-                      <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm">
+                      
+                      {/* Icône souriante par défaut, ou triste si le prix est trop bas */}
+                      <div className="w-8 flex-shrink-0 flex justify-center items-center">
+                        {showSadIcon ? (
+                          <FaSadTear size={24} className="text-red-400" />
+                        ) : (
+                          <FaSmile size={24} className="text-green-400" />
+                        )}
+                      </div>
+                      
+                      <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg text-sm">
                         {currentContent.submitProposal}
                       </button>
                     </div>
-
                   </div>
                 </div>
               )}
@@ -329,7 +396,6 @@ const HeroFareCalculator = () => {
               </a>
             </div>
           </div>
-
 
           <div className="lg:w-1/2">
             <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
