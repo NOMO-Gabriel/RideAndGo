@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "name": "Djotio Thomas",
+    "position": {
+      "fr": "Prof,Dr-Ing, Directeur Général",
+      "en": "Prof, Dr-Ing, CEO"
+    },
+    "bio": {
+      "fr": "Enseignant chercheur doté de puissantes qualités de pédagogue et de manager",
+      "en": "Leadership expert"
+    },
+    "image": "/images/equipe/djotio.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com",
+      "twitter": "https://twitter.com"
+    },
+    "featured": true
+  },
+  {
+    "id": 2,
+    "name": "Nomo Gabriel",
+    "position": {
+      "fr": "Directeur Général",
+      "en": "CEO"
+    },
+    "bio": {
+      "fr": "Expert en leadership",
+      "en": "Leadership expert"
+    },
+    "image": "/images/equipe/nomo.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com",
+      "twitter": "https://twitter.com"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Yves",
+    "position": {
+      "fr": "Directeur Marketing",
+      "en": "Marketing Director"
+    },
+    "bio": {
+      "fr": "Spécialiste en stratégie digitale",
+      "en": "Digital strategy specialist"
+    },
+    "image": "/images/equipe/yves.jpg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    },
+    "featured": true
+
+  },
+  {
+    "id": 4,
+    "name": "Eleonor",
+    "position": {
+      "fr": "Directrice Marketing",
+      "en": "Marketing Director"
+    },
+    "bio": {
+      "fr": "Developpeur Full stack et Ingenieur  ML ",
+      "en": "Full stack developer and ML Engineer"
+    },
+    "image": "/images/equipe/eleonor.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Folong Zidane",
+    "position": {
+      "fr": "Directeur Technique",
+      "en": "Technical Director"
+    },
+    "bio": {
+      "fr": "Spécialiste en solutions techniques",
+      "en": "Technical solutions specialist"
+    },
+    "image": "/images/equipe/folongz.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Estelle",
+    "position": {
+      "fr": "Responsable RH",
+      "en": "HR Manager"
+    },
+    "bio": {
+      "fr": "Gestionnaire des ressources humaines",
+      "en": "HR management specialist"
+    },
+    "image": "/images/equipe/member1.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Donchi",
+    "position": {
+      "fr": "Développeur Frontend",
+      "en": "Frontend Developer"
+    },
+    "bio": {
+      "fr": "Expert en développement d'interfaces utilisateur",
+      "en": "UI development expert"
+    },
+    "image": "/images/equipe/member1.jpeg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Noukoua",
+    "position": {
+      "fr": "Développeur Backend",
+      "en": "Backend Developer"
+    },
+    "bio": {
+      "fr": "Expert en architecture de serveurs",
+      "en": "Server architecture expert"
+    },
+    "image": "/images/equipe/member1.jpg",
+    "socials": {
+      "linkedin": "https://linkedin.com"
+    }
+  }
+]
