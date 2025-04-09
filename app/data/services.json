@@ -1,0 +1,69 @@
+{
+    "services": [
+      {
+        "id": "organisation",
+        "name": "Service Organisation",
+        "description": "Service permettant la gestion et l'organisation des trajets et des ressources pour la planification d'itinéraires.",
+        "links": [
+          {
+            "name": "Page Vitrine",
+            "url": "https://organisation-presentation.vercel.app/",
+            "icon": "presentation",
+            "description": "Présentation et fonctionnalités du service organisation"
+          },
+          {
+            "name": "Documentation",
+            "url": "https://organisation-doc.vercel.app/",
+            "icon": "document",
+            "description": "Documentation complète pour développeurs"
+          },
+          {
+            "name": "API Swagger",
+            "url": "https://gateway.yowyob.com/webjars/swagger-ui/index.html?urls.primaryName=Organization+Service#/",
+            "icon": "api",
+            "description": "Interface Swagger pour tester l'API du service organisation"
+          }
+        ],
+        "additionalInfo": {
+          "title": "À propos du Service Organisation",
+          "subtitle": "Informations supplémentaires sur le service",
+          "description": "Le Service Organisation est un composant essentiel de notre solution de planification d'itinéraire. Il permet la gestion complète des organisations, la configuration des ressources et la définition des règles tarifaires pour assurer une planification précise et optimisée des trajets.",
+          "features": [
+            {
+              "icon": "security",
+              "title": "Sécurité & Fiabilité",
+              "description": "Conforme aux standards de sécurité et haute disponibilité"
+            },
+            {
+              "icon": "performance",
+              "title": "Performances",
+              "description": "Optimisé pour des résultats rapides même avec de grands volumes de données"
+            }
+          ]
+        }
+      },
+      {
+        "id": "resource",
+        "name": "Service de Gestion des Ressources",
+        "description": "Service dédié à la gestion des ressources nécessaires pour les itinéraires et le calcul des tarifs.",
+        "links": [
+          {
+            "name": "API Swagger",
+            "url": "https://gateway.yowyob.com/webjars/swagger-ui/index.html?urls.primaryName=Resource+Service",
+            "icon": "api",
+            "description": "Interface Swagger pour tester l'API de gestion des ressources (version 5gi'25)"
+          }
+        ]
+      }
+      
+      
+    ],
+    "support": {
+      "title": "Besoin d'aide ?",
+      "subtitle": "Contactez notre équipe de support technique",
+      "email": "tafoukeuz@gmail.com",
+      "phone": "+237 672538346",
+      "buttonText": "Accéder à l'aide",
+      "buttonLink": "/contact"
+    }
+  }

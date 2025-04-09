@@ -8,6 +8,7 @@ import VideoGuide from './components/Home/VideoGuide';
 import StatisticsSection from "./components/Home/StatisticsSection";
 import TestimonySection from "./components/Home/TestimonySection";
 import SubscribeSection from "./components/Home/SubscribeSection";
+import Equipe from "./components/Home/Equipe"
 // import CompactFareCalculator from "./components/Home/FareCalculator";
 import HeroFareCalculator from "./components/Home/FareCalculator";
 
@@ -32,6 +33,7 @@ export default function page(){
            <StatisticsSection/>
            <SubscribeSection/>
            <TestimonySection/>
+           <Equipe />
         </div>
     );
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import {calculateCost ,calculateCostRequest,formatDuration} from '@/app/utils/api/cost';
+import { calculateCost, calculateCostRequest, formatDuration } from '@/app/utils/api/cost';
 import {
   FaCalculator,
   FaMoneyBillWave,
@@ -18,11 +18,12 @@ import {
 } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
+// Import dynamique de la carte pour éviter les erreurs de rendu côté serveur
 const Map = dynamic(() => import('@/app/components/collectRideGo/Map'), {
-  ssr: false // This will disable server-side rendering for this component
+  ssr: false
 });
 
-
+// Interface pour les détails de coût
 interface CostDetails {
   distance: number;
   duration: string;
@@ -30,94 +31,60 @@ interface CostDetails {
   officialCost: number;
   startLocation: string;
   endLocation: string;
-  // mapDetails: string;
 }
 
+// Composants réutilisables
+const InputField = ({ icon: Icon, placeholder, value, onChange }) => (
+  <div className="relative group">
+    <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600 group-hover:text-blue-800 transition-colors" />
+    <input
+      type="text"
+      placeholder={placeholder}
+      className="w-full pl-10 pr-4 py-3 rounded-lg bg-white border border-gray-300 text-blue-900 placeholder-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  </div>
+);
+
+const ServiceCard = ({ service, learnMoreText }) => (
+  <div className="bg-white rounded-xl border border-gray-200 shadow-md p-5 transform hover:scale-105 transition">
+    <div className="flex flex-col items-center text-center">
+      <div className="bg-blue-100 p-3 rounded-full mb-3">
+        <service.icon className="text-blue-600 text-2xl" />
+      </div>
+      <h3 className="text-lg font-semibold text-blue-900 mb-2">{service.title}</h3>
+      <p className="text-blue-700 mb-3 text-sm">{service.description}</p>
+      <a href={service.link} className="text-blue-500 hover:text-blue-700 font-medium text-sm">
+        {learnMoreText} →
+      </a>
+    </div>
+  </div>
+);
+
+const TestimonialCard = ({ testimonial }) => (
+  <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4">
+    <div className="flex gap-1 mb-3">
+      {[...Array(testimonial.rating)].map((_, i) => (
+        <FaStar key={i} className="text-yellow-500" />
+      ))}
+    </div>
+    <p className="text-blue-700 italic text-sm">&quot;{testimonial.text}&quot;</p>
+  </div>
+);
 
 const CostCalculator = () => {
+  // États
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
   const [costDetails, setCostDetails] = useState<CostDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPriceAnimation, setShowPriceAnimation] = useState(false);
   const [proposedPrice, setProposedPrice] = useState('');
-  const [isFormCentered, setIsFormCentered] = useState(true);
-    const [isCalculated, setIsCalculated] = useState(false);
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState('estimated'); // 'estimated' ou 'official'
+  const [isCalculated, setIsCalculated] = useState(false);
   const { locale } = useLocale();
 
-  const testimonials = [
-    { text: "Le calculateur le plus précis que j'ai utilisé !", rating: 5 },
-    { text: "Super outil pour planifier mes déplacements", rating: 5 },
-    { text: "Estimation très proche du prix final", rating: 4 }
-  ];
-
-  const services = [
-    {
-      title: "Besoin d'une course ?",
-      icon: FaTaxi,
-      description: "Réservez votre taxi en quelques clics",
-      link: "#"
-    },
-    {
-      title: "Besoin d'une agence de voyage ?",
-      icon: FaPlane,
-      description: "Planifiez votre prochain voyage",
-      link: "#"
-    },
-    {
-      title: "Location de véhicule",
-      icon: FaCar,
-      description: "Large gamme de véhicules disponibles",
-      link: "#"
-    }
-  ];
-
-    const handleCalculateCost = async () => {
-      if (!startLocation || !endLocation) {
-        alert("Veuillez entrer les deux emplacements.");
-        return;
-      }
-    
-      setIsLoading(true);
-      setIsCalculated(false);
-    
-      // Obtenir l'heure actuelle au format HH:MM
-      const now = new Date();
-      const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    
-      const requestData: calculateCostRequest = {
-        start: startLocation,
-        end: endLocation,
-        hour: formattedTime,
-      };
-    
-      try {
-        const response = await calculateCost(requestData);
-        setCostDetails({
-          estimatedCost: response.cost,
-          officialCost: response.min_cost,
-          distance: response.distance.toFixed(3),
-          duration: formatDuration(response.distance*1000/60),
-          startLocation: startLocation,
-          endLocation: endLocation,
-
-        });
-        setIsCalculated(true);
-      } catch (error) {
-        console.error("Erreur lors du calcul du coût :", error);
-        alert("Une erreur est survenue lors du calcul du tarif.");
-      }
-    
-      setIsLoading(false);
-    };
-    
-  useEffect(() => {
-    if (showPriceAnimation) {
-      const timer = setTimeout(() => setShowPriceAnimation(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [showPriceAnimation]);
-
+  // Textes localisés
   const content = {
     en: {
       heroTitle: "Calculate Your Trip Cost",
@@ -139,7 +106,30 @@ const CostCalculator = () => {
       learnMore: "Learn More",
       makeProposal: "Propose your price",
       proposalPlaceholder: "Your offer",
-      submitProposal: "Order"
+      submitProposal: "Order",
+      selectedPrice: "Selected Price",
+      services: [
+        {
+          title: "Need a ride?",
+          description: "Book your taxi in just a few clicks",
+          link: "#"
+        },
+        {
+          title: "Need a travel agency?",
+          description: "Plan your next trip",
+          link: "#"
+        },
+        {
+          title: "Vehicle rental",
+          description: "Wide range of vehicles available",
+          link: "#"
+        }
+      ],
+      testimonials: [
+        { text: "The most accurate calculator I've used!", rating: 5 },
+        { text: "Great tool for planning my trips", rating: 5 },
+        { text: "Estimation very close to the final price", rating: 4 }
+      ]
     },
     fr: {
       heroTitle: "Calculez le Coût de Votre Trajet",
@@ -161,234 +151,293 @@ const CostCalculator = () => {
       learnMore: "En Savoir Plus",
       makeProposal: "Proposez votre prix",
       proposalPlaceholder: "Votre offre",
-      submitProposal: "Commander"
+      submitProposal: "Commander",
+      selectedPrice: "Prix Sélectionné",
+      services: [
+        {
+          title: "Besoin d'une course ?",
+          description: "Réservez votre taxi en quelques clics",
+          link: "#"
+        },
+        {
+          title: "Besoin d'une agence de voyage ?",
+          description: "Planifiez votre prochain voyage",
+          link: "#"
+        },
+        {
+          title: "Location de véhicule",
+          description: "Large gamme de véhicules disponibles",
+          link: "#"
+        }
+      ],
+      testimonials: [
+        { text: "Le calculateur le plus précis que j'ai utilisé !", rating: 5 },
+        { text: "Super outil pour planifier mes déplacements", rating: 5 },
+        { text: "Estimation très proche du prix final", rating: 4 }
+      ]
     }
   };
 
   const currentContent = locale === 'fr' ? content.fr : content.en;
 
+  // Association des icônes aux services
+  const serviceIcons = [FaTaxi, FaPlane, FaCar];
+
+  // Gestion du calcul de coût
+  const handleCalculateCost = async () => {
+    if (!startLocation || !endLocation) {
+      alert(locale === 'fr' ? "Veuillez entrer les deux emplacements." : "Please enter both locations.");
+      return;
+    }
+  
+    setIsLoading(true);
+    setIsCalculated(false);
+  
+    // Obtenir l'heure actuelle au format HH:MM
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  
+    const requestData: calculateCostRequest = {
+      start: startLocation,
+      end: endLocation,
+      hour: formattedTime,
+    };
+  
+    try {
+      const response = await calculateCost(requestData);
+      setCostDetails({
+        estimatedCost: response.cost,
+        officialCost: response.min_cost || 350, // Valeur par défaut si undefined
+        distance: Number(response.distance.toFixed(3)),
+        duration: formatDuration(response.distance*1000/60),
+        startLocation: startLocation,
+        endLocation: endLocation,
+      });
+      setIsCalculated(true);
+    } catch (error) {
+      console.error("Erreur lors du calcul du coût :", error);
+      alert(locale === 'fr' ? "Une erreur est survenue lors du calcul du tarif." : "An error occurred while calculating the fare.");
+    }
+  
+    setIsLoading(false);
+  };
+
+  // Déterminer le prix affiché dans les détails du trajet en fonction de l'option sélectionnée
+  const getSelectedPrice = () => {
+    if (!costDetails) return null;
+    return selectedPaymentOption === 'estimated' 
+      ? `${costDetails.estimatedCost.toLocaleString()} FCFA` 
+      : `${costDetails.officialCost.toLocaleString()} FCFA`;
+  };
+
   return (
-    <div className="min-h-screen bg-[url('/path-to-your-bg.jpg')] bg-cover bg-center bg-fixed">
-      <div className="min-h-screen bg-bleu-nuit backdrop-blur-md p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-orange-600">
-              {currentContent.heroTitle}
-            </h1>
-            <p className="text-blue-200 text-xl font-light">
-              {currentContent.heroSubtitle}
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto p-4 md:p-6">
+        {/* En-tête */}
+        <div className="text-center mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 text-blue-900">
+            {currentContent.heroTitle}
+          </h1>
+          <p className="text-blue-700 text-lg">
+            {currentContent.heroSubtitle}
+          </p>
+        </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Colonne de gauche */}
-            <div className={`space-y-8 transition-transform duration-500 ${isFormCentered ? 'translate-y-1/4' : 'translate-y-0'}`}>
-              <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
-                <div className="p-6">
-                  <div className="space-y-6">
-                    <div className="relative group">
-                      <FaMapMarkerAlt className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 group-hover:text-blue-300 transition-colors" />
-                      <input
-                        type="text"
-                        placeholder={currentContent.startLocationPlaceholder}
-                        className="w-full pl-10 pr-4 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
-                        value={startLocation}
-                        onChange={(e) => setStartLocation(e.target.value)}
-                      />
+        {/* Zone principale avec formulaire et carte côte à côte */}
+        <div className="grid md:grid-cols-2 gap-5 mb-8 relative">
+          {/* Formulaire à gauche - hauteur réduite */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-lg p-5 z-10">
+            <div className="space-y-4">
+              <InputField 
+                icon={FaMapMarkerAlt} 
+                placeholder={currentContent.startLocationPlaceholder}
+                value={startLocation}
+                onChange={setStartLocation}
+              />
+
+              <InputField 
+                icon={FaLocationArrow} 
+                placeholder={currentContent.endLocationPlaceholder}
+                value={endLocation}
+                onChange={setEndLocation}
+              />
+
+              <button
+                onClick={handleCalculateCost}
+                disabled={isLoading}
+                className="w-full py-2.5 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                ) : (
+                  <>
+                    <FaCalculator className="text-lg" />
+                    <span>{currentContent.calculateButton}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Résultats du calcul - compacté */}
+            {costDetails && (
+              <div className="mt-5 space-y-3">
+                <h2 className="text-xl font-semibold text-blue-900 flex items-center gap-2">
+                  <FaMoneyBillWave className="text-blue-600" />
+                  {currentContent.estimatedCost}
+                </h2>
+                
+                {/* Métriques */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 text-blue-700 text-sm mb-1">
+                      <FaRoute />
+                      {currentContent.distance}
                     </div>
-
-                    <div className="relative group">
-                      <FaLocationArrow className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 group-hover:text-blue-300 transition-colors" />
-                      <input
-                        type="text"
-                        placeholder={currentContent.endLocationPlaceholder}
-                        className="w-full pl-10 pr-4 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
-                        value={endLocation}
-                        onChange={(e) => setEndLocation(e.target.value)}
-                      />
+                    <p className="text-xl font-bold text-blue-900">
+                      {costDetails.distance} km
+                    </p>
+                  </div>
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 text-blue-700 text-sm mb-1">
+                      <FaClock />
+                      {currentContent.duration}
                     </div>
+                    <p className="text-xl font-bold text-blue-900">
+                      {costDetails.duration}
+                    </p>
+                  </div>
+                </div>
 
-                    <button
-                      onClick={handleCalculateCost}
-                      disabled={isLoading}
-                      className="w-full py-4 bg-gradient-to-r from-orange-200 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-lg font-medium shadow-lg flex items-center justify-center gap-3 transition transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isLoading ? (
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                      ) : (
-                        <>
-                          <FaCalculator className="text-xl" />
-                          <span>{currentContent.calculateButton}</span>
-                        </>
-                      )}
+                {/* Options de tarification - plus compactes */}
+                <div className="space-y-2">
+                  <div 
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                      selectedPaymentOption === 'estimated' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                    }`}
+                    onClick={() => setSelectedPaymentOption('estimated')}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-blue-800 font-medium text-sm">{currentContent.estimatedCost}</span>
+                      <span className="text-blue-900 font-bold">{costDetails.estimatedCost.toLocaleString()} FCFA</span>
+                    </div>
+                    <button className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm">
+                      {currentContent.orderButton}
+                    </button>
+                  </div>
+
+                  <div 
+                    className={`p-3 rounded-lg border-2 cursor-pointer transition ${
+                      selectedPaymentOption === 'official' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                    }`}
+                    onClick={() => setSelectedPaymentOption('official')}
+                  >
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-blue-800 font-medium text-sm">{currentContent.officialCost}</span>
+                      <span className="text-blue-900 font-bold">{costDetails.officialCost.toLocaleString()} FCFA</span>
+                    </div>
+                    <button className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition text-sm">
+                      {currentContent.orderButton}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Section "Proposez votre prix" - compactée */}
+                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                  <h3 className="text-sm font-semibold text-blue-900 mb-1 flex items-center gap-1.5">
+                    <FaHandHoldingUsd className="text-blue-700" />
+                    {currentContent.makeProposal}
+                  </h3>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      placeholder={currentContent.proposalPlaceholder}
+                      className="flex-1 px-3 py-1.5 rounded-md bg-white border border-gray-300 text-blue-900 placeholder-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      value={proposedPrice}
+                      onChange={(e) => setProposedPrice(e.target.value)}
+                    />
+                    <button className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition text-sm">
+                      {currentContent.submitProposal}
                     </button>
                   </div>
                 </div>
               </div>
+            )}
+          </div>
 
-              {costDetails && (
-                <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
-                  <div className="p-6">
-                    <h2 className="text-2xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <FaMoneyBillWave className="text-blue-400" />
-                      {currentContent.estimatedCost}
-                    </h2>
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="bg-white/10 p-4 rounded-lg transform hover:scale-105 transition">
-                        <div className="flex items-center gap-2 text-blue-200 mb-2">
-                          <FaRoute />
-                          {currentContent.distance}
-                        </div>
-                        <p className="text-3xl font-bold text-white">
-                          {costDetails.distance} km
-                        </p>
-                      </div>
-                      <div className="bg-white/10 p-4 rounded-lg transform hover:scale-105 transition">
-                        <div className="flex items-center gap-2 text-blue-200 mb-2">
-                          <FaClock />
-                          {currentContent.duration}
-                        </div>
-                        <p className="text-3xl font-bold text-white">
-                          {costDetails.duration} 
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="bg-white/5 p-4 rounded-lg">
-                        <div className="flex justify-between items-center text-blue-200 mb-2">
-                          <span>{currentContent.estimatedCost}</span>
-                          <span className="text-white font-medium">{costDetails.estimatedCost.toLocaleString()} FCFA</span>
-                        </div>
-                        <button className="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition">
-                          {currentContent.orderButton}
-                        </button>
-                      </div>
-
-                      <div className="bg-white/5 p-4 rounded-lg">
-                        <div className="flex justify-between items-center text-blue-200 mb-2">
-                          <span>{currentContent.officialCost}</span>
-                          <span className="text-white font-medium">{costDetails?.officialCost !== undefined ? (
-                            <p>Tarif officiel: {costDetails.officialCost} FCFA</p>
-                          ) : (
-                            <p>Tarif officiel: 350 FCFA</p>
-                          )}</span>
-                        </div>
-                        <button className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
-                          {currentContent.orderButton}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Section "Proposez votre prix" */}
-                    <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur flex-grow mt-4">
-                      <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
-                        <FaHandHoldingUsd className="text-lg" />
-                        {currentContent.makeProposal}
-                      </h3>
-                      <div className="flex gap-2">
-                        <input
-                          type="number"
-                          placeholder={currentContent.proposalPlaceholder}
-                          className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
-                          value={proposedPrice}
-                          onChange={(e) => setProposedPrice(e.target.value)}
-                        />
-                        <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm">
-                          {currentContent.submitProposal}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+          {/* Carte et détails à droite - z-index corrigé */}
+          <div className="space-y-5 z-10">
+            {/* Carte agrandie avec z-index approprié */}
+            <div className="h-[450px] bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
+              <Map center={[0.0, 0.0]} zoom={10} />
             </div>
 
-            {/* Colonne de droite */}
-            <div className="space-y-8">
-              <div className="h-[600px] bg-white/10 backdrop-blur-md rounded-xl overflow-hidden shadow-xl">
-                <div className="w-full h-full bg-gray-800/50 flex items-center justify-center text-white">
-                  <Map center={[0.0, 0.0]} zoom={0} />
+            {/* Détails du trajet */}
+            {costDetails && (
+              <div className="bg-white rounded-lg border border-gray-200 shadow-md p-4">
+                <h2 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                  <FaRoute className="text-blue-600" />
+                  {currentContent.tripDetails}
+                </h2>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-green-100 p-1.5 rounded-md">
+                      <FaMapMarkerAlt className="text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-blue-500 text-xs">{currentContent.departure}</p>
+                      <p className="text-blue-900 font-medium text-sm">{costDetails.startLocation}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-orange-100 p-1.5 rounded-md">
+                      <FaLocationArrow className="text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-blue-500 text-xs">{currentContent.arrival}</p>
+                      <p className="text-blue-900 font-medium text-sm">{costDetails.endLocation}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Affichage du prix sélectionné */}
+                  <div className="bg-blue-50 p-3 rounded-md">
+                    <p className="text-blue-500 text-xs">{currentContent.selectedPrice}</p>
+                    <p className="text-blue-900 font-bold text-lg mt-1">{getSelectedPrice()}</p>
+                  </div>
                 </div>
               </div>
-
-              {costDetails && (
-                <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg h-max mb-12">
-                    <div className="p-4">
-                    <h2 className="text-xl font-semibold text-white mb-4">
-                        {currentContent.tripDetails}
-                    </h2>
-                    <div className="space-y-4">
-                        <div className="flex items-start gap-3">
-                        <div className="bg-green-400/20 p-1.5 rounded-md">
-                            <FaMapMarkerAlt className="text-green-400 text-lg" />
-                        </div>
-                        <div>
-                            <p className="text-blue-200 text-xs">{currentContent.departure}</p>
-                            <p className="text-white text-base">{costDetails.startLocation}</p>
-                        </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                        <div className="bg-orange-400/20 p-1.5 rounded-md">
-                            <FaLocationArrow className="text-orange-400 text-lg" />
-                        </div>
-                        <div>
-                            <p className="text-blue-200 text-xs">{currentContent.arrival}</p>
-                            <p className="text-white text-base">{costDetails.endLocation}</p>
-                        </div>
-                        </div>
-                        <div className="bg-white/5 p-3 rounded-md">
-                        {/* <p className="text-blue-200 text-xs">{currentContent.routeDetails}</p> */}
-                        {/* <p className="text-white mt-1 text-sm">{costDetails.mapDetails}</p> */}
-                        </div>
-                    </div>
-                    </div>
-                </div>
             )}
-
-            </div>
           </div>
+        </div>
 
-          {/* Services annexes */}
-          <div className="mt-[250px]">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              {currentContent.servicesTitle}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {services.map((service, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6 transform hover:scale-105 transition">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="bg-blue-400/20 p-4 rounded-full mb-4">
-                      <service.icon className="text-blue-400 text-3xl" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{service.title}</h3>
-                    <p className="text-blue-200 mb-4">{service.description}</p>
-                    <a href={service.link} className="text-blue-400 hover:text-blue-300 font-medium">
-                      {currentContent.learnMore} →
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Services annexes (rapprochés du contenu principal) */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4 text-center">
+            {currentContent.servicesTitle}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {currentContent.services.map((service, index) => (
+              <ServiceCard 
+                key={index} 
+                service={{...service, icon: serviceIcons[index]}} 
+                learnMoreText={currentContent.learnMore} 
+              />
+            ))}
           </div>
+        </div>
 
-          {/* Testimonials */}
-          <div className="mt-12">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              {currentContent.testimonialsTitle}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <FaStar key={i} className="text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-blue-200 italic">&quot;{testimonial.text}&quot;</p>
-                </div>
-              ))}
-            </div>
+        {/* Témoignages */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-blue-900 mb-4 text-center">
+            {currentContent.testimonialsTitle}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {currentContent.testimonials.map((testimonial, index) => (
+              <TestimonialCard key={index} testimonial={testimonial} />
+            ))}
           </div>
         </div>
       </div>

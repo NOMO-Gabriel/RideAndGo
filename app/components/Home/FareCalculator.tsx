@@ -2,10 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocale } from '@/app/utils/hooks/useLocale.js';
-import { FaMapMarkerAlt, FaClock, FaRoute, FaCalculator, FaLocationArrow, FaMoneyBillWave, FaBuilding, FaHandHoldingUsd, FaAngleRight, FaAngleLeft, FaCar, FaPlane, FaTaxi, FaBus } from 'react-icons/fa';
+import { 
+  FaMapMarkerAlt, 
+  FaClock, 
+  FaRoute, 
+  FaCalculator, 
+  FaLocationArrow, 
+  FaMoneyBillWave, 
+  FaBuilding, 
+  FaHandHoldingUsd, 
+  FaAngleRight, 
+  FaAngleLeft, 
+  FaCar, 
+  FaPlane, 
+  FaTaxi, 
+  FaBus,
+  FaSmile,
+  FaSadTear
+} from 'react-icons/fa';
 import Map from '../collectRideGo/DynamicMap';
 import { calculateCost } from '@/app/utils/api/cost';
-import { calculateCostRequest,formatDuration } from '@/app/utils/api/cost';
+import { calculateCostRequest, formatDuration } from '@/app/utils/api/cost';
 
 interface TripDetails {
   fare: number;
@@ -80,6 +97,15 @@ const HeroFareCalculator = () => {
     setIsLoading(false);
   };
   
+  // Fonction pour déterminer si le prix proposé est suffisant
+  const isPriceAcceptable = () => {
+    if (!tripDetails || !proposedPrice) return null;
+    
+    const numericPrice = parseFloat(proposedPrice);
+    if (isNaN(numericPrice)) return null;
+    
+    return numericPrice >= tripDetails.fare;
+  };
 
   const content = {
     en: {
@@ -135,7 +161,7 @@ const HeroFareCalculator = () => {
   const currentContent = locale == 'fr' ? content.fr : content.en;
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden pb-8">
       <div className="absolute inset-0 z-0">
         {backgroundImages.map((img, index) => (
           <div
@@ -170,16 +196,17 @@ const HeroFareCalculator = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 pt-4">
         <div className="text-center mb-4">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight animate-fade-in">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 tracking-tight animate-fade-in">
             {currentContent.heroTitle}
           </h1>
-          <p className="text-base md:text-lg text-blue-200 animate-fade-in-delay">
+          <p className="text-sm sm:text-base md:text-lg text-blue-200 animate-fade-in-delay">
             {currentContent.heroSubtitle}
           </p>
         </div>
 
         <div className={`flex flex-col lg:flex-row gap-4 transition-all duration-500 ${isCalculated ? 'h-auto' : 'h-full items-center'}`}>
-          <div className={`lg:w-1/2 bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-xl transition-all duration-500 ${isCalculated ? 'mb-4' : 'mb-0'}`}>
+          {/* Left column (calculator) */}
+          <div className={`w-full lg:w-1/2 bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-xl shadow-xl transition-all duration-500 ${isCalculated ? 'mb-4' : 'mb-0'}`}>
             <div className="space-y-3">
               <div className="space-y-2">
                 <div className="relative group">
@@ -217,7 +244,6 @@ const HeroFareCalculator = () => {
                       <span>{currentContent.calculateButton}</span>
                     </>
                   )}
-
                 </button>
               </div>
 
@@ -225,21 +251,21 @@ const HeroFareCalculator = () => {
                 <div className="space-y-3 animate-fade-in flex-grow">
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
-                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                        <FaRoute className="text-base" />
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-xs sm:text-sm">
+                        <FaRoute className="text-sm sm:text-base" />
                         {currentContent.distance}
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-base sm:text-lg font-bold text-white">
                         {tripDetails.distance} {currentContent.km}
                       </p>
                     </div>
 
                     <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
-                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                        <FaClock className="text-base" />
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-xs sm:text-sm">
+                        <FaClock className="text-sm sm:text-base" />
                         {currentContent.duration}
                       </div>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-base sm:text-lg font-bold text-white">
                         {tripDetails.duration} 
                       </p>
                     </div>
@@ -247,118 +273,131 @@ const HeroFareCalculator = () => {
 
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
-                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                        <FaMoneyBillWave className="text-base" />
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-xs sm:text-sm">
+                        <FaMoneyBillWave className="text-sm sm:text-base" />
                         {currentContent.estimatedFare}
                       </div>
-                      <p className="text-lg font-bold text-white mb-2">
+                      <p className="text-base sm:text-lg font-bold text-white mb-2">
                         {tripDetails.fare.toLocaleString()} FCFA
                       </p>
-                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
+                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs sm:text-sm transition-all">
                         {currentContent.order}
                       </button>
                     </div>
 
                     <div className="bg-white/10 p-2 rounded-lg backdrop-blur hover:bg-white/20 transition-colors flex-grow">
-                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-sm">
-                        <FaBuilding className="text-base" />
+                      <div className="flex items-center gap-1 text-blue-200 mb-1 text-xs sm:text-sm">
+                        <FaBuilding className="text-sm sm:text-base" />
                         {currentContent.officialPrice}
                       </div>
-                      <p className="text-lg font-bold text-white mb-2">
+                      <p className="text-base sm:text-lg font-bold text-white mb-2">
                       {tripDetails?.officialPrice !== undefined ? (
-                            <p>Tarif officiel: {tripDetails.officialPrice} FCFA</p>
+                            <p className="text-xs sm:text-sm">Tarif officiel: {tripDetails.officialPrice} FCFA</p>
                           ) : (
-                            <p>Tarif officiel: 350 FCFA</p>
+                            <p className="text-xs sm:text-sm">Tarif officiel: 350 FCFA</p>
                           )}
                       </p>
-                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm transition-all">
+                      <button className="w-full py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-xs sm:text-sm transition-all">
                         {currentContent.order}
                       </button>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-3 rounded-lg backdrop-blur flex-grow">
-                    <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
-                      <FaHandHoldingUsd className="text-lg" />
+                  <div className="bg-gradient-to-r from-orange-500/30 to-orange-600/30 p-2 sm:p-3 rounded-lg backdrop-blur flex-grow">
+                    <h3 className="text-sm sm:text-base font-semibold text-white mb-2 flex items-center gap-2">
+                      <FaHandHoldingUsd className="text-base sm:text-lg" />
                       {currentContent.makeProposal}
                     </h3>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                       <input
                         type="number"
                         placeholder={currentContent.proposalPlaceholder}
-                        className="flex-1 px-3 py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
+                        className="flex-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:ring-2 focus:ring-orange-400 focus:border-transparent text-xs sm:text-sm"
                         value={proposedPrice}
                         onChange={(e) => setProposedPrice(e.target.value)}
                       />
-                      <button className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-sm">
+                      
+                      {/* Emoji basé sur le prix proposé */}
+                      {proposedPrice && (
+                        isPriceAcceptable() ? (
+                          <FaSmile className="text-xl sm:text-2xl text-green-400 animate-pulse" />
+                        ) : (
+                          <FaSadTear className="text-xl sm:text-2xl text-red-400 animate-pulse" />
+                        )
+                      )}
+                      
+                      <button className="px-2 sm:px-4 py-1 sm:py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-md font-medium transition-all hover:shadow-lg transform hover:scale-105 text-xs sm:text-sm">
                         {currentContent.submitProposal}
                       </button>
                     </div>
-
                   </div>
                 </div>
               )}
             </div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            
+            {/* Service Quick Links */}
+            <div className="mt-3 sm:mt-4 grid grid-cols-3 gap-2">
               <a
                 href="#ride"
-                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+                className="flex flex-col items-center p-1 sm:p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
               >
-                <FaTaxi className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
-                <span className="text-xs text-white text-center">
+                <FaTaxi className="text-orange-400 group-hover:text-orange-300 text-base sm:text-lg mb-1" />
+                <span className="text-[10px] sm:text-xs text-white text-center">
                   {currentContent.needRide}
                 </span>
               </a>
               <a
                 href="#travel"
-                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+                className="flex flex-col items-center p-1 sm:p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
               >
-                <FaBus className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
-                <span className="text-xs text-white text-center">
+                <FaBus className="text-orange-400 group-hover:text-orange-300 text-base sm:text-lg mb-1" />
+                <span className="text-[10px] sm:text-xs text-white text-center">
                   {currentContent.needTravelAgency}
                 </span>
               </a>
               <a
                 href="#rental"
-                className="flex flex-col items-center p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
+                className="flex flex-col items-center p-1 sm:p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all group"
               >
-                <FaCar className="text-orange-400 group-hover:text-orange-300 text-lg mb-1" />
-                <span className="text-xs text-white text-center">
+                <FaCar className="text-orange-400 group-hover:text-orange-300 text-base sm:text-lg mb-1" />
+                <span className="text-[10px] sm:text-xs text-white text-center">
                   {currentContent.needCarRental}
                 </span>
               </a>
             </div>
           </div>
 
-
-          <div className="lg:w-1/2">
-            <div className="h-[450px] relative rounded-xl overflow-hidden shadow-xl">
+          {/* Right column (map) */}
+          <div className="w-full lg:w-1/2">
+            {/* Map container with responsive height */}
+            <div className="h-64 sm:h-80 md:h-96 lg:h-[450px] relative rounded-xl overflow-hidden shadow-xl">
               {Map && <Map center={[0.0, 0.0]} zoom={0} />}
               {tripDetails && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-2 m-3 rounded-lg">
-                  <div className="flex flex-col gap-1.5 text-white text-sm">
-                    <div className="flex items-center gap-2">
-                      <FaMapMarkerAlt className="text-green-400" />
-                      <span>{tripDetails.start}</span>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-md p-2 m-2 sm:m-3 rounded-lg">
+                  <div className="flex flex-col gap-1 sm:gap-1.5 text-white text-xs sm:text-sm">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <FaMapMarkerAlt className="text-green-400 text-xs sm:text-sm" />
+                      <span className="truncate">{tripDetails.start}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <FaLocationArrow className="text-orange-400" />
-                      <span>{tripDetails.end}</span>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <FaLocationArrow className="text-orange-400 text-xs sm:text-sm" />
+                      <span className="truncate">{tripDetails.end}</span>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-2">
-              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint1}</h3>
+            {/* Trust points below map */}
+            <div className="mt-2 sm:mt-3 grid grid-cols-3 gap-2">
+              <div className="bg-white/10 backdrop-blur p-1 sm:p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-xs sm:text-sm font-semibold text-white">{currentContent.trustPoint1}</h3>
               </div>
-              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint2}</h3>
+              <div className="bg-white/10 backdrop-blur p-1 sm:p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-xs sm:text-sm font-semibold text-white">{currentContent.trustPoint2}</h3>
               </div>
-              <div className="bg-white/10 backdrop-blur p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
-                <h3 className="text-sm font-semibold text-white">{currentContent.trustPoint3}</h3>
+              <div className="bg-white/10 backdrop-blur p-1 sm:p-2 rounded-lg text-center hover:bg-white/20 transition-colors">
+                <h3 className="text-xs sm:text-sm font-semibold text-white">{currentContent.trustPoint3}</h3>
               </div>
             </div>
           </div>

@@ -11,8 +11,12 @@ interface Video {
 }
 
 const VideoGuide = () => {
-  const [activeVideo, setActiveVideo] = useState<number>(0);
-  const videoRefs = [useRef<HTMLVideoElement>(null), useRef<HTMLVideoElement>(null), useRef<HTMLVideoElement>(null)];
+  const [activeVideo, setActiveVideo] = useState(0);
+  const videoRefs = [
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null)
+  ];
   
   const videos: Video[] = [
     {
@@ -38,7 +42,7 @@ const VideoGuide = () => {
     }
   ];
 
-  const handleVideoSelect = (index: number): void => {
+  const handleVideoSelect = (index:number) => {
     setActiveVideo(index);
     // Pause toutes les vidéos
     videoRefs.forEach((ref, i) => {
