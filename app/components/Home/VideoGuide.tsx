@@ -1,11 +1,20 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+
+interface Video {
+  id: number;
+  title: string;
+  description: string;
+  src: string;
+  icon: string;
+}
+
 const VideoGuide = () => {
-  const [activeVideo, setActiveVideo] = useState(0);
-  const videoRefs = [useRef(null), useRef(null), useRef(null)];
+  const [activeVideo, setActiveVideo] = useState<number>(0);
+  const videoRefs = [useRef<HTMLVideoElement>(null), useRef<HTMLVideoElement>(null), useRef<HTMLVideoElement>(null)];
   
-  const videos = [
+  const videos: Video[] = [
     {
       id: 0,
       title: "Calculateur de tarif",
@@ -29,13 +38,13 @@ const VideoGuide = () => {
     }
   ];
 
-  const handleVideoSelect = (index) => {
+  const handleVideoSelect = (index: number): void => {
     setActiveVideo(index);
     // Pause toutes les vidéos
     videoRefs.forEach((ref, i) => {
       if (ref.current) {
         if (i === index) {
-          ref.current.play();
+          ref.current.play().catch(e => console.log("Autoplay prevented:", e));
         } else {
           ref.current.pause();
         }
