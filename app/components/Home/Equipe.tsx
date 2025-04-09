@@ -243,17 +243,17 @@ const Equipe: React.FC<TeamSectionProps> = ({ teamData: initialTeamData, transla
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">{translations.description}</p>
         </div>
 
-        {/* Featured members section - centered at the top */}
+        {/* Featured members section - en ligne sur desktop */}
         {featuredMembers.length > 0 && (
           <div className="flex justify-center mb-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+            <div className="flex flex-col md:flex-row gap-6 md:gap-8 max-w-6xl">
               {featuredMembers.map((member: TeamMember) => (
                 <div 
                   key={member.id} 
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 flex-1 max-w-sm mx-auto"
                 >
-                  <div className="h-64 overflow-hidden flex items-center justify-center">
-                    <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-orange-500">
+                  <div className="h-48 md:h-56 overflow-hidden flex items-center justify-center">
+                    <div className="w-36 h-36 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-orange-500">
                       <img 
                         src={member.image} 
                         alt={member.name} 
@@ -261,13 +261,13 @@ const Equipe: React.FC<TeamSectionProps> = ({ teamData: initialTeamData, transla
                       />
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-black">{member.name}</h3>
+                  <div className="p-4 md:p-6">
+                    <h3 className="text-lg md:text-xl font-bold text-black">{member.name}</h3>
                     <p className="text-orange-500 font-medium mb-2">{member.position}</p>
-                    <p className="text-gray-700 mb-4">{member.bio}</p>
+                    <p className="text-gray-700 mb-4 text-sm md:text-base line-clamp-3">{member.bio}</p>
                     
                     {/* Social Media Icons */}
-                    <div className="flex space-x-3 mb-4">
+                    <div className="flex space-x-3 mb-2">
                       {member.socials?.linkedin && (
                         <a 
                           href={member.socials.linkedin} 

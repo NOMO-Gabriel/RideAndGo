@@ -3,7 +3,11 @@
 import { useState, useRef, useEffect } from 'react';
 const VideoGuide = () => {
   const [activeVideo, setActiveVideo] = useState(0);
-  const videoRefs = [useRef(null), useRef(null), useRef(null)];
+  const videoRefs = [
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null),
+    useRef<HTMLVideoElement>(null)
+  ];
   
   const videos = [
     {
@@ -29,7 +33,7 @@ const VideoGuide = () => {
     }
   ];
 
-  const handleVideoSelect = (index) => {
+  const handleVideoSelect = (index:number) => {
     setActiveVideo(index);
     // Pause toutes les vidéos
     videoRefs.forEach((ref, i) => {
