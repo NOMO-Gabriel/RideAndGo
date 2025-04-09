@@ -33,8 +33,64 @@ interface CostDetails {
   endLocation: string;
 }
 
+// Interface pour les témoignages
+interface Testimonial {
+  text: string;
+  rating: number;
+}
+
+// Interface pour les services
+interface Service {
+  title: string;
+  description: string;
+  link: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+// Interface pour le contenu localisé
+interface LocalizedContent {
+  heroTitle: string;
+  heroSubtitle: string;
+  startLocationPlaceholder: string;
+  endLocationPlaceholder: string;
+  calculateButton: string;
+  distance: string;
+  duration: string;
+  estimatedCost: string;
+  officialCost: string;
+  orderButton: string;
+  tripDetails: string;
+  departure: string;
+  arrival: string;
+  routeDetails: string;
+  servicesTitle: string;
+  testimonialsTitle: string;
+  learnMore: string;
+  makeProposal: string;
+  proposalPlaceholder: string;
+  submitProposal: string;
+  selectedPrice: string;
+  services: {
+    title: string;
+    description: string;
+    link: string;
+  }[];
+  testimonials: Testimonial[];
+}
+
+// Interface pour le contenu disponible dans chaque langue
+interface ContentByLocale {
+  en: LocalizedContent;
+  fr: LocalizedContent;
+}
+
 // Composants réutilisables
-const InputField = ({ icon: Icon, placeholder, value, onChange }) => (
+const InputField: React.FC<{
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ icon: Icon, placeholder, value, onChange }) => (
   <div className="relative group">
     <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600 group-hover:text-blue-800 transition-colors" />
     <input
@@ -47,7 +103,10 @@ const InputField = ({ icon: Icon, placeholder, value, onChange }) => (
   </div>
 );
 
-const ServiceCard = ({ service, learnMoreText }) => (
+const ServiceCard: React.FC<{
+  service: Service;
+  learnMoreText: string;
+}> = ({ service, learnMoreText }) => (
   <div className="bg-white rounded-xl border border-gray-200 shadow-md p-5 transform hover:scale-105 transition">
     <div className="flex flex-col items-center text-center">
       <div className="bg-blue-100 p-3 rounded-full mb-3">
@@ -62,7 +121,9 @@ const ServiceCard = ({ service, learnMoreText }) => (
   </div>
 );
 
-const TestimonialCard = ({ testimonial }) => (
+const TestimonialCard: React.FC<{
+  testimonial: Testimonial;
+}> = ({ testimonial }) => (
   <div className="bg-white rounded-xl border border-gray-200 shadow-md p-4">
     <div className="flex gap-1 mb-3">
       {[...Array(testimonial.rating)].map((_, i) => (
@@ -73,19 +134,19 @@ const TestimonialCard = ({ testimonial }) => (
   </div>
 );
 
-const CostCalculator = () => {
+const CostCalculator: React.FC = () => {
   // États
-  const [startLocation, setStartLocation] = useState('');
-  const [endLocation, setEndLocation] = useState('');
+  const [startLocation, setStartLocation] = useState<string>('');
+  const [endLocation, setEndLocation] = useState<string>('');
   const [costDetails, setCostDetails] = useState<CostDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [proposedPrice, setProposedPrice] = useState('');
-  const [selectedPaymentOption, setSelectedPaymentOption] = useState('estimated'); // 'estimated' ou 'official'
-  const [isCalculated, setIsCalculated] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [proposedPrice, setProposedPrice] = useState<string>('');
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState<'estimated' | 'official'>('estimated'); // 'estimated' ou 'official'
+  const [isCalculated, setIsCalculated] = useState<boolean>(false);
   const { locale } = useLocale();
 
   // Textes localisés
-  const content = {
+  const content: ContentByLocale = {
     en: {
       heroTitle: "Calculate Your Trip Cost",
       heroSubtitle: "Get an instant estimate for your journey with our smart calculator",
@@ -178,13 +239,19 @@ const CostCalculator = () => {
     }
   };
 
-  const currentContent = locale === 'fr' ? content.fr : content.en;
+  const currentContent: LocalizedContent = locale === 'fr' ? content.fr : content.en;
 
   // Association des icônes aux services
-  const serviceIcons = [FaTaxi, FaPlane, FaCar];
+  const serviceIcons: React.ComponentType<React.SVGProps<SVGSVGElement>>[] = [FaTaxi, FaPlane, FaCar];
+  
+  // Création des services avec leurs icônes
+  const servicesWithIcons: Service[] = currentContent.services.map((service, index) => ({
+    ...service,
+    icon: serviceIcons[index]
+  }));
 
   // Gestion du calcul de coût
-  const handleCalculateCost = async () => {
+  const handleCalculateCost = async (): Promise<void> => {
     if (!startLocation || !endLocation) {
       alert(locale === 'fr' ? "Veuillez entrer les deux emplacements." : "Please enter both locations.");
       return;
@@ -223,7 +290,7 @@ const CostCalculator = () => {
   };
 
   // Déterminer le prix affiché dans les détails du trajet en fonction de l'option sélectionnée
-  const getSelectedPrice = () => {
+  const getSelectedPrice = (): string | null => {
     if (!costDetails) return null;
     return selectedPaymentOption === 'estimated' 
       ? `${costDetails.estimatedCost.toLocaleString()} FCFA` 
@@ -419,10 +486,10 @@ const CostCalculator = () => {
             {currentContent.servicesTitle}
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
-            {currentContent.services.map((service, index) => (
+            {servicesWithIcons.map((service, index) => (
               <ServiceCard 
                 key={index} 
-                service={{...service, icon: serviceIcons[index]}} 
+                service={service} 
                 learnMoreText={currentContent.learnMore} 
               />
             ))}
