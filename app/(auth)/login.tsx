@@ -83,7 +83,7 @@ export default function Login() {
           </Text>
         </TouchableOpacity>
 
-        <Link href="/(auth)/register" asChild>
+        <Link href="./register" asChild>
           <TouchableOpacity style={styles.linkContainer}>
             <Text style={[styles.linkText, { color: colors.primary }]}>
               Pas de compte ? Créer un compte
