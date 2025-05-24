@@ -7,7 +7,7 @@ export default function AuthLayout() {
 
   if (isLoading) return null;
   if (isAuthenticated) { 
-    router.replace('../tabs/home');
+    router.replace('/(tabs)');
     // return <Redirect href="../tabs/home" />; 
   } 
 

@@ -14,7 +14,7 @@ export default function Index() {
     if (!isLoading) {
       if (isAuthenticated) {
         // Utilisateur connecté, rediriger vers les tabs
-        router.replace('/(tabs)/home');
+        router.replace('/(tabs)');
       } else {
         // Utilisateur non connecté, rediriger vers l'authentification
         router.replace('/(auth)/login');
@@ -28,8 +28,6 @@ export default function Index() {
       <Text style={[styles.title, { color: colors.primary }]}>RideAndGo</Text>
       <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
       <Text style={[styles.loadingText, { color: colors.text }]}>{t('loading')}</Text>
-      <Link href="/login">Login</Link>
-      <Link href={"/register"}>Register</Link>
     </View>
   );
 }

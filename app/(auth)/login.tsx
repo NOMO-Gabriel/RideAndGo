@@ -34,7 +34,7 @@ export default function Login() {
     try {
       const success = await login(email, password);
       if (success) {
-        router.replace('./(tabs)');
+        router.replace('/(tabs)');
       } else {
         Alert.alert('Erreur', 'Email ou mot de passe incorrect');
       }
